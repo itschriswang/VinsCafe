@@ -26,7 +26,13 @@ const MENU = JSON.parse(read('menu.json'));
 
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_SCHEMA = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const WEEK_ORDER = [3, 4, 5, 6, 0, 1, 2];
+/* Starts on the first day we are actually open, so the open days lead and the
+   shut ones collapse behind them. Mirrors weekOrder() in app.js. */
+const WEEK_ORDER = (() => {
+  let start = 1;
+  for (let i = 0; i < 7; i++) { const d = (1 + i) % 7; if (CAFE.hours[d]) { start = d; break; } }
+  return Array.from({ length: 7 }, (_, j) => (start + j) % 7);
+})();
 const pad = (n) => String(n).padStart(2, '0');
 
 /* ---- these four mirror app.js exactly; the Playwright run asserts they agree -- */
@@ -95,7 +101,6 @@ const SPOTS = {
     alt: 'Watercolour of a flat white seen from above, the crema drawn as one olive ring.' }
 };
 
-const LEFT = ['coffee', 'tea', 'take-home'];
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -110,8 +115,15 @@ function spotHTML(id) {
     ` src="art/${id}-${s.w * 2}w.webp">`;
 }
 
-function sectionHTML(sec) {
-  let h = `<section class="sec" data-sec="${slug(sec.section)}">`;
+/* --i is the section's place in menu.json. The phone board is one column and
+   needs the file's reading order, but the desktop board splits the sections
+   across two columns, so DOM order is not reading order. This used to be a
+   hardcoded list of slugs in the stylesheet — rename a section or add one and
+   it silently jumped to the top of the phone board with order:0. The flip
+   class alternates the head alignment the same way, from the same number. */
+function sectionHTML(sec, i) {
+  let h = `<section class="sec${i % 2 ? ' sec--flip' : ''}" data-sec="${slug(sec.section)}"` +
+    ` style="--i:${i}">`;
   for (const id of sec.spots || []) h += spotHTML(id);
   h += `<div class="sec-head"><h2 class="sec-name">${esc(sec.section)}</h2>`;
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
@@ -143,11 +155,28 @@ function previewPick(data) {
 const previewSlice = (data) => previewPick(data).map((sec) => ({
   section: sec.section,
   note: sec.note,
-  items: (sec.items || []).slice(0, PREVIEW_ITEMS)
+  /* One spot per column, not the section's whole set: the preview columns are
+     narrower than the board's and a second spot would land on the type. */
+  spot: (sec.spots || [])[0] || null,
+  items: (sec.items || []).slice(0, PREVIEW_ITEMS),
+  of: (sec.items || []).length
 }));
 
-function previewSectionHTML(sec) {
-  let h = `<section class="sec" data-sec="${slug(sec.section)}">`;
+/* What the preview is NOT showing. Without this the four items under each
+   heading read as the entire menu, which is the one thing a cafe site must
+   never get wrong. Both numbers come from menu.json, so they cannot drift. */
+function previewRest(data) {
+  const shown = previewPick(data);
+  return {
+    others: data.filter((s) => !shown.includes(s)).map((s) => s.section),
+    total: data.reduce((n, s) => n + (s.items || []).length, 0)
+  };
+}
+
+function previewSectionHTML(sec, i) {
+  let h = `<section class="sec${i % 2 ? ' sec--flip' : ''}" data-sec="${slug(sec.section)}"` +
+    ` style="--i:${i}">`;
+  if (sec.spot) h += spotHTML(sec.spot);
   h += `<div class="sec-head"><h3 class="sec-name">${esc(sec.section)}</h3>`;
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
   h += '</div><ul class="items">';
@@ -156,15 +185,25 @@ function previewSectionHTML(sec) {
       '<span class="item-lead" aria-hidden="true"></span>' +
       `<span class="item-price">${esc(it.price)}</span></li>`;
   }
-  return h + '</ul></section>';
+  h += '</ul>';
+  if (sec.of > sec.items.length) h += `<p class="sec-more">and ${sec.of - sec.items.length} more</p>`;
+  return h + '</section>';
 }
 
 function previewHTML() {
   const slice = previewSlice(MENU);
-  const sig = signature(JSON.stringify(slice));
+  const rest = previewRest(MENU);
+  const sig = signature(JSON.stringify([slice, rest]));
   return [
     `    <div class="preview-cols" data-preview-sig="${sig}">`,
-    ...slice.map((s) => '      ' + previewSectionHTML(s)),
+    ...slice.map((s, i) => '      ' + previewSectionHTML(s, i)),
+    '    </div>',
+    '    <div class="preview-tail">',
+    `      <p class="preview-rest">Also on the board: ${rest.others.map(esc).join(', ')}.</p>`,
+    '      <a class="hero-onward preview-more" href="menu.html#board">',
+    `        The whole board, ${rest.total} things`,
+    '        <span class="mark mark--onward" aria-hidden="true"></span>',
+    '      </a>',
     '    </div>'
   ].join('\n');
 }
@@ -175,17 +214,23 @@ function signature(str) {
   return h.toString(36);
 }
 
+/* Alternating, not a named list: sections go left, right, left, right down
+   menu.json. Any set of sections lands somewhere sensible and stays balanced. */
+const columns = (data) => [
+  data.map((s, i) => [s, i]).filter(([, i]) => i % 2 === 0),
+  data.map((s, i) => [s, i]).filter(([, i]) => i % 2 === 1)
+];
+
 function boardHTML() {
-  const left = MENU.filter((s) => LEFT.includes(slug(s.section)));
-  const right = MENU.filter((s) => !LEFT.includes(slug(s.section)));
+  const [left, right] = columns(MENU);
   const sig = signature(JSON.stringify(MENU));
   return [
     `    <div class="board" data-menu-sig="${sig}">`,
     '      <div class="board-col">',
-    ...left.map((s) => '        ' + sectionHTML(s)),
+    ...left.map(([s, i]) => '        ' + sectionHTML(s, i)),
     '      </div>',
     '      <div class="board-col">',
-    ...right.map((s) => '        ' + sectionHTML(s)),
+    ...right.map(([s, i]) => '        ' + sectionHTML(s, i)),
     '      </div>',
     '    </div>'
   ].join('\n');
@@ -193,8 +238,31 @@ function boardHTML() {
 
 /* ---- page-level JSON-LD ----------------------------------------------------- */
 
-function jsonLd(existing) {
+/* Every absolute URL on the site is built here from CAFE.url, so the domain is
+   written down exactly once. It was written down 22 times across three heads,
+   sitemap.xml and robots.txt, and renaming the repository silently pointed all
+   of them at a 404 — canonicals, social cards and the search-engine data. */
+const SITE = CAFE.url.replace(/\/*$/, '/');
+const OG = { 'index.html': 'og-home', 'menu.html': 'og-menu', 'find-us.html': 'og-find-us' };
+const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
+
+function siteUrls(src, page) {
+  let out = src
+    .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${pageUrl(page)}$2`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`);
+  if (OG[page]) {
+    out = out.replace(/(<meta property="og:image" content=")[^"]*(")/,
+      `$1${SITE}art/${OG[page]}.jpg$2`);
+  }
+  return out;
+}
+
+function jsonLd(existing, page) {
   const data = JSON.parse(existing);
+  data['@id'] = SITE + '#cafe';
+  data.url = pageUrl(page);
+  data.hasMenu = SITE + 'menu.html';
+  if (OG[page]) data.image = SITE + `art/${OG[page]}.jpg`;
   data.name = CAFE.name;
   data.telephone = CAFE.telephone;
   data.email = CAFE.email;
@@ -226,9 +294,11 @@ for (const page of PAGES) {
   const before = read(page);
   let after = before;
 
+  after = siteUrls(after, page);
+
   after = region(after, 'jsonld', (body) => {
     const m = /<script[^>]*>([\s\S]*?)<\/script>/.exec(body);
-    return m ? '\n' + jsonLd(m[1]) + '\n' : body;
+    return m ? '\n' + jsonLd(m[1], page) + '\n' : body;
   });
 
   after = region(after, 'hours', (body) => {
@@ -247,6 +317,28 @@ for (const page of PAGES) {
   if (check) { console.error(`  ${page} OUT OF DATE`); stale++; continue; }
   writeFileSync(join(ROOT, page), after);
   console.log(`  ${page} rewritten`);
+}
+
+/* sitemap.xml and robots.txt carry the same absolute URLs, so they are written
+   from the same constant rather than kept in step by hand. */
+const LASTMOD = (/<lastmod>([^<]+)<\/lastmod>/.exec(read('sitemap.xml')) || [, '2026-08-10'])[1];
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  ['index.html', 'menu.html', 'find-us.html'].map((p, i) =>
+    '  <url>\n' +
+    `    <loc>${pageUrl(p)}</loc>\n` +
+    `    <lastmod>${LASTMOD}</lastmod>\n` +
+    `    <priority>${['1.0', '0.8', '0.8'][i]}</priority>\n` +
+    '  </url>').join('\n') +
+  '\n</urlset>\n';
+
+const robots = `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
+
+for (const [file, body] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
+  if (read(file) === body) { console.log(`  ${file} up to date`); continue; }
+  if (check) { console.error(`  ${file} OUT OF DATE`); stale++; continue; }
+  writeFileSync(join(ROOT, file), body);
+  console.log(`  ${file} rewritten`);
 }
 
 if (check && stale) {

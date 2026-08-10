@@ -28,7 +28,15 @@ const TARGETS = [
   ['.stamp', 4.5, 'timestamp 10px'],
 ];
 const STATES = ['morning', 'midday', 'late', 'closed'];
-const VIEWPORTS = [{ width: 1440, height: 900 }, { width: 390, height: 844 }];
+/* 1024 is not decoration. The hero headlines are clamp()ed and their columns
+   are percentages, so the line count changes between the two extremes — a
+   headline that sits on the paper strip at 1440 and in flow at 390 can wrap
+   onto bare painting somewhere in the middle. Testing only the ends misses it. */
+const VIEWPORTS = [
+  { width: 1440, height: 900 },
+  { width: 1024, height: 800 },
+  { width: 390, height: 844 }
+];
 
 /* Minimal PNG -> RGBA decoder, so this stays a single file with one dependency. */
 function paeth(a,b,c){const p=a+b-c,pa=Math.abs(p-a),pb=Math.abs(p-b),pc=Math.abs(p-c);return pa<=pb&&pa<=pc?a:pb<=pc?b:c;}

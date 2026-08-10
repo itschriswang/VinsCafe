@@ -2,7 +2,6 @@
   {
     "section": "Coffee",
     "note": "Oat, no charge",
-    "standfirst": "This week it is a washed Kirinyaga — blackcurrant, quite bright, better as filter than with milk.",
     "spots": ["spot-cup", "spot-espresso"],
     "items": [
       { "name": "Filter",     "price": "3.20" },
@@ -14,55 +13,51 @@
     ]
   },
   {
-    "section": "Tea",
-    "note": "Whisked or in a pot",
-    "spots": ["spot-teapot"],
+    "section": "Matcha",
+    "note": "Built to order",
+    "standfirst": "Say the grade, the milk and how sweet. Ceremonial is stone-ground and thinner; the everyday grade takes milk better.",
+    "spots": ["spot-matcha", "spot-teapot"],
     "items": [
-      { "name": "Pot of leaf tea", "price": "4.20" },
-      { "name": "Matcha",          "price": "4.60" },
-      { "name": "Matcha latte",    "price": "5.00" },
-      { "name": "Chai",            "price": "4.40" }
+      { "name": "Usucha, whisked plain", "price": "4.60" },
+      { "name": "Matcha latte",          "price": "5.00" },
+      { "name": "Ceremonial grade",      "price": "6.20" },
+      { "name": "Iced matcha",           "price": "5.00" },
+      { "name": "Iced matcha latte",     "price": "5.40" },
+      { "name": "Matcha tonic",          "price": "5.20" },
+      { "name": "Hojicha latte",         "price": "4.80" }
     ]
   },
   {
-    "section": "Kitchen",
-    "note": "Eleven till three",
-    "standfirst": "One soup, made in the morning. When it is finished the pot is washed and that is the end of it.",
-    "spots": ["spot-croissant", "spot-toast"],
+    "section": "Desserts",
+    "note": "Baked at six",
+    "standfirst": "Made this morning for this morning. When the cabinet is empty that is the end of it, and the last of it goes cheap rather than in the bin.",
+    "spots": ["spot-cake", "spot-croissant"],
     "items": [
-      { "name": "Toast, butter & jam", "price": "4.50" },
-      { "name": "Cheese toastie",      "price": "7.50" },
-      { "name": "Soup of the day",     "price": "7.00" },
-      { "name": "Croissant",           "price": "3.60" }
-    ]
-  },
-  {
-    "section": "Sweet",
-    "note": "Baked here",
-    "spots": ["spot-cake"],
-    "items": [
-      { "name": "Cake of the day", "price": "4.80" },
-      { "name": "Cardamom bun",    "price": "4.20" }
+      { "name": "Matcha basque cheesecake", "price": "6.50" },
+      { "name": "Black sesame cookie",      "price": "3.60" },
+      { "name": "Cake of the day",          "price": "4.80" },
+      { "name": "Cardamom bun",             "price": "4.20" },
+      { "name": "Croissant",                "price": "3.60" },
+      { "name": "Hojicha custard tart",     "price": "5.20" }
     ]
   },
   {
     "section": "Cold",
-    "note": "From May",
-    "spots": ["spot-coldbrew", "spot-matcha"],
+    "note": "From the fridge",
+    "spots": ["spot-coldbrew"],
     "items": [
-      { "name": "Iced filter",       "price": "4.00" },
-      { "name": "Iced matcha",       "price": "5.00" },
-      { "name": "Iced matcha latte", "price": "5.40" },
-      { "name": "Matcha tonic",      "price": "5.20" },
-      { "name": "House lemonade",    "price": "3.80" }
+      { "name": "Iced filter",    "price": "4.00" },
+      { "name": "House lemonade", "price": "3.80" },
+      { "name": "Yuzu soda",      "price": "4.20" }
     ]
   },
   {
     "section": "Take home",
-    "note": "Roasted Tuesdays",
+    "note": "While it lasts",
     "spots": ["spot-beans"],
     "items": [
       { "name": "Beans, 250g",   "price": "12.00" },
+      { "name": "Matcha, 30g",   "price": "18.00" },
       { "name": "Filter papers", "price": "4.00" }
     ]
   }

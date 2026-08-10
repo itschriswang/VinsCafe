@@ -34,7 +34,7 @@ Not deployed: `src-art/` (the PNG masters), `tools/`, `.github/`, `EDITING.md`,
 
 ## Deploying
 
-Live at **https://itschriswang.github.io/VinCafe/**, published by
+Live at **https://itschriswang.github.io/VinsCafe/**, published by
 `.github/workflows/pages.yml` on every push to `main`. The workflow checks that
 the derived blocks are current, copies the files listed above into `_site` and
 hands that to GitHub Pages. Nothing is compiled; the deployed files are the
@@ -43,15 +43,20 @@ files in this repository.
 Every asset path is relative, so the site also runs from any subdirectory, from
 `file://`, or from any other static host — copy the same list of files up.
 
-The absolute site URL appears in the canonical links, the Open Graph tags, the
-JSON-LD, `sitemap.xml` and `robots.txt`. To move to a custom domain, replace it
-everywhere and add a `CNAME`:
+The absolute site URL is written down once, as `url` in `config.js`. The
+canonical links, the Open Graph tags, the JSON-LD, `sitemap.xml` and
+`robots.txt` are all generated from it. To move to a custom domain:
 
 ```sh
-grep -rl 'itschriswang.github.io/VinCafe/' index.html menu.html find-us.html 404.html sitemap.xml robots.txt README.md \
-  | xargs sed -i 's#https://itschriswang.github.io/VinCafe/#https://gamsia.cafe/#g'
+# edit config.js:  url: 'https://gamsia.cafe/'
+node tools/sync-static.mjs
 echo 'gamsia.cafe' > CNAME     # and add CNAME to the cp list in the workflow
 ```
+
+It used to be 22 copies of the string across three heads, `sitemap.xml` and
+`robots.txt`. Renaming the repository pointed every one of them at a 404 —
+canonicals, social cards and the search-engine data — with nothing failing
+loudly. `--check` now catches it.
 
 ## How it works
 
@@ -116,17 +121,38 @@ the plate positions or the pigment layer. It needs the site served locally and
 
 ## Notes for the next person
 
-- **The home page is not just the hero.** The cafe is shut for about three
-  quarters of the week, so a hero that only says "closed" would be the page
-  most visitors see. The closed hero leads with what the place is and puts the
+- **The home page is not just the hero.** The cafe opens one morning a week,
+  so a hero that only says "closed" is the page essentially every visitor
+  sees. The closed hero leads with what the place is and puts the
   reopening in the subhead, and every state carries a short board preview
   underneath: the two sections of `menu.json` that have a `standfirst`, four
   items each. This departs from the brief's "hero, then nothing".
-- **Type on the paint.** The paper strip is translucent and the headline hangs
-  past it onto the painting; the eyebrow, rule and body stay on paper, because
-  48px holds its own over a wash and 13px does not. Midday is the exception —
-  below 19% its headline reaches the window frame and measures 2.72:1 — so it
-  stays above the paint and gets its integration from the strip instead.
+- **Nothing about the week is written down twice.** The hours table starts on
+  the first open day; the three daylight states are thirds of whatever the open
+  day is; the late eyebrow reads the closing hour. All of it from `config.js`.
+  Fixed 7/11/15 bands and a hardcoded Wed-first week were fine for a nine-hour
+  Wednesday-to-Sunday cafe and wrong the moment it became a six-hour Sunday —
+  the late-afternoon painting could no longer occur at all, and the one open
+  day sat buried between two runs of "Closed".
+- **Sections are not named in code.** Their order on the board, which column
+  they fall in, which side their paintings hang on and how high — all derive
+  from a section's index in `menu.json`, carried into the markup as `--i`.
+  These used to be lists of slugs in the stylesheet, so renaming Kitchen to
+  Desserts sent it to the top of the phone board and dropped a teapot on top
+  of Coffee's prices.
+- **The type carries its own paper.** Each hero's copy sits on a wash sized by
+  the copy itself (`.hero-type::before`), not on the fixed `.strip`. The strip
+  is a percentage of the hero while the copy is however many lines someone
+  writes, so a longer headline or one extra line of body used to push type onto
+  bare painting — measured at 1.88:1. The wash is an ellipse inscribed in its
+  own box so the fade reaches zero before the element clips; sized any larger
+  you get a faint seam down the painting where the mask is cut off.
+- **The phone gets the same composition, not a cut-down one.** Plate, then the
+  paper sheet laid over its foot carrying all four states' type. It used to be
+  an image band with the copy stacked underneath on flat cream, which read as a
+  newsletter. The nav is a second row under the wordmark: it was `display:none`
+  below 720px, which left the menu reachable only by scrolling the whole hero —
+  and unreachable from the closed hero, the one most visitors land on.
 
 - **Colour.** Four interface colours, written in Oklch so every interpolation
   the browser performs runs through Oklch rather than sRGB. Lichen, butter,

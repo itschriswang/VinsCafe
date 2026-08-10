@@ -35,7 +35,20 @@ This is the menu. Each block is one section of the board.
   standfirst are the two shown under the hero on the home page, four items each.
   Move it to another section and the front page follows.
 - **`spots`** are the paintings in the margin. Leave these alone unless you have
-  had new ones painted.
+  had new ones painted. The first spot of each front-page section is also the
+  painting that appears beside it on the home page.
+
+Section order in this file is the order on the board. The sections alternate
+down the two columns and the paintings follow their section — which side they
+hang on and how high comes from where the section landed, not from the
+painting. So you can rename a section, reorder them or add one, and nothing
+lands on top of the prices.
+
+Everything the front page says about the size of the menu counts itself. "And 2
+more" under a column, "Also on the board: Tea, Sweet, Cold, Take home", and "The
+whole board, 23 things" are all read off `menu.json` when the page is built — so
+adding a drink or a whole section updates them on its own, and the front page
+can never imply that the eight items it shows are the entire menu.
 
 Adding or removing items is safe: the paintings stay exactly where they are.
 
@@ -54,18 +67,28 @@ closed screen and the hours Google reads all come from here.
 
 ```js
 hours: {
-  0: [8, 16],   // Sunday
+  0: [8, 14],   // Sunday      — the one day
   1: null,      // Monday      — shut
   2: null,      // Tuesday     — shut
-  3: [7, 16],   // Wednesday
-  4: [7, 16],   // Thursday
-  5: [7, 16],   // Friday
-  6: [8, 16]    // Saturday
+  3: null,      // Wednesday   — shut
+  4: null,      // Thursday    — shut
+  5: null,      // Friday      — shut
+  6: null       // Saturday    — shut
 }
 ```
 
-`[7, 16]` means open at seven, shut at four. Whole hours only. `null` means
+`[8, 14]` means open at eight, shut at two. Whole hours only. `null` means
 shut all day. Change a number here and every one of those places follows.
+
+Two things follow the hours that are easy to miss. The hours table starts on
+the first day you are actually open, so the open days lead and the shut ones
+collapse into one line behind them. And the four paintings are thirds of
+whatever the open day is — open eight till two and the morning painting runs
+to ten, midday to twelve, late afternoon to close. Shorten the day and they
+shorten with it; there is no fixed hour written down anywhere.
+
+Add a second day and everything re-derives, including the hours table, the
+sentence on the closed screen and the hours Google reads.
 
 The address, telephone number and email underneath work the same way.
 
