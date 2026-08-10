@@ -64,7 +64,9 @@
   --rose:   #E39FA6;   /* pink cloud */
   --sky:    #A9BDCE;   /* dusty blue */
   --sun:    #D9543E;   /* the red sun */
-  --sun-deep: #B84431;
+  --sun-deep: #B84431; /* the sun as a text/UI colour: 4.7:1 on paper */
+  --sun-press: #9C3826;
+  --moss-text: #5A6530; /* moss dark enough to carry small type */
 
   --ink-12: rgba(38, 51, 29, 0.12);
   --ink-18: rgba(38, 51, 29, 0.18);
@@ -129,16 +131,23 @@ a {
   text-underline-offset: 3px;
   transition: color 140ms var(--ease-out);
 }
-a:hover { color: var(--sun); }
+a:hover { color: var(--sun-press); }
 
 ::selection { background: var(--butter); color: var(--ink); }
 
 :focus-visible {
-  outline: 2.5px solid var(--sun);
+  outline: 2.5px solid var(--sun-deep);
   outline-offset: 3px;
   border-radius: 2px;
 }
-[data-state='closed'] .bar :focus-visible { outline-color: var(--butter); }
+/* On pine grounds the sun ring cannot be seen; butter can. */
+[data-state='closed'] .bar :focus-visible,
+[data-state='closed'] .hero-type :focus-visible,
+.visit :focus-visible,
+.foot :focus-visible { outline-color: var(--butter); }
+/* Pills take a pill-shaped ring. */
+.nav a:focus-visible, .ind-trigger:focus-visible,
+.hero-onward:focus-visible { border-radius: 999px; }
 
 .vh {
   position: absolute;
@@ -226,7 +235,9 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   text-decoration: none;
   transition: transform 200ms var(--ease-spring);
 }
-.wordmark:hover { color: var(--ink); transform: rotate(-2deg) scale(1.04); }
+@media (hover: hover) and (pointer: fine) {
+  .wordmark:hover { color: var(--ink); transform: rotate(-2deg) scale(1.04); }
+}
 
 .nav {
   display: flex;
@@ -245,14 +256,16 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   transition: background 160ms var(--ease-out), color 160ms var(--ease-out),
               transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out);
 }
-.nav a:hover {
-  color: var(--ink);
-  background: var(--butter);
-  transform: translateY(-2px);
-  box-shadow: 0 3px 0 var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .nav a:hover {
+    color: var(--ink);
+    background: var(--butter);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--ink);
+  }
 }
-.nav a[aria-current='page'] { background: var(--ink); color: var(--paper); }
-.nav a[aria-current='page']:hover { background: var(--ink); color: var(--butter); }
+.nav a[aria-current='page'] { background: var(--pine); color: var(--paper); }
+.nav a[aria-current='page']:hover { background: var(--pine); color: var(--butter); }
 
 /* Closed takes a solid pine bar; nav goes cream. */
 [data-state='closed'] .hero > .bar { background: var(--pine); border-bottom: 2px solid var(--ink); }
@@ -281,7 +294,9 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   text-align: left;
   transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out);
 }
-.ind-trigger:hover { transform: translateY(-2px); box-shadow: 0 3px 0 var(--ink); }
+@media (hover: hover) and (pointer: fine) {
+  .ind-trigger:hover { transform: translateY(-2px); box-shadow: 0 3px 0 var(--ink); }
+}
 [data-state='closed'] .hero .ind-trigger { background: transparent; border-color: var(--paper); }
 [data-state='closed'] .hero .ind-trigger:hover { box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
 .ind-dot {
@@ -457,9 +472,11 @@ html:not(.js) .ind-close { display: none; }
   align-items: center;
   gap: 12px;
   width: max-content;
+  white-space: nowrap;
+  flex-shrink: 0;
   padding: 12px 24px 15px;
   border-radius: 999px;
-  background: var(--sun);
+  background: var(--sun-deep);
   border: 2px solid var(--ink);
   font: 700 16px/1 var(--sans);
   letter-spacing: 0.12em;
@@ -470,11 +487,13 @@ html:not(.js) .ind-close { display: none; }
   transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out),
               background 160ms var(--ease-out);
 }
-.hero-onward:hover {
-  color: var(--paper);
-  background: var(--sun-deep);
-  transform: translate(-1px, -2px);
-  box-shadow: 5px 6px 0 var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .hero-onward:hover {
+    color: var(--paper);
+    background: var(--sun-press);
+    transform: translate(-1px, -2px);
+    box-shadow: 5px 6px 0 var(--ink);
+  }
 }
 .hero-onward:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
 .hero-onward .mark { --mark-color: var(--paper); }
@@ -504,7 +523,7 @@ html:not(.js) .ind-close { display: none; }
   font: 400 11px/1 var(--mono);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink-60);
+  color: var(--ink-75);
   font-variant-numeric: tabular-nums;
 }
 .hero .stamp::before {
@@ -522,6 +541,9 @@ html:not(.js) .ind-close { display: none; }
           mask-image: radial-gradient(125% 150% at 10% 50%, #000 42%, rgba(0, 0, 0, 0) 86%);
 }
 [data-state='closed'] .hero .stamp::before { display: none; }
+/* Closed puts the type in the page's lower-left; the timestamp moves to the
+   free corner so the two never touch. */
+[data-state='closed'] .hero .stamp { left: auto; right: var(--gutter); }
 
 /* -- morning: type column right, strip masked in from the right ----------- */
 [data-state='morning'] { --plate-pos: 22% center; }
@@ -786,7 +808,7 @@ html:not(.js) .roundel { display: none; }
   font: 700 14px/1.7 var(--sans);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--moss);
+  color: var(--moss-text);
 }
 .page-rule { margin-top: 28px; }
 
@@ -819,7 +841,7 @@ html:not(.js) .roundel { display: none; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--paper);
-  background: var(--moss);
+  background: var(--moss-text);
   padding: 5px 12px 7px;
   border-radius: 999px;
   transform: rotate(1.6deg);
@@ -847,7 +869,7 @@ html:not(.js) .roundel { display: none; }
   border-bottom: 2px dotted var(--ink-30);
   transform: translateY(-4px);
 }
-.item-price { font: 400 15px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--sun-deep); }
+.item-price { font: 400 15px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--pine); }
 
 .standfirst {
   margin: 18px 0 0;
@@ -1315,4 +1337,9 @@ html:not(.js) .roundel { display: none; }
   .bar, .ind, .pigment, .strip, .spot, .stamp, .ticker, .roundel, .visit { display: none !important; }
   body { color: #000; background: #fff; }
   .board { display: block; }
+  /* Browsers strip backgrounds when printing; the pale text on the coloured
+     blocks would print white-on-white without this. */
+  .foot, .foot * { color: #000 !important; background: none !important; }
+  .preview { background: none !important; border: 0 !important; }
+  .foot-sign { display: none !important; }
 }
