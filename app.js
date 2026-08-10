@@ -46,22 +46,22 @@
     morning: {
       eyebrow: null,       /* derived: the hours are the whole story now */
       mark: 'note',
-      headline: 'The first tray comes out at eight.',
-      body: 'Whisked to order, ground to order, and the cabinet is as full as it will be all day.'
+      headline: 'The morning we wait all week for.',
+      body: 'First light through the window, warm trays coming out, the first pour of the day. Six days of getting ready, for this.'
     },
     midday: {
       eyebrow: 'Say how you want it',
       mark: 'board',
-      headline: 'Every matcha is built to order.',
-      body: 'Pick the grade, the milk and how sweet, then pick something warm from the cabinet to go with it.'
+      headline: 'A quiet obsession with matcha.',
+      body: 'Stone-ground, whisked to order, poured slow. Tell us how you like it, take the window seat, and let the morning stretch.'
     },
     late: {
       /* Derived from the closing hour in config.js so the two cannot disagree.
          The brief's fixed "half five" was already wrong twice over. */
       eyebrow: null,
       mark: 'hours',
-      headline: 'When the cabinet is empty we stop.',
-      body: 'The last hour is the quiet one. The counter to yourself, the light going gold on the far wall.'
+      headline: 'Stay for the golden hour.',
+      body: 'The sun drops low over Kingsway and the room goes soft. The regulars call this the good hour — now you know too.'
     },
     closed: {
       /* Six days in seven this is the site. Nearly every visitor will only ever
@@ -190,7 +190,7 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'Desserts still warm from the oven, matcha whisked how you ask, coffee done properly. ' + closedHeadline(now);
+    return 'One room, one oven, one morning a week — everything made like it matters. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {

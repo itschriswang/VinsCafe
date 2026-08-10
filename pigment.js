@@ -116,7 +116,7 @@ void main() {
 
   /* b. State bleed: a noise field thresholded by progress, wet into wet.
      The whole term is skipped when nothing is bleeding — this is the fifth
-     noise evaluation per pixel and it is only wanted for 2.6 seconds an hour. */
+     noise evaluation per pixel and it is only wanted for about a second an hour. */
   float fringe = 0.0;
   if (u_progress < 0.999) {
     float nb = snoise(p * 2.6 + 41.0) * 0.5 + 0.5;
@@ -171,7 +171,7 @@ const LIGHT = {
 
 const DPR_CAP = 1.75;
 const SCALE = 0.75;         /* render small and upsample; watercolour hides it */
-const BLEED_MS = 2600;
+const BLEED_MS = 1100;
 
 /* Two ways of noticing that this is too expensive for the machine it landed on.
    SLOW_MS is our own JavaScript cost, which catches a CPU-bound page. It cannot
