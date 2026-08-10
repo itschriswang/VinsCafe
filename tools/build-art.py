@@ -179,30 +179,64 @@ def spot_matte(im, feather=0.07):
         return d * d * (3.0 - 2.0 * d)
     alpha *= ramp(h)[:, None] * ramp(w)[None, :]
 
-    # Several of these were painted with a square of wash behind the subject.
-    # That backdrop is what reads on the page as a box, and it is what the
-    # brief's elliptical mask was there to lose — but a fixed ellipse cannot
-    # know where the subject is, so it clips some and misses others. Measure
-    # the subject instead and fade outwards from its own extent: opaque over
-    # everything actually drawn, gone before the edge of the sheet.
-    strong = alpha > 0.35
-    if strong.any():
-        ys, xs = np.nonzero(strong)
-        # Percentiles, not min and max: one stray dark speck near a corner
-        # would otherwise stretch the extent over the whole sheet.
-        y0, y1 = np.percentile(ys, 1.5), np.percentile(ys, 98.5)
-        x0, x1 = np.percentile(xs, 1.5), np.percentile(xs, 98.5)
-        cy, cx = (y0 + y1) / 2.0, (x0 + x1) / 2.0
-        ry = max((y1 - y0) / 2.0, h * 0.06) * 1.18
-        rx = max((x1 - x0) / 2.0, w * 0.06) * 1.18
-        gy = (np.arange(h, dtype=np.float32) - cy)[:, None] / ry
-        gx = (np.arange(w, dtype=np.float32) - cx)[None, :] / rx
-        d = np.sqrt(gy * gy + gx * gx)
-        s = np.clip((d - 1.0) / 0.9, 0.0, 1.0)
-        alpha *= 1.0 - s * s * (3.0 - 2.0 * s)
+    alpha = _drop_backdrop(alpha)
 
     rgba = np.dstack([colour, alpha * 255.0])
     return Image.fromarray(np.clip(rgba, 0, 255).astype("uint8"), "RGBA")
+
+
+def _drop_backdrop(alpha):
+    """Lose the square of wash several of these were painted on.
+
+    That backdrop is what reads on the page as a box, and losing it is the
+    whole job the brief gave the elliptical mask. A shape cannot do it: a
+    fixed ellipse knows nothing about where the subject is, and even one
+    measured from the subject's extent keeps whatever wash falls inside that
+    radius — which for the espresso and the teapot is all of it.
+
+    Density can do it. Blur the alpha heavily and the subject stays high while
+    a broad thin wash stays low, because the wash is thin everywhere and the
+    subject is not. Threshold that, relative to each painting's own density so
+    a pale subject is not mistaken for a backdrop, and use it to decide what is
+    drawing and what is the sheet it was drawn on. The result keeps a soft
+    halo of wash against the subject, which is what a painting looks like, and
+    drops it well before any edge, which is what the page needs.
+    """
+    import numpy as np
+
+    h, w = alpha.shape
+    a8 = Image.fromarray(np.clip(alpha * 255.0, 0, 255).astype("uint8"), "L")
+    core = np.asarray(
+        a8.filter(ImageFilter.GaussianBlur(min(h, w) / 26.0)), dtype=np.float32
+    ) / 255.0
+
+    peak = float(np.percentile(core, 99.8))
+    if peak < 0.06:                      # nothing solid here; leave it alone
+        return alpha
+    lo_t, hi_t = 0.18 * peak, 0.42 * peak
+    keep = np.clip((core - lo_t) / max(hi_t - lo_t, 1e-4), 0.0, 1.0)
+    keep = keep * keep * (3.0 - 2.0 * keep)
+
+    # Density alone would cut a rim, a handle or an outline stroke, because a
+    # thin line has almost no neighbourhood density however dark it is. So keep
+    # anything that is plainly pigment on its own account as well. A backdrop
+    # wash sits far below this; a drawn line sits far above it.
+    own = np.clip((alpha - 0.13) / 0.19, 0.0, 1.0)
+    keep = np.maximum(keep, own * own * (3.0 - 2.0 * own))
+
+    # Soften the decision so the subject's own cast shadow and the wash right
+    # against it survive, and nothing acquires a cut-out edge.
+    keep = np.asarray(
+        Image.fromarray(np.clip(keep * 255.0, 0, 255).astype("uint8"), "L")
+        .filter(ImageFilter.GaussianBlur(min(h, w) / 60.0)),
+        dtype=np.float32,
+    ) / 255.0
+
+    # Gating the backdrop also thins the soft outer washes a painting is
+    # entitled to — a cast shadow, the bloom round a wet edge. A small gain
+    # gives that weight back. It cannot resurrect the backdrop, which the gate
+    # has already multiplied to nothing.
+    return np.clip(alpha * keep * 1.15, 0.0, 1.0)
 
 
 def paper_field(im, inset=0.085):

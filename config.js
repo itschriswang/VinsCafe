@@ -8,7 +8,7 @@
    null means shut all day. */
 
 const CAFE = {
-  name: 'Deckle',
+  name: 'Gam Sia',
   timezone: 'Europe/London',
 
   hours: {
@@ -31,7 +31,7 @@ const CAFE = {
   geo: { lat: 51.50086, lon: -0.11342 },
 
   telephone: '+44 20 7946 0417',
-  email: 'hello@deckle.cafe',
+  email: 'hello@gamsia.cafe',
 
   /* Opened in a new tab from Find us. No map is embedded in the page. */
   mapUrl: 'https://www.openstreetmap.org/?mlat=51.50086&mlon=-0.11342#map=18/51.50086/-0.11342',

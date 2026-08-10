@@ -1,4 +1,4 @@
-# Deckle
+# Gam Sia
 
 A static site for a small cafe. Information only: no ordering, no bookings, no
 cart, no accounts, no analytics, and no third-party request of any kind at
@@ -49,8 +49,8 @@ everywhere and add a `CNAME`:
 
 ```sh
 grep -rl 'itschriswang.github.io/VinCafe/' index.html menu.html find-us.html 404.html sitemap.xml robots.txt README.md \
-  | xargs sed -i 's#https://itschriswang.github.io/VinCafe/#https://deckle.cafe/#g'
-echo 'deckle.cafe' > CNAME     # and add CNAME to the cp list in the workflow
+  | xargs sed -i 's#https://itschriswang.github.io/VinCafe/#https://gamsia.cafe/#g'
+echo 'gamsia.cafe' > CNAME     # and add CNAME to the cp list in the workflow
 ```
 
 ## How it works
@@ -64,7 +64,7 @@ Every layout difference between the four is CSS keyed off that one attribute.
 The plate for the resolved state is written by an inline script at the point in
 the markup where it goes, so the browser fetches the painting for the hour you
 actually arrived at and never one of the other three. Copy that depends on the
-clock is written by `Deckle.paint()` from an inline call at the end of the
+clock is written by `GamSia.paint()` from an inline call at the end of the
 section it fills — filling it later would resize things after layout, and the
 layout-shift budget here is zero.
 
@@ -121,10 +121,13 @@ or a pre-commit hook after editing `config.js` or `menu.json`.
   `min-height` that clears their spot.
 - **The spots carry their own alpha.** `build-art.py` cuts it from the scans:
   flat-field the paper, trim the sheet's torn border, take alpha from how far
-  each pixel departs from white, then fade out from each painting's own extent.
+  each pixel departs from white, then drop the square of wash some of them were
+  painted on. That last step is by density, not by shape — blur the alpha and a
+  broad thin backdrop stays low while a subject stays high — with a floor that
+  keeps any pixel that is plainly pigment, so a rim or a handle is never cut.
   So there is no mask in the CSS to clip anything and no levels lift to hide a
-  backdrop with — only `mix-blend-mode: multiply`, which is how pigment sits on
-  paper. Re-supply a painting in `src-art/`, run the script, and it will be
-  matted the same way.
+  backdrop with, only `mix-blend-mode: multiply`, which is how pigment sits on
+  paper. Re-supply a painting in `src-art/`, run the script, and it is matted
+  the same way.
 - **The masters.** `src-art/` holds the PNGs everything in `art/` is made from,
   including three surfaces the site does not currently use.
