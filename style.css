@@ -365,7 +365,7 @@ html:not(.js) .ind-close { display: none; }
   position: absolute;
   inset: -76px -104px -64px -104px;
   z-index: -1;
-  opacity: 0.74;
+  opacity: 0.78;
   background-image: image-set(
     url('art/tex-paper-1376w.avif') type('image/avif'),
     url('art/tex-paper-1376w.webp') type('image/webp'));
@@ -377,8 +377,8 @@ html:not(.js) .ind-close { display: none; }
      faint vertical seam down the painting. Solid only in the core, so what is
      left reads as paper coming up through the paint where the writing is,
      not as a panel laid on top of it. */
-  -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 36%, rgba(0,0,0,0) 100%);
-          mask-image: radial-gradient(50% 50% at 50% 50%, #000 36%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
+          mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
 }
 
 /* Morning and late let the headline hang past the type column onto the paint.
@@ -730,10 +730,11 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
 
 /* Short sections carry a min-height that clears their own spot, so adding an
    item to menu.json can never push a painting into the section below. */
-.sec[data-sec='tea']       { min-height: 200px; }
-.sec[data-sec='take-home'] { min-height: 180px; }
-.sec[data-sec='sweet']     { min-height: 210px; }
-.sec[data-sec='cold']      { min-height: 250px; }
+/* Keyed off whether a section actually carries a spot, not off its name. The
+   floor stops a short section from letting its own painting overhang the next
+   one; two spots need room for the second, which hangs at 190px. */
+.sec:has(.spot)          { min-height: 210px; }
+.sec:has(.spot ~ .spot)  { min-height: 350px; }
 
 /* The spots carry their own alpha, cut from the scans by tools/build-art.py:
    the paper is gone, the sheet's torn border is gone, and the edge is feathered
@@ -745,20 +746,31 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   height: auto;
   pointer-events: none;
   mix-blend-mode: multiply;
+  width: var(--w);
+  transform: rotate(var(--tilt, 0deg));
 }
 
-/* Desktop placement, straight from the comp. Every offset is relative to the
-   spot's own section, never to the page. */
-.spot--cup       { top: -14px; left: -214px;  width: 206px; transform: rotate(-1.4deg); }
-.spot--espresso  { top: 190px; left: -196px;  width: 134px; transform: rotate(2deg); }
-.spot--teapot    { top: -16px; left: -210px;  width: 168px; transform: rotate(-2.2deg); }
-.spot--beans     { top: -10px; left: -192px;  width: 132px; transform: rotate(1.2deg); }
-.spot--croissant { top: -22px; right: -214px; width: 198px; transform: rotate(1.6deg); }
-.spot--toast     { top: 185px; right: -196px; width: 146px; transform: rotate(-1.8deg); }
-.spot--cake      { top: -8px;  right: -208px; width: 180px; transform: rotate(1.1deg); }
-.spot--coldbrew  { top: -12px; right: -192px; width: 138px; transform: rotate(-1.5deg); }
-.spot--matcha    { top: 190px; right: -206px; width: 170px; transform: rotate(2.4deg); }
-.spot--flatwhite { top: -26px; left: -246px;  width: 232px; transform: rotate(-1.7deg); }
+/* A painting declares only its size, how far it reaches into the margin, and
+   its tilt. Which SIDE it hangs on comes from the column its section sits in,
+   and whether it hangs high or low comes from its order within that section.
+   Both were hardcoded per painting, which silently assumed one fixed grouping
+   of sections: regrouping the menu put the teapot on top of Coffee's prices
+   and the croissant across Cold's. */
+.sec:not(.sec--flip) > .spot { left: calc(-1 * var(--into)); right: auto; }
+.sec--flip > .spot           { right: calc(-1 * var(--into)); left: auto; }
+.sec > .spot:nth-of-type(1)  { top: var(--t1, -16px); }
+.sec > .spot:nth-of-type(2)  { top: 205px; }
+
+.spot--cup       { --w: 206px; --into: 214px; --tilt: -1.4deg; }
+.spot--espresso  { --w: 134px; --into: 196px; --tilt: 2deg; }
+.spot--teapot    { --w: 168px; --into: 210px; --tilt: -2.2deg; }
+.spot--beans     { --w: 132px; --into: 192px; --tilt: 1.2deg; }
+.spot--croissant { --w: 198px; --into: 214px; --tilt: 1.6deg; }
+.spot--toast     { --w: 146px; --into: 196px; --tilt: -1.8deg; }
+.spot--cake      { --w: 180px; --into: 208px; --tilt: 1.1deg; }
+.spot--coldbrew  { --w: 138px; --into: 192px; --tilt: -1.5deg; }
+.spot--matcha    { --w: 170px; --into: 206px; --tilt: 2.4deg; }
+.spot--flatwhite { --w: 232px; --into: 246px; --tilt: -1.7deg; --t1: -26px; }
 
 .board-foot { padding: 150px 0 34px; }
 .board-foot .foot-inner { padding-top: 18px; }
@@ -1037,32 +1049,34 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   .board-foot { padding-top: 120px; }
 
   /* alternating: even sections take the right gutter, odd ones the left */
-  .sec[data-sec='coffee']    { order: 1; }
-  .sec[data-sec='tea']       { order: 2; }
-  .sec[data-sec='kitchen']   { order: 3; }
-  .sec[data-sec='sweet']     { order: 4; }
-  .sec[data-sec='cold']      { order: 5; }
-  .sec[data-sec='take-home'] { order: 6; }
+  /* Reading order is menu.json's order, carried on --i by the generator. This
+     was a list of six section names, so renaming a section or adding one sent
+     it to the top of the phone board on order:0 with no warning. */
+  .sec { order: var(--i, 0); }
 
-  .sec[data-sec='tea'] .sec-head,
-  .sec[data-sec='sweet'] .sec-head,
-  .sec[data-sec='take-home'] .sec-head { text-align: right; }
-  .sec[data-sec='tea'] .items,
-  .sec[data-sec='sweet'] .items,
-  .sec[data-sec='take-home'] .items { margin-left: 96px; max-width: none; }
-  .sec[data-sec='sweet'] .items { margin-left: 106px; }
-  .sec[data-sec='cold'] .items { max-width: 236px; }
+  /* Every other section faces right, which is what gives the phone board its
+     alternating margin. Also from --i, so it follows any set of sections. */
+  .sec--flip .sec-head { text-align: right; }
+  .sec--flip .items { margin-left: 96px; max-width: none; }
 
   .sec .items, .sec .standfirst, .sec .sec-head { position: relative; }
 
-  .spot--espresso, .spot--toast, .spot--matcha { display: none; }
-  .spot--cup       { top: -18px; left: auto; right: -46px; width: 156px; }
-  .spot--teapot    { top: -6px;  left: -48px;  width: 132px; }
-  .spot--croissant { top: -26px; right: -52px; width: 168px; }
-  .spot--cake      { top: -14px; right: auto; left: -50px; width: 156px; }
-  .spot--coldbrew  { top: -20px; right: -44px; width: 140px; }
-  .spot--beans     { top: -16px; left: -44px;  width: 126px; }
-  .spot--flatwhite { top: -30px; right: -56px; left: auto; width: 200px; }
+  /* One painting per section on a phone, and the side alternates with the
+     head alignment so the board zigzags down the screen as the comp does. */
+  .sec > .spot:nth-of-type(2) { display: none; }
+  .sec:not(.sec--flip) > .spot { right: calc(-1 * var(--into-m, 46px)); left: auto; }
+  .sec--flip > .spot           { left: calc(-1 * var(--into-m, 48px)); right: auto; }
+  .sec > .spot:nth-of-type(1)  { top: var(--t1-m, -18px); }
+
+  .spot--cup       { --w: 156px; --into-m: 46px; }
+  .spot--espresso  { --w: 112px; --into-m: 44px; }
+  .spot--teapot    { --w: 132px; --into-m: 48px; }
+  .spot--croissant { --w: 168px; --into-m: 52px; }
+  .spot--cake      { --w: 156px; --into-m: 50px; }
+  .spot--coldbrew  { --w: 140px; --into-m: 44px; }
+  .spot--beans     { --w: 126px; --into-m: 44px; }
+  .spot--matcha    { --w: 140px; --into-m: 48px; }
+  .spot--flatwhite { --w: 200px; --into-m: 56px; --t1-m: -30px; }
 
   .foot-inner { padding: 26px 0 24px; font-size: 9.5px; }
 }
@@ -1070,17 +1084,28 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
 /* Between the mobile comp and the full 1120 board there is no margin wide
    enough for a 206px spot. Scale them down and let them sit closer in. */
 @media (min-width: 720px) and (max-width: 1179px) {
+  /* Midday's headline runs the full width of the hero, so below 1180px its
+     column is narrow enough to take two lines. The second one falls past a
+     31% strip onto the dark window frame — 2.79:1 measured. The strip is
+     deepened only in this band; at 1180 and up the headline is one line and
+     the thinner strip shows more of the painting. */
+  [data-state='midday'] .strip {
+    height: 43%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+            mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+
   .spot { transform-origin: center; }
-  .spot--cup       { width: 168px; left: -178px; }
-  .spot--espresso  { width: 112px; left: -160px; }
-  .spot--teapot    { width: 138px; left: -172px; }
-  .spot--beans     { width: 110px; left: -158px; }
-  .spot--croissant { width: 162px; right: -176px; }
-  .spot--toast     { width: 120px; right: -160px; }
-  .spot--cake      { width: 148px; right: -172px; }
-  .spot--coldbrew  { width: 114px; right: -158px; }
-  .spot--matcha    { width: 140px; right: -170px; }
-  .spot--flatwhite { width: 188px; left: -202px; }
+  .spot--cup       { --w: 168px; --into: 178px; }
+  .spot--espresso  { --w: 112px; --into: 160px; }
+  .spot--teapot    { --w: 138px; --into: 172px; }
+  .spot--beans     { --w: 110px; --into: 158px; }
+  .spot--croissant { --w: 162px; --into: 176px; }
+  .spot--toast     { --w: 120px; --into: 160px; }
+  .spot--cake      { --w: 148px; --into: 172px; }
+  .spot--coldbrew  { --w: 114px; --into: 158px; }
+  .spot--matcha    { --w: 140px; --into: 170px; }
+  .spot--flatwhite { --w: 188px; --into: 202px; }
 }
 
 /* -------------------------------------------------------------- motion ---

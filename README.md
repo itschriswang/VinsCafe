@@ -116,12 +116,25 @@ the plate positions or the pigment layer. It needs the site served locally and
 
 ## Notes for the next person
 
-- **The home page is not just the hero.** The cafe is shut for about three
-  quarters of the week, so a hero that only says "closed" would be the page
-  most visitors see. The closed hero leads with what the place is and puts the
+- **The home page is not just the hero.** The cafe opens one morning a week,
+  so a hero that only says "closed" is the page essentially every visitor
+  sees. The closed hero leads with what the place is and puts the
   reopening in the subhead, and every state carries a short board preview
   underneath: the two sections of `menu.json` that have a `standfirst`, four
   items each. This departs from the brief's "hero, then nothing".
+- **Nothing about the week is written down twice.** The hours table starts on
+  the first open day; the three daylight states are thirds of whatever the open
+  day is; the late eyebrow reads the closing hour. All of it from `config.js`.
+  Fixed 7/11/15 bands and a hardcoded Wed-first week were fine for a nine-hour
+  Wednesday-to-Sunday cafe and wrong the moment it became a six-hour Sunday —
+  the late-afternoon painting could no longer occur at all, and the one open
+  day sat buried between two runs of "Closed".
+- **Sections are not named in code.** Their order on the board, which column
+  they fall in, which side their paintings hang on and how high — all derive
+  from a section's index in `menu.json`, carried into the markup as `--i`.
+  These used to be lists of slugs in the stylesheet, so renaming Kitchen to
+  Desserts sent it to the top of the phone board and dropped a teapot on top
+  of Coffee's prices.
 - **The type carries its own paper.** Each hero's copy sits on a wash sized by
   the copy itself (`.hero-type::before`), not on the fixed `.strip`. The strip
   is a percentage of the hero while the copy is however many lines someone

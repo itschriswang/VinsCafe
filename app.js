@@ -44,29 +44,29 @@
      doors down. */
   var COPY = {
     morning: {
-      eyebrow: 'Seven till eleven',
+      eyebrow: null,       /* derived: the hours are the whole story now */
       mark: 'note',
-      headline: 'The grinder goes on at ten to seven.',
-      body: 'Filter, cortado, yesterday’s loaf under the grill. Nobody says much before half eight.'
+      headline: 'The first tray comes out at eight.',
+      body: 'Whisked to order, ground to order, and the cabinet is as full as it will be all day.'
     },
     midday: {
-      eyebrow: 'Board up at eleven',
+      eyebrow: 'Say how you want it',
       mark: 'board',
-      headline: 'One soup. When it goes, it goes.',
-      body: 'A sandwich, a cake, and whatever the kitchen felt like. Usually finished by two.'
+      headline: 'Every matcha is built to order.',
+      body: 'Pick the grade, the milk and how sweet. The pastries are whatever we baked at six.'
     },
     late: {
-      /* The brief’s eyebrow read “half five”, which contradicts the four o’clock
-         close in config.js. The hour here is derived so the two cannot disagree. */
+      /* Derived from the closing hour in config.js so the two cannot disagree.
+         The brief's fixed "half five" was already wrong twice over. */
       eyebrow: null,
       mark: 'hours',
-      headline: 'The corner table is free. It usually is.',
-      body: 'The sun comes round the bookshop at three and sits on the back wall until we shut.'
+      headline: 'When the cabinet is empty we stop.',
+      body: 'The last hour is the quiet one. Whatever is left goes cheap rather than in the bin.'
     },
     closed: {
-      /* Shut about three quarters of the week, so this is the page most people
-         land on — and the only page where there is room to say what the name
-         means. The subhead carries both the room and the day we reopen. */
+      /* Six days in seven this is the site. Nearly every visitor will only ever
+         see this one state, so it has to say what the place is, what it sells
+         and when it is next open — the headline, then the subhead carries both. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
       headline: 'Gam sia is thank you in Hokkien.',
@@ -80,8 +80,31 @@
   var WORDS = ['twelve', 'one', 'two', 'three', 'four', 'five', 'six',
                'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
-  /* Board order runs Wednesday to Tuesday, so the open days group first. */
-  var WEEK_ORDER = [3, 4, 5, 6, 0, 1, 2];
+  /* The hours table starts on the first day we are actually open, so the open
+     days lead and the shut ones collapse behind them. Hardcoded Wed-first, a
+     Sunday-only week read "Wed–Sat Closed / Sun 08–14 / Mon–Tue Closed" — the
+     one day we are open buried in the middle of two runs of nothing. */
+  function weekOrder() {
+    var start = 1;                                  /* look from Monday */
+    for (var i = 0; i < 7; i++) {
+      var d = (1 + i) % 7;
+      if (CAFE.hours[d]) { start = d; break; }
+    }
+    var order = [];
+    for (var j = 0; j < 7; j++) order.push((start + j) % 7);
+    return order;
+  }
+  var WEEK_ORDER = weekOrder();
+
+  /* The first day of the week we open, for copy that has to name an hour while
+     we are shut. Reading a fixed weekday broke the moment that day went dark. */
+  function openHours() {
+    for (var i = 0; i < 7; i++) {
+      var h = CAFE.hours[WEEK_ORDER[i]];
+      if (h) return h;
+    }
+    return [8, 14];
+  }
 
   /* ----------------------------------------------------------- the clock ---
      Resolved in the cafe's timezone, never the visitor's. Someone opening the
@@ -118,18 +141,23 @@
     };
   }
 
-  function band(hour) {
-    if (hour >= 7 && hour < 11) return 'morning';
-    if (hour >= 11 && hour < 15) return 'midday';
-    if (hour >= 15 && hour < 18) return 'late';
-    return 'closed';
+  /* The three daylight states are thirds of whatever the day actually is, not
+     fixed clock hours. Pinned to 7/11/15/18 they assumed a nine-hour day: on a
+     six-hour Sunday the late-afternoon painting could never appear at all,
+     because the cafe shut an hour before that band began. */
+  function bands(h) {
+    var third = Math.max(1, Math.round((h[1] - h[0]) / 3));
+    return { middayFrom: h[0] + third, lateFrom: Math.max(h[0] + third, h[1] - third) };
   }
 
   function stateAt(now) {
     var h = CAFE.hours[now.weekday];
     if (!h) return 'closed';                                  /* no hours today */
     if (now.hour < h[0] || now.hour >= h[1]) return 'closed';  /* shut, on an open day */
-    return band(now.hour);
+    var b = bands(h);
+    if (now.hour < b.middayFrom) return 'morning';
+    if (now.hour < b.lateFrom) return 'midday';
+    return 'late';
   }
 
   /* The next time the door is unlocked, walking forward from `now`. */
@@ -162,18 +190,28 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'A long counter, six stools, one soup a day. ' + closedHeadline(now);
+    return 'Desserts, matcha made how you ask, and coffee. One morning a week. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
-    /* Last coffee half an hour before the chairs go up. */
-    var h = CAFE.hours[3] || [7, 16];
-    var last = h[1] - 1;
-    return 'Last coffee at half ' + hour12(last);
+    /* Last orders half an hour before the chairs go up. Read off the day we
+       actually open — a fixed weekday went dark when the week shrank. */
+    var last = openHours()[1] - 1;
+    return 'Last orders at half ' + hour12(last);
   }
 
+  function morningEyebrow() {
+    /* "Eight till ten" — the span of the morning band, not a fixed hour. */
+    var h = openHours();
+    return capitalise(hour12(h[0])) + ' till ' + hour12(bands(h).middayFrom);
+  }
+
+  function capitalise(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
   function eyebrowFor(state) {
-    return state === 'late' ? lateEyebrow() : COPY[state].eyebrow;
+    if (state === 'late') return lateEyebrow();
+    if (state === 'morning') return COPY.morning.eyebrow || morningEyebrow();
+    return COPY[state].eyebrow;
   }
 
   /* Consecutive days that share hours, collapsed into Wed–Fri / Sat–Sun / Mon–Tue. */
@@ -430,8 +468,13 @@
       ' src="art/' + id + '-' + (s.w * 2) + 'w.webp">';
   }
 
-  function sectionHTML(sec) {
-    var h = '<section class="sec" data-sec="' + slug(sec.section) + '">';
+  /* --i is the section's place in menu.json; see the note in sync-static.mjs.
+     The phone board is a single column and needs the file's reading order,
+     which DOM order cannot give it once the desktop board splits the sections
+     across two columns. */
+  function sectionHTML(sec, i) {
+    var h = '<section class="sec' + (i % 2 ? ' sec--flip' : '') + '" data-sec="' +
+      slug(sec.section) + '" style="--i:' + i + '">';
     (sec.spots || []).forEach(function (id) { h += spotHTML(id); });
     h += '<div class="sec-head"><h2 class="sec-name">' + esc(sec.section) + '</h2>';
     if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
@@ -488,8 +531,9 @@
     };
   }
 
-  function previewHTML(sec) {
-    var h = '<section class="sec" data-sec="' + slug(sec.section) + '">';
+  function previewHTML(sec, i) {
+    var h = '<section class="sec' + (i % 2 ? ' sec--flip' : '') + '" data-sec="' +
+      slug(sec.section) + '" style="--i:' + i + '">';
     if (sec.spot) h += spotHTML(sec.spot);
     h += '<div class="sec-head"><h3 class="sec-name">' + esc(sec.section) + '</h3>';
     if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
@@ -547,14 +591,13 @@
       if (sig === board.getAttribute('data-menu-sig')) return;   /* markup is current */
       var cols = $$('.board-col', board);
       if (cols.length !== 2) return;
-      /* The comp's left column is Coffee, Tea, Take home; everything else
-         goes right, so a section the owner adds lands somewhere sensible
-         rather than shifting the whole board. */
-      var LEFT = ['coffee', 'tea', 'take-home'];
-      var left = data.filter(function (s) { return LEFT.indexOf(slug(s.section)) >= 0; });
-      var right = data.filter(function (s) { return LEFT.indexOf(slug(s.section)) < 0; });
-      cols[0].innerHTML = left.map(sectionHTML).join('');
-      cols[1].innerHTML = right.map(sectionHTML).join('');
+      /* Alternating, not a named list: sections go left, right, left, right
+         down menu.json, so any set of sections stays balanced and a renamed
+         one cannot fall through to a default. */
+      var html = ['', ''];
+      data.forEach(function (sec, i) { html[i % 2] += sectionHTML(sec, i); });
+      cols[0].innerHTML = html[0];
+      cols[1].innerHTML = html[1];
       board.setAttribute('data-menu-sig', sig);
     }).catch(function () { /* the markup already says the right thing */ });
   }

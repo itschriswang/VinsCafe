@@ -12,13 +12,13 @@ const CAFE = {
   timezone: 'Europe/London',
 
   hours: {
-    0: [8, 16],   // Sunday
+    0: [8, 14],   // Sunday      — the one day
     1: null,      // Monday      — shut
     2: null,      // Tuesday     — shut
-    3: [7, 16],   // Wednesday
-    4: [7, 16],   // Thursday
-    5: [7, 16],   // Friday
-    6: [8, 16]    // Saturday
+    3: null,      // Wednesday   — shut
+    4: null,      // Thursday    — shut
+    5: null,      // Friday      — shut
+    6: null       // Saturday    — shut
   },
 
   address: {
