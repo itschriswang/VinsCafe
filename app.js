@@ -380,6 +380,7 @@
     paintStamp(now, state);
     paintIndicator(now);
     paintHours($('.page-hours'));
+    setThemeColor(state);
   }
   window.GamSia.paint = paint;
 
@@ -645,9 +646,20 @@
      The indicator keeps answering the real clock throughout. */
 
   function markDaydial() {
-    $$('.daystrip-btns button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.getAttribute('data-set-state') === state));
+    var strip = $('.daystrip');
+    $$('.daystrip-btns button').forEach(function (b, i) {
+      var on = b.getAttribute('data-set-state') === state;
+      b.setAttribute('aria-pressed', String(on));
+      /* the sun rides the arc to whichever hour is chosen */
+      if (on && strip) strip.style.setProperty('--sun-i', i);
     });
+  }
+
+  /* The browser chrome follows the page: pine while a closed hero is dark,
+     paper everywhere else. */
+  function setThemeColor(s) {
+    var m = $('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#2E4A30' : '#F7EFDF');
   }
 
   function wireDaydial() {
@@ -717,6 +729,7 @@
     if (pigment && animate) pigment.bleed(img, next, snapped);
     else if (pigment) pigment.setState(next, img);
     markDaydial();
+    setThemeColor(next);
   }
 
   function tick() {
