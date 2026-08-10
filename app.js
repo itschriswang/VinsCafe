@@ -637,6 +637,37 @@
     });
   }
 
+  /* ------------------------------------------------------------ day dial ---
+     The paintings are keyed to the clock, so on any single visit three of
+     the four can never be seen. The dial under the hero turns the room
+     through its day by setting the same forced state ?state= uses, so the
+     pigment layer bleeds between paintings exactly as an hour change would.
+     The indicator keeps answering the real clock throughout. */
+
+  function markDaydial() {
+    $$('.daystrip-btns button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-set-state') === state));
+    });
+  }
+
+  function wireDaydial() {
+    var btns = $$('.daystrip-btns button');
+    if (!btns.length) return;
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var s = b.getAttribute('data-set-state');
+        /* choosing the hour we are actually in hands the page back to the clock */
+        forcedState = s === stateAt(moment()) ? null : s;
+        tick();
+        markDaydial();
+        /* the hero is above the dial; bring the painting into view to watch it turn */
+        var hero = $('.hero');
+        if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    markDaydial();
+  }
+
   /* ------------------------------------------------------------- pigment --- */
 
   var pigment = null;
@@ -685,6 +716,7 @@
 
     if (pigment && animate) pigment.bleed(img, next, snapped);
     else if (pigment) pigment.setState(next, img);
+    markDaydial();
   }
 
   function tick() {
@@ -699,6 +731,7 @@
   function init() {
     paint();                 /* idempotent: the inline call already did this */
     wireIndicator();
+    wireDaydial();
     syncSchema();
     hydrateMenu();
     loadPigment();

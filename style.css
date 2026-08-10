@@ -217,7 +217,7 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   justify-content: space-between;
   gap: 20px;
   padding: 0 var(--gutter);
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink-18);
   background: var(--paper);
 }
 
@@ -241,38 +241,29 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
 
 .nav {
   display: flex;
-  gap: 10px;
-  font: 700 15px/1 var(--sans);
-  letter-spacing: 0.12em;
+  gap: 28px;
+  font: 700 14.5px/1 var(--sans);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .nav a {
   color: var(--ink);
   text-decoration: none;
-  padding: 9px 18px 11px;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  background: var(--paper);
-  transition: background 160ms var(--ease-out), color 160ms var(--ease-out),
-              transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out);
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav a:hover {
-    color: var(--ink);
-    background: var(--butter);
-    transform: translateY(-2px);
-    box-shadow: 0 3px 0 var(--ink);
-  }
+  .nav a:hover { color: var(--sun-deep); border-bottom-color: var(--sun); }
 }
-.nav a[aria-current='page'] { background: var(--pine); color: var(--paper); }
-.nav a[aria-current='page']:hover { background: var(--pine); color: var(--butter); }
+.nav a[aria-current='page'] { border-bottom-color: var(--sun); }
 
 /* Closed takes a solid pine bar; nav goes cream. */
-[data-state='closed'] .hero > .bar { background: var(--pine); border-bottom: 2px solid var(--ink); }
+[data-state='closed'] .hero > .bar { background: var(--pine); border-bottom-color: transparent; }
 [data-state='closed'] .hero .wordmark { color: var(--paper); }
-[data-state='closed'] .hero .nav a { color: var(--paper); background: transparent; border-color: var(--paper); }
-[data-state='closed'] .hero .nav a:hover { background: var(--butter); color: var(--ink); border-color: var(--ink); box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
-[data-state='closed'] .hero .nav a[aria-current='page'] { background: var(--paper); color: var(--pine); }
+[data-state='closed'] .hero .nav a { color: var(--cream-85); }
+[data-state='closed'] .hero .nav a:hover { color: var(--paper); border-bottom-color: var(--butter); }
+[data-state='closed'] .hero .nav a[aria-current='page'] { color: var(--paper); border-bottom-color: var(--butter); }
 [data-state='closed'] .hero .ind-label { color: var(--paper); }
 
 /* ----------------------------------------------------------- indicator ---
@@ -287,18 +278,18 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   gap: 9px;
   margin: 0;
   padding: 9px 16px 11px;
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--cream-85);
+  border: 1px solid var(--ink-30);
   border-radius: 999px;
   cursor: pointer;
   text-align: left;
-  transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out);
+  transition: border-color 160ms var(--ease-out), background 160ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .ind-trigger:hover { transform: translateY(-2px); box-shadow: 0 3px 0 var(--ink); }
+  .ind-trigger:hover { border-color: var(--ink-60); background: var(--paper); }
 }
-[data-state='closed'] .hero .ind-trigger { background: transparent; border-color: var(--paper); }
-[data-state='closed'] .hero .ind-trigger:hover { box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
+[data-state='closed'] .hero .ind-trigger { background: transparent; border-color: var(--cream-35); }
+[data-state='closed'] .hero .ind-trigger:hover { border-color: var(--cream-85); background: transparent; }
 .ind-dot {
   flex: none;
   width: 11px; height: 11px;
@@ -323,9 +314,9 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
 .ind-panel {
   padding: 24px 26px 26px;
   background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: 18px;
-  box-shadow: 5px 5px 0 var(--ink);
+  border: 1px solid var(--ink-18);
+  border-radius: 14px;
+  box-shadow: 0 22px 44px -20px rgba(38, 51, 29, 0.4);
 }
 html.js .ind-panel {
   position: absolute;
@@ -443,18 +434,14 @@ html:not(.js) .ind-close { display: none; }
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   width: max-content;
-  padding: 7px 16px 9px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--paper);
   font: 700 14px/1 var(--sans);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  transform: rotate(-1.5deg);
+  color: var(--moss-text);
 }
-.hero-eyebrow .mark { --mark-size: 13px; --mark-color: var(--butter); }
+.hero-eyebrow .mark { --mark-size: 13px; --mark-color: var(--sun); }
 
 .hero-headline {
   font: italic 400 var(--h1, 74px)/0.98 var(--serif);
@@ -477,13 +464,13 @@ html:not(.js) .ind-close { display: none; }
   padding: 12px 24px 15px;
   border-radius: 999px;
   background: var(--sun-deep);
-  border: 2px solid var(--ink);
+  border: 0;
   font: 700 16px/1 var(--sans);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--paper);
   text-decoration: none;
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 0 16px 30px -14px rgba(184, 68, 49, 0.55);
   transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out),
               background 160ms var(--ease-out);
 }
@@ -491,11 +478,11 @@ html:not(.js) .ind-close { display: none; }
   .hero-onward:hover {
     color: var(--paper);
     background: var(--sun-press);
-    transform: translate(-1px, -2px);
-    box-shadow: 5px 6px 0 var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 36px -14px rgba(184, 68, 49, 0.6);
   }
 }
-.hero-onward:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.hero-onward:active { transform: translateY(1px); box-shadow: 0 8px 18px -10px rgba(184, 68, 49, 0.5); }
 .hero-onward .mark { --mark-color: var(--paper); }
 .hero-hours { display: none; }   /* only the closed state shows a table in the hero */
 
@@ -670,7 +657,7 @@ html:not(.js) .hero > .bar {
   height: auto;
   padding-block: 18px;
   background: var(--paper);
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink-18);
   flex-wrap: wrap;
   gap: 18px;
 }
@@ -700,49 +687,68 @@ html:not(.js) .hero-headline { margin-bottom: 22px; }
 html:not(.js) .hero-rule { margin-bottom: 18px; align-self: stretch; }
 html:not(.js) .roundel { display: none; }
 
-/* --------------------------------------------------------------- ticker ---
-   A painted awning: the essentials of the place scrolling past in the sun
-   red. Pauses on hover; static under reduced motion. */
+/* ------------------------------------------------------------- day dial ---
+   Under the hero: the same room at four hours, one click apart. The buttons
+   set the hero's state and the pigment layer bleeds between paintings. */
 
-.ticker {
-  overflow: hidden;
-  background: var(--sun);
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-  padding: 12px 0 15px;
-}
-.ticker-track {
+.daystrip {
   display: flex;
-  gap: 0;
-  width: max-content;
-  animation: ticker 30s linear infinite;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px 36px;
+  padding: 20px var(--gutter) 22px;
+  border-bottom: 1px solid var(--ink-12);
+  background: var(--paper);
 }
-.ticker:hover .ticker-track { animation-play-state: paused; }
-.ticker-track > span {
-  flex: none;
-  white-space: nowrap;
-  font: italic 400 clamp(22px, 2.4vw, 30px)/1 var(--serif);
-  color: var(--paper);
-  padding-right: 0.5em;
+.daystrip-label {
+  font: italic 400 21px/1 var(--serif);
+  color: var(--ink-60);
 }
-.ticker-track em {
-  font-style: normal;
-  font-family: var(--sans);
-  font-weight: 800;
-  font-size: 0.72em;
+.daystrip-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 26px;
+}
+.daystrip-btns button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 6px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font: 700 13.5px/1 var(--sans);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--butter);
-  vertical-align: 0.12em;
+  color: var(--ink-75);
+  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
-@keyframes ticker { to { transform: translateX(-50%); } }
+@media (hover: hover) and (pointer: fine) {
+  .daystrip-btns button:hover { color: var(--sun-deep); }
+}
+.daystrip-btns button[aria-pressed='true'] {
+  color: var(--ink);
+  border-bottom-color: var(--sun);
+}
+.swatch {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(38, 51, 29, 0.2);
+}
+.swatch--morning { background: var(--sky); }
+.swatch--midday  { background: var(--butter); }
+.swatch--late    { background: var(--rose); }
+.swatch--closed  { background: var(--pine); }
+/* Without JS the buttons cannot turn anything. */
+html:not(.js) .daystrip { display: none; }
 
 /* -------------------------------------------------------------- footer --- */
 
 .foot {
   background: var(--pine);
   color: var(--paper);
-  border-top: 2px solid var(--ink);
   padding: 0 var(--gutter);
 }
 .foot-inner {
@@ -838,15 +844,11 @@ html:not(.js) .roundel { display: none; }
 .sec-note {
   flex: none;
   font: 700 12.5px/1 var(--sans);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--paper);
-  background: var(--moss-text);
-  padding: 5px 12px 7px;
-  border-radius: 999px;
-  transform: rotate(1.6deg);
+  color: var(--moss-text);
+  text-align: right;
 }
-.sec--flip .sec-note, .sec:nth-of-type(even) .sec-note { transform: rotate(-1.8deg); }
 
 .items { display: flex; flex-direction: column; gap: 2px; }
 .item {
@@ -877,8 +879,6 @@ html:not(.js) .roundel { display: none; }
   color: var(--pine);
   max-width: 34ch;
   text-wrap: pretty;
-  padding-left: 16px;
-  border-left: 4px solid var(--butter);
 }
 
 /* Short sections carry a floor that clears their own spot. */
@@ -917,7 +917,7 @@ html:not(.js) .roundel { display: none; }
 .board-foot { padding: 130px 0 34px; }
 .board-foot .foot-inner {
   padding-top: 18px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--ink-30);
   color: var(--ink-60);
   font: 700 13px/1.6 var(--sans);
   letter-spacing: 0.12em;
@@ -931,7 +931,6 @@ html:not(.js) .roundel { display: none; }
 
 .preview {
   background: var(--butter);
-  border-top: 2px solid var(--ink);
   padding-top: clamp(54px, 9vh, 104px);
   padding-bottom: clamp(54px, 9vh, 104px);
 }
@@ -964,15 +963,19 @@ html:not(.js) .roundel { display: none; }
    like everything else pinned up in the room. */
 .preview .sec {
   background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: 22px;
+  border-radius: 10px;
   padding: 30px 32px 30px;
-  box-shadow: 6px 6px 0 var(--ink);
-  transform: rotate(-0.8deg);
+  box-shadow: 0 26px 48px -22px rgba(38, 51, 29, 0.45);
+  transform: rotate(-0.7deg);
   transition: transform 300ms var(--ease-spring), box-shadow 300ms var(--ease-out);
 }
-.preview .sec--flip { transform: rotate(0.9deg); }
-.preview .sec:hover { transform: rotate(0deg) translateY(-4px); box-shadow: 8px 10px 0 var(--ink); }
+.preview .sec--flip { transform: rotate(0.8deg); }
+@media (hover: hover) and (pointer: fine) {
+  .preview .sec:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 32px 56px -22px rgba(38, 51, 29, 0.5);
+  }
+}
 .preview .sec:has(.spot) { min-height: 0; }
 
 /* Inside a card the spot hangs off the top corner rather than in a margin. */
@@ -1020,7 +1023,6 @@ html:not(.js) .roundel { display: none; }
 
 .visit {
   background: var(--pine);
-  border-top: 2px solid var(--ink);
   color: var(--paper);
   padding: clamp(64px, 11vh, 130px) var(--gutter);
   position: relative;
@@ -1040,14 +1042,14 @@ html:not(.js) .roundel { display: none; }
   max-width: 46ch;
 }
 .visit-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 34px; }
-.visit .hero-onward { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); }
-.visit .hero-onward:hover { box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.45); }
+.visit .hero-onward { box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.55); }
 .visit .hero-onward--ghost {
   background: transparent;
-  border-color: var(--paper);
+  border: 1px solid var(--cream-85);
   color: var(--paper);
+  box-shadow: none;
 }
-.visit .hero-onward--ghost:hover { background: rgba(247, 239, 223, 0.12); }
+.visit .hero-onward--ghost:hover { background: rgba(247, 239, 223, 0.12); box-shadow: none; }
 .visit .hero-onward--ghost .mark { --mark-color: var(--paper); }
 /* the red sun rising over the block's corner */
 .visit::after {
@@ -1132,7 +1134,7 @@ html:not(.js) .roundel { display: none; }
     display: flex;
     flex-direction: column;
   }
-  .hero > .bar { position: static; order: 1; background: var(--paper); border-bottom: 2px solid var(--ink); }
+  .hero > .bar { position: static; order: 1; background: var(--paper); border-bottom: 1px solid var(--ink-18); }
   [data-state='closed'] .hero > .bar { background: var(--pine); }
   .plate-wrap { position: relative; inset: auto; order: 2; height: var(--band, 290px); width: 100%; }
   [data-state='closed'] .plate-wrap { inset: auto; height: var(--band, 300px); }
@@ -1215,7 +1217,9 @@ html:not(.js) .roundel { display: none; }
   [data-state='midday'] .hero-eyebrow,
   [data-state='closed'] .hero-eyebrow { align-self: flex-start; }
 
-  .ticker { padding: 9px 0 12px; }
+  .daystrip { gap: 10px 20px; padding: 16px var(--gutter) 18px; }
+  .daystrip-label { font-size: 19px; width: 100%; text-align: center; }
+  .daystrip-btns { justify-content: center; }
 
   .board, .find {
     padding-left: 0;
@@ -1237,14 +1241,13 @@ html:not(.js) .roundel { display: none; }
   .page-rule { margin-top: 20px; }
   .sec-head { display: block; margin-bottom: 14px; }
   .sec-name { font-size: 36px; display: block; }
-  .sec-note { display: inline-block; margin-top: 10px; }
+  .sec-note { display: block; margin-top: 8px; text-align: inherit; }
   .item { font-size: 19px; }
   .standfirst { font-size: 21px; max-width: 28ch; }
   .board-foot { padding-top: 110px; }
 
   .sec { order: var(--i, 0); }
   .sec--flip .sec-head { text-align: right; }
-  .sec--flip .sec-note { transform: rotate(-1.8deg); }
   .sec--flip .items { margin-left: 96px; max-width: none; }
 
   .sec .items, .sec .standfirst, .sec .sec-head { position: relative; }
@@ -1325,7 +1328,6 @@ html:not(.js) .roundel { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .pigment { display: none; }
-  .ticker-track { animation: none; }
   .roundel { animation: none; }
   .ind-dot { animation: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -1334,7 +1336,7 @@ html:not(.js) .roundel { display: none; }
 /* ---------------------------------------------------------------- print --- */
 
 @media print {
-  .bar, .ind, .pigment, .strip, .spot, .stamp, .ticker, .roundel, .visit { display: none !important; }
+  .bar, .ind, .pigment, .strip, .spot, .stamp, .daystrip, .roundel, .visit { display: none !important; }
   body { color: #000; background: #fff; }
   .board { display: block; }
   /* Browsers strip backgrounds when printing; the pale text on the coloured

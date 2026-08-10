@@ -170,10 +170,16 @@
 
 </section>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <span>Desserts out of the oven at six <em>✳</em> ceremonial or everyday grade <em>✳</em> oat milk, no charge <em>✳</em> Sundays eight till two <em>✳</em> 41 Lower Marsh <em>✳</em> four minutes from Waterloo <em>✳</em> </span>
-    <span>Desserts out of the oven at six <em>✳</em> ceremonial or everyday grade <em>✳</em> oat milk, no charge <em>✳</em> Sundays eight till two <em>✳</em> 41 Lower Marsh <em>✳</em> four minutes from Waterloo <em>✳</em> </span>
+<!-- The paintings are keyed to the clock, so on any one visit three of the
+     four are invisible. This dial lets a visitor turn the room through its
+     whole day; the pigment layer bleeds one painting into the next. -->
+<div class="daystrip">
+  <p class="daystrip-label">The room, hour by hour</p>
+  <div class="daystrip-btns" role="group" aria-label="See the room at another time of day">
+    <button type="button" data-set-state="morning"><span class="swatch swatch--morning" aria-hidden="true"></span>Morning</button>
+    <button type="button" data-set-state="midday"><span class="swatch swatch--midday" aria-hidden="true"></span>Midday</button>
+    <button type="button" data-set-state="late"><span class="swatch swatch--late" aria-hidden="true"></span>Late</button>
+    <button type="button" data-set-state="closed"><span class="swatch swatch--closed" aria-hidden="true"></span>After close</button>
   </div>
 </div>
 
