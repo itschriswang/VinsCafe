@@ -60,10 +60,13 @@
       body: 'The corner table is free most afternoons. Nobody will ask you to order again.'
     },
     closed: {
+      /* The cafe is shut for about three quarters of the week, so this is the
+         page most visitors land on. It leads with what the place is; the
+         reopening is the subhead, and the hours table sits beside it. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
-      headline: null,   /* derived: it has to name the day we actually reopen */
-      body: null
+      headline: 'A long counter, six stools, and one soup a day.',
+      body: null        /* derived: it has to name the day we actually reopen */
     }
   };
 
@@ -150,33 +153,6 @@
              : n.days === 1 ? 'tomorrow'
              : 'on ' + DAY_LONG[n.weekday];
     return 'Closed until ' + hour12(n.hour) + ' ' + when + '.';
-  }
-
-  /* The closed subhead states our hours, so it is written from config.js
-     rather than typed out a second place where it could go stale. The brief's
-     version said "Wednesday to Sunday, seven till four", which is a day early
-     for the weekend — Saturday and Sunday open at eight. */
-  function longRun(days) {
-    if (days.length === 1) return DAY_LONG[days[0]];
-    if (days.length === 2) return DAY_LONG[days[0]] + ' and ' + DAY_LONG[days[1]];
-    return DAY_LONG[days[0]] + ' to ' + DAY_LONG[days[days.length - 1]];
-  }
-
-  function closedBody() {
-    var runs = hourRuns();
-    var sentences = [], first = true;
-    for (var i = 0; i < runs.length; i++) {
-      var r = runs[i];
-      if (!r.hours) continue;
-      sentences.push(first
-        ? longRun(r.days) + ', ' + hour12(r.hours[0]) + ' till ' + hour12(r.hours[1]) + '.'
-        : longRun(r.days) + ' from ' + hour12(r.hours[0]) + '.');
-      first = false;
-    }
-    for (var j = 0; j < runs.length; j++) {
-      if (!runs[j].hours) sentences.push(longRun(runs[j].days) + ' we are shut.');
-    }
-    return sentences.join(' ');
   }
 
   function lateEyebrow() {
@@ -323,7 +299,7 @@
     var head = $('.hero-headline', hero);
     if (head && !head.hasAttribute('data-fixed')) setText(head, c.headline || closedHeadline(now));
     var body = $('.hero-body', hero);
-    if (body && !body.hasAttribute('data-fixed')) setText(body, c.body || closedBody());
+    if (body && !body.hasAttribute('data-fixed')) setText(body, c.body || closedHeadline(now));
     paintHours($('.hero-hours', hero));
   }
 
@@ -460,6 +436,45 @@
     return h + '</section>';
   }
 
+  /* Which two sections get the shop window: the ones the owner bothered to
+     write a standfirst for. That is already the signal for "this is the part
+     I care about", and it means the front page follows menu.json without
+     naming any section in code. Topped up in file order if there are fewer
+     than two. */
+  var PREVIEW_SECTIONS = 2;
+  var PREVIEW_ITEMS = 4;
+
+  function previewPick(data) {
+    var picked = data.filter(function (s) { return s.standfirst; });
+    for (var i = 0; i < data.length && picked.length < PREVIEW_SECTIONS; i++) {
+      if (picked.indexOf(data[i]) < 0) picked.push(data[i]);
+    }
+    return picked.slice(0, PREVIEW_SECTIONS);
+  }
+
+  function previewSlice(data) {
+    return previewPick(data).map(function (sec) {
+      return {
+        section: sec.section,
+        note: sec.note,
+        items: (sec.items || []).slice(0, PREVIEW_ITEMS)
+      };
+    });
+  }
+
+  function previewHTML(sec) {
+    var h = '<section class="sec" data-sec="' + slug(sec.section) + '">';
+    h += '<div class="sec-head"><h3 class="sec-name">' + esc(sec.section) + '</h3>';
+    if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
+    h += '</div><ul class="items">';
+    (sec.items || []).forEach(function (it) {
+      h += '<li class="item"><span class="item-name">' + esc(it.name) +
+        '</span><span class="item-lead" aria-hidden="true"></span>' +
+        '<span class="item-price">' + esc(it.price) + '</span></li>';
+    });
+    return h + '</ul></section>';
+  }
+
   function signature(str) {
     var h = 5381;
     for (var i = 0; i < str.length; i++) h = ((h * 33) ^ str.charCodeAt(i)) >>> 0;
@@ -470,11 +485,20 @@
      is owner-editable lives in EDITING.md next to it. */
   function hydrateMenu() {
     var board = $('.board[data-menu-sig]');
-    if (!board || !window.fetch) return;
+    var preview = $('.preview-cols[data-preview-sig]');
+    if ((!board && !preview) || !window.fetch) return;
     fetch('menu.json', { cache: 'no-cache' }).then(function (r) {
       return r.ok ? r.json() : null;
     }).then(function (data) {
       if (!Array.isArray(data)) return;
+      if (preview) {
+        var psig = signature(JSON.stringify(previewSlice(data)));
+        if (psig !== preview.getAttribute('data-preview-sig')) {
+          preview.innerHTML = previewSlice(data).map(previewHTML).join('');
+          preview.setAttribute('data-preview-sig', psig);
+        }
+      }
+      if (!board) return;
       var sig = signature(JSON.stringify(data));
       if (sig === board.getAttribute('data-menu-sig')) return;   /* markup is current */
       var cols = $$('.board-col', board);

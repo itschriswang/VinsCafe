@@ -15,11 +15,12 @@
   },
   {
     "section": "Tea",
-    "note": "Leaf, in a pot",
+    "note": "Whisked or in a pot",
     "spots": ["spot-teapot"],
     "items": [
       { "name": "Pot of leaf tea", "price": "4.20" },
       { "name": "Matcha",          "price": "4.60" },
+      { "name": "Matcha latte",    "price": "5.00" },
       { "name": "Chai",            "price": "4.40" }
     ]
   },
@@ -49,9 +50,11 @@
     "note": "From May",
     "spots": ["spot-coldbrew", "spot-matcha"],
     "items": [
-      { "name": "Iced filter",    "price": "4.00" },
-      { "name": "Iced matcha",    "price": "5.00" },
-      { "name": "House lemonade", "price": "3.80" }
+      { "name": "Iced filter",       "price": "4.00" },
+      { "name": "Iced matcha",       "price": "5.00" },
+      { "name": "Iced matcha latte", "price": "5.40" },
+      { "name": "Matcha tonic",      "price": "5.20" },
+      { "name": "House lemonade",    "price": "3.80" }
     ]
   },
   {

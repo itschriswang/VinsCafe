@@ -91,9 +91,10 @@ Not linked from anywhere; for the owner and whoever is maintaining this.
 Neither runs on deploy. The site still has no build step.
 
 ```
-python3 tools/build-art.py        # src-art/*.png -> art/*.avif + *.webp
-node tools/sync-static.mjs        # rewrite the derived blocks in the HTML
+python3 tools/build-art.py           # src-art/*.png -> art/*.avif + *.webp
+node tools/sync-static.mjs           # rewrite the derived blocks in the HTML
 node tools/sync-static.mjs --check   # non-zero exit if anything is stale
+node tools/check-contrast.mjs        # measure type contrast on every state ground
 ```
 
 `sync-static.mjs` regenerates the four regions marked `<!--gen:…-->` in the
@@ -104,9 +105,28 @@ copies exist so that a visitor without it, and a crawler that does not execute
 scripts, sees the same thing rather than something stale. Run `--check` in CI
 or a pre-commit hook after editing `config.js` or `menu.json`.
 
+`check-contrast.mjs` renders each state, hides the glyphs, and measures the
+WCAG ratio of every pixel actually behind each piece of type — the grounds here
+are paintings, so no static value can tell you whether a word is legible. It
+reports the worst pixel, not the average. Run it after touching the paper strip,
+the plate positions or the pigment layer. It needs the site served locally and
+`npm i --no-save playwright`.
+
 `build-art.py` needs Pillow with AVIF support (`pip install Pillow numpy`).
 
 ## Notes for the next person
+
+- **The home page is not just the hero.** The cafe is shut for about three
+  quarters of the week, so a hero that only says "closed" would be the page
+  most visitors see. The closed hero leads with what the place is and puts the
+  reopening in the subhead, and every state carries a short board preview
+  underneath: the two sections of `menu.json` that have a `standfirst`, four
+  items each. This departs from the brief's "hero, then nothing".
+- **Type on the paint.** The paper strip is translucent and the headline hangs
+  past it onto the painting; the eyebrow, rule and body stay on paper, because
+  48px holds its own over a wash and 13px does not. Midday is the exception —
+  below 19% its headline reaches the window frame and measures 2.72:1 — so it
+  stays above the paint and gets its integration from the strip instead.
 
 - **Colour.** Four interface colours, written in Oklch so every interpolation
   the browser performs runs through Oklch rather than sRGB. Lichen, butter,

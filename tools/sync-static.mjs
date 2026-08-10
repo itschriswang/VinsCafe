@@ -126,6 +126,49 @@ function sectionHTML(sec) {
   return h + '</section>';
 }
 
+/* The home page shows the two sections that have a standfirst — the owner's
+   own signal for which part of the board matters — four items each. */
+const PREVIEW_SECTIONS = 2;
+const PREVIEW_ITEMS = 4;
+
+function previewPick(data) {
+  const picked = data.filter((s) => s.standfirst);
+  for (const s of data) {
+    if (picked.length >= PREVIEW_SECTIONS) break;
+    if (!picked.includes(s)) picked.push(s);
+  }
+  return picked.slice(0, PREVIEW_SECTIONS);
+}
+
+const previewSlice = (data) => previewPick(data).map((sec) => ({
+  section: sec.section,
+  note: sec.note,
+  items: (sec.items || []).slice(0, PREVIEW_ITEMS)
+}));
+
+function previewSectionHTML(sec) {
+  let h = `<section class="sec" data-sec="${slug(sec.section)}">`;
+  h += `<div class="sec-head"><h3 class="sec-name">${esc(sec.section)}</h3>`;
+  if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
+  h += '</div><ul class="items">';
+  for (const it of sec.items || []) {
+    h += `<li class="item"><span class="item-name">${esc(it.name)}</span>` +
+      '<span class="item-lead" aria-hidden="true"></span>' +
+      `<span class="item-price">${esc(it.price)}</span></li>`;
+  }
+  return h + '</ul></section>';
+}
+
+function previewHTML() {
+  const slice = previewSlice(MENU);
+  const sig = signature(JSON.stringify(slice));
+  return [
+    `    <div class="preview-cols" data-preview-sig="${sig}">`,
+    ...slice.map((s) => '      ' + previewSectionHTML(s)),
+    '    </div>'
+  ].join('\n');
+}
+
 function signature(str) {
   let h = 5381;
   for (let i = 0; i < str.length; i++) h = ((h * 33) ^ str.charCodeAt(i)) >>> 0;
@@ -195,6 +238,7 @@ for (const page of PAGES) {
 
   after = region(after, 'hours-summary', () => hoursSummary());
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');
+  after = region(after, 'preview', () => '\n' + previewHTML() + '\n');
 
   if (after === before) {
     console.log(`  ${page} up to date`);
