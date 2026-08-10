@@ -258,8 +258,19 @@
           <rect class="mp-wash-blush" x="428" y="322" width="44" height="30" rx="4"/>
           <text class="mp-shop" x="486" y="341">the barber</text>
 
-          <!-- the walk: out of the station, past the bus, straight up Kingsway -->
-          <path class="mp-route" d="M292,86 C330,96 360,96 392,116 C398,170 396,220 398,262 C399,278 402,290 410,295"/>
+          <!-- the walk: out of the station, past the bus, straight up Kingsway.
+               The mask's solid stroke is a pen pulled along the same path by
+               the scroll, so the dots draw themselves station to door; where
+               scroll-driven animation isn't supported, or motion is reduced,
+               the route is simply there, whole. -->
+          <defs>
+            <mask id="mp-walk" maskUnits="userSpaceOnUse" x="0" y="0" width="660" height="400">
+              <path class="mp-walk-pen" pathLength="100" d="M292,86 C330,96 360,96 392,116 C398,170 396,220 398,262 C399,278 402,290 410,295"/>
+            </mask>
+          </defs>
+          <g mask="url(#mp-walk)">
+            <path class="mp-route" d="M292,86 C330,96 360,96 392,116 C398,170 396,220 398,262 C399,278 402,290 410,295"/>
+          </g>
           <text class="mp-note" x="446" y="178">two minutes on foot</text>
 
           <!-- the door, marked the way the favicon marks the tab -->

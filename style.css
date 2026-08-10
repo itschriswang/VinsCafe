@@ -1197,6 +1197,23 @@ html:not(.js) .daystrip { display: none; }
 .map-art .mp-wash-blush  { fill: var(--blush);  opacity: 0.6; }
 .map-art .mp-front       { fill: var(--pine); }
 
+/* The pen that draws the walk: a solid mask stroke pulled along the route by
+   the scroll (the animation lives with the other scroll-driven ones, in the
+   motion block). --walk is path-length still to draw; at its initial 0 the
+   route is complete, so every browser without the animation sees the whole
+   walk, and the sun by the door is fully lit. */
+@property --walk { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+.map-art .mp-walk-pen {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: var(--walk);
+}
+.map-art .mp-sun { opacity: clamp(0, (26 - var(--walk)) / 26, 1); }
+
 .map-art .mp-label  { font: 700 13px var(--sans); letter-spacing: 0.14em; fill: var(--moss-text); }
 .map-art .mp-street { font: 400 11px var(--mono); letter-spacing: 0.14em; fill: var(--ink-60); }
 .map-art .mp-shop   { font: 400 11px var(--mono); letter-spacing: 0.04em; fill: var(--ink-60); }
@@ -1466,6 +1483,14 @@ html:not(.js) .daystrip { display: none; }
       animation-timeline: view();
       animation-range: entry 10% entry 60%;
     }
+
+    /* And on Find us, the walk walks: station to door as the map enters,
+       the sun arriving with the walker. */
+    .map-art {
+      animation: walk-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 30% entry 95%;
+    }
   }
 }
 
@@ -1475,6 +1500,10 @@ html:not(.js) .daystrip { display: none; }
 @keyframes rule-draw {
   from { clip-path: inset(0 100% 0 0); }
   to   { clip-path: inset(0); }
+}
+@keyframes walk-draw {
+  from { --walk: 100; }
+  to   { --walk: 0; }
 }
 
 @keyframes dv-out { to { opacity: 0; } }

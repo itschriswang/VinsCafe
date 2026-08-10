@@ -354,7 +354,8 @@ const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '  </url>').join('\n') +
   '\n</urlset>\n';
 
-const robots = `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
+const robots = '# Sundays only. The rest of the week, this file has the place to itself.\n' +
+  `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
 
 for (const [file, body] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
   if (read(file) === body) { console.log(`  ${file} up to date`); continue; }

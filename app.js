@@ -741,6 +741,22 @@
 
   /* ---------------------------------------------------------------- init --- */
 
+  /* For whoever opens the hood: the same word we say at the door. Composed
+     from config.js like everything else, so even the easter egg cannot go
+     stale. */
+  function signOff() {
+    var open = hourRuns().filter(function (r) { return r.hours; })
+      .map(function (r) { return r.label + ' ' + r.value.replace(' – ', '–'); }).join(' · ');
+    try {
+      console.log(
+        '%cgam sia%c\nHokkien for thank you — for reading the source, too.\n' +
+        open + ' · ' + CAFE.address.street + ', ' + CAFE.address.locality,
+        "font: italic 22px Georgia, 'Times New Roman', serif; color: #2E4A30;",
+        'font: 12px ui-monospace, Menlo, monospace; color: #5A6530;'
+      );
+    } catch (e) { /* a console is never load-bearing */ }
+  }
+
   function init() {
     paint();                 /* idempotent: the inline call already did this */
     wireIndicator();
@@ -748,6 +764,7 @@
     syncSchema();
     hydrateMenu();
     loadPigment();
+    signOff();
 
     /* Fifteen seconds is fine: the timestamp shows minutes and the state can
        only change on the hour. */
