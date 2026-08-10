@@ -29,12 +29,29 @@ fonts/          two families, latin subset, woff2
 robots.txt  sitemap.xml  favicon.svg  favicon.ico  apple-touch-icon.png
 ```
 
-Not deployed: `src-art/` (the PNG masters), `tools/`, `EDITING.md`, `README.md`.
+Not deployed: `src-art/` (the PNG masters), `tools/`, `.github/`, `EDITING.md`,
+`README.md`.
 
-Relative paths throughout, so it will run from a subdirectory. The one thing to
-change before going live is the domain: `https://deckle.cafe/` appears in the
-canonical links, the Open Graph tags, `sitemap.xml`, `robots.txt` and the
-JSON-LD `@id`.
+## Deploying
+
+Live at **https://itschriswang.github.io/VinCafe/**, published by
+`.github/workflows/pages.yml` on every push to `main`. The workflow checks that
+the derived blocks are current, copies the files listed above into `_site` and
+hands that to GitHub Pages. Nothing is compiled; the deployed files are the
+files in this repository.
+
+Every asset path is relative, so the site also runs from any subdirectory, from
+`file://`, or from any other static host — copy the same list of files up.
+
+The absolute site URL appears in the canonical links, the Open Graph tags, the
+JSON-LD, `sitemap.xml` and `robots.txt`. To move to a custom domain, replace it
+everywhere and add a `CNAME`:
+
+```sh
+grep -rl 'itschriswang.github.io/VinCafe/' index.html menu.html find-us.html 404.html sitemap.xml robots.txt README.md \
+  | xargs sed -i 's#https://itschriswang.github.io/VinCafe/#https://deckle.cafe/#g'
+echo 'deckle.cafe' > CNAME     # and add CNAME to the cp list in the workflow
+```
 
 ## How it works
 
@@ -102,7 +119,12 @@ or a pre-commit hook after editing `config.js` or `menu.json`.
 - **Spots.** Positioned against their own section, never the page, so adding an
   item to `menu.json` cannot move a painting. Short sections carry a
   `min-height` that clears their spot.
-- **The masters.** `src-art/` holds the PNGs the site's images are made from.
-  The spots are white-pointed at build time so `mix-blend-mode: multiply`
-  leaves no rectangle on the page; when a spot is re-supplied as a transparent
-  PNG, drop the elliptical mask for that image in `style.css`.
+- **The spots carry their own alpha.** `build-art.py` cuts it from the scans:
+  flat-field the paper, trim the sheet's torn border, take alpha from how far
+  each pixel departs from white, then fade out from each painting's own extent.
+  So there is no mask in the CSS to clip anything and no levels lift to hide a
+  backdrop with — only `mix-blend-mode: multiply`, which is how pigment sits on
+  paper. Re-supply a painting in `src-art/`, run the script, and it will be
+  matted the same way.
+- **The masters.** `src-art/` holds the PNGs everything in `art/` is made from,
+  including three surfaces the site does not currently use.

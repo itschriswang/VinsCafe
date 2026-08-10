@@ -651,14 +651,16 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
 .sec[data-sec='sweet']     { min-height: 210px; }
 .sec[data-sec='cold']      { min-height: 250px; }
 
+/* The spots carry their own alpha, cut from the scans by tools/build-art.py:
+   the paper is gone, the sheet's torn border is gone, and the edge is feathered
+   from each painting's own extent rather than by a fixed ellipse over the whole
+   image. So there is no mask here to clip anything and no levels lift to hide a
+   backdrop with — only multiply, which is how pigment sits on paper. */
 .spot {
   position: absolute;
   height: auto;
   pointer-events: none;
   mix-blend-mode: multiply;
-  filter: brightness(1.07) contrast(1.03);
-  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 56%, rgba(0, 0, 0, 0) 93%);
-          mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 56%, rgba(0, 0, 0, 0) 93%);
 }
 
 /* Desktop placement, straight from the comp. Every offset is relative to the

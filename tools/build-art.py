@@ -14,9 +14,8 @@ Requires: Pillow with AVIF + WebP support.
 """
 
 import os
-import shutil
 
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src-art")
@@ -75,27 +74,135 @@ def flatten(path):
     return im.convert("RGB")
 
 
-def whiten(im):
-    """Set the white point so the unpainted paper in a spot scan is pure white.
+def _flat_field(a):
+    """Divide out the scanner's illumination so the paper is uniformly white.
 
-    Spots are laid over the page with mix-blend-mode:multiply, which is only
-    invisible where the backdrop is white — a scan whose paper sits at 250,248,243
-    multiplies the cream page down and leaves a rectangle around every
-    illustration. Mapping each channel's 97th percentile to 255 removes the
-    rectangle and barely touches the paint, which is far below that percentile.
+    A single global white point is not enough: every one of these scans is
+    brighter in the middle than at the edges, and the residue of that is a soft
+    dark rectangle round each illustration once it is multiplied onto the page.
+    Estimating the paper brightness per region — a high percentile over coarse
+    blocks, smoothed — removes the gradient without touching the paint, which
+    is far below that percentile everywhere.
     """
     import numpy as np
 
-    a = np.asarray(im, dtype=np.float32)
-    out = np.empty_like(a)
-    for c in range(3):
-        ch = a[:, :, c]
-        white = float(np.percentile(ch, 97)) or 255.0
-        out[:, :, c] = ch * (255.0 / white)
-    # A soft knee so near-paper settles at white instead of hovering a value below.
-    k = np.clip((out - 236.0) / 14.0, 0.0, 1.0)
-    out = out * (1.0 - k) + 255.0 * k
-    return Image.fromarray(np.clip(out, 0, 255).astype("uint8"), "RGB")
+    h, w, _ = a.shape
+    bh, bw = max(1, h // 18), max(1, w // 18)
+    ny, nx = h // bh, w // bw
+    crop = a[:ny * bh, :nx * bw]
+    blocks = crop.reshape(ny, bh, nx, bw, 3)
+    field = np.percentile(blocks, 92, axis=(1, 3))              # ny x nx x 3
+    field = np.array(
+        Image.fromarray(np.clip(field, 1, 255).astype("uint8"), "RGB")
+        .resize((w, h), Image.BICUBIC)
+        .filter(ImageFilter.GaussianBlur(max(w, h) / 40.0)),
+        dtype=np.float32,
+    )
+    return np.clip(a / np.maximum(field, 1.0) * 255.0, 0, 255)
+
+
+def _sheet_inset(flat):
+    """How far in from each edge the painted sheet's own torn border reaches.
+
+    Several of these are scans of a whole small sheet, so the deckle edge sits
+    inside the frame and reads on the page as a hard straight line across the
+    illustration. Walk in from each side until the rows stop containing dark
+    pixels; that is where the paper proper begins.
+    """
+    dark = flat.min(axis=2) < 236
+    h, w = dark.shape
+    out = []
+    for axis_len, profile in ((h, dark.mean(axis=1)), (w, dark.mean(axis=0))):
+        limit = int(axis_len * 0.14)
+
+        def walk(index):
+            """Inward from one edge, looking only for a line that runs most of
+            the way across. The torn edge of the sheet does; a painting that
+            happens to reach into the margin does not, and must not be cut."""
+            last = -1
+            for i in range(limit):
+                if profile[index(i)] > 0.45:
+                    last = i
+            return min(last + 4, limit) if last >= 0 else 0
+
+        out.append((walk(lambda i: i), walk(lambda i: axis_len - 1 - i)))
+    return out[0], out[1]                                        # (top, bottom), (left, right)
+
+
+def spot_matte(im, feather=0.07):
+    """Turn a watercolour scan into artwork with a real alpha channel.
+
+    The brief's stopgap was a fixed elliptical mask over the whole scan, with a
+    note that a transparent image is the intended end state. This is that end
+    state, derived rather than re-painted: flat-field the paper, trim the
+    sheet's border, then take alpha from how far each pixel departs from white.
+
+    The colour channels are un-multiplied against white so that the image still
+    behaves as pigment — laid over the page with mix-blend-mode:multiply, the
+    painted parts darken the paper and the unpainted parts do nothing at all.
+    No mask, so nothing gets clipped, and no box, so nothing needs hiding.
+    """
+    import numpy as np
+
+    flat = _flat_field(np.asarray(im, dtype=np.float32))
+    (top, bottom), (left, right) = _sheet_inset(flat)
+    h, w, _ = flat.shape
+    flat = flat[top:h - bottom, left:w - right]
+    h, w, _ = flat.shape
+
+    # Flat-fielding evens the paper out but leaves it a couple of levels below
+    # white; put the white point exactly on it, since the 95th percentile of an
+    # evened scan is paper by definition.
+    flat = np.clip(flat * (255.0 / max(float(np.percentile(flat, 95)), 1.0)), 0, 255)
+
+    lo = flat.min(axis=2)
+    raw = 1.0 - lo / 255.0                                       # 0 on paper, 1 on ink
+
+    # Colour that reproduces the scan when composited back over white.
+    denom = np.maximum(raw, 1e-3)[:, :, None]
+    colour = np.clip((flat - lo[:, :, None]) / denom, 0, 255)
+    colour = np.where(raw[:, :, None] > 1e-3, colour, 255.0)
+
+    # The tooth of the paper is not artwork. Left in at one or two per cent it
+    # is still legible as a grainy panel round every illustration, which is the
+    # rectangle the elliptical mask was there to hide. Gate it out; paint above
+    # the gate keeps its exact value.
+    t = np.clip((raw - 0.035) / 0.075, 0.0, 1.0)
+    alpha = raw * (t * t * (3.0 - 2.0 * t))
+
+    # A soft edge on the asset rather than a mask on the element: the ramp is
+    # measured from the trimmed sheet, so it can never cut into the painting.
+    def ramp(n):
+        i = np.arange(n, dtype=np.float32)
+        d = np.minimum(i, n - 1 - i) / max(1.0, feather * n)
+        d = np.clip(d, 0.0, 1.0)
+        return d * d * (3.0 - 2.0 * d)
+    alpha *= ramp(h)[:, None] * ramp(w)[None, :]
+
+    # Several of these were painted with a square of wash behind the subject.
+    # That backdrop is what reads on the page as a box, and it is what the
+    # brief's elliptical mask was there to lose — but a fixed ellipse cannot
+    # know where the subject is, so it clips some and misses others. Measure
+    # the subject instead and fade outwards from its own extent: opaque over
+    # everything actually drawn, gone before the edge of the sheet.
+    strong = alpha > 0.35
+    if strong.any():
+        ys, xs = np.nonzero(strong)
+        # Percentiles, not min and max: one stray dark speck near a corner
+        # would otherwise stretch the extent over the whole sheet.
+        y0, y1 = np.percentile(ys, 1.5), np.percentile(ys, 98.5)
+        x0, x1 = np.percentile(xs, 1.5), np.percentile(xs, 98.5)
+        cy, cx = (y0 + y1) / 2.0, (x0 + x1) / 2.0
+        ry = max((y1 - y0) / 2.0, h * 0.06) * 1.18
+        rx = max((x1 - x0) / 2.0, w * 0.06) * 1.18
+        gy = (np.arange(h, dtype=np.float32) - cy)[:, None] / ry
+        gx = (np.arange(w, dtype=np.float32) - cx)[None, :] / rx
+        d = np.sqrt(gy * gy + gx * gx)
+        s = np.clip((d - 1.0) / 0.9, 0.0, 1.0)
+        alpha *= 1.0 - s * s * (3.0 - 2.0 * s)
+
+    rgba = np.dstack([colour, alpha * 255.0])
+    return Image.fromarray(np.clip(rgba, 0, 255).astype("uint8"), "RGBA")
 
 
 def paper_field(im, inset=0.085):
@@ -180,12 +287,18 @@ def main():
             print("  %-22s %4dx%-4d avif %6.1fkB  webp %6.1fkB" % (stem, w, h, a / 1024, wb / 1024))
 
     print("spots")
+    ratios = []
     for stem, display in sorted(SPOTS.items()):
-        im = whiten(flatten(os.path.join(SRC, stem + ".png")))
+        im = spot_matte(flatten(os.path.join(SRC, stem + ".png")))
         for width in (display, display * 2):
             w, h, a, wb = emit(im, stem, width)
             total += a
+            if width == display:
+                ratios.append((stem, w, h))
             print("  %-22s %4dx%-4d avif %6.1fkB  webp %6.1fkB" % (stem, w, h, a / 1024, wb / 1024))
+    print("\n  intrinsic sizes for the SPOTS tables in app.js and tools/sync-static.mjs:")
+    for stem, w, h in ratios:
+        print("    %-16s w: %3d, h: %3d" % ("'" + stem + "':", w, h))
 
     print("paper")
     paper_master = flatten(os.path.join(SRC, "tex-paper.png"))

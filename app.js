@@ -405,11 +405,11 @@
      case, so nothing is rewritten and nothing shifts. */
 
   var SPOTS = {
-    'spot-cup':       { w: 206, h: 115, sizes: '(max-width:719px) 156px, (max-width:1179px) 168px, 206px',
+    'spot-cup':       { w: 206, h: 111, sizes: '(max-width:719px) 156px, (max-width:1179px) 168px, 206px',
       alt: 'Watercolour of a green and lilac cup, half full, a small red mark on its side.' },
-    'spot-espresso':  { w: 134, h: 134, sizes: '(max-width:1179px) 112px, 134px',
+    'spot-espresso':  { w: 134, h: 130, sizes: '(max-width:1179px) 112px, 134px',
       alt: 'Watercolour of a green espresso cup with a lilac shadow pooling under it.' },
-    'spot-teapot':    { w: 168, h: 191, sizes: '(max-width:719px) 132px, (max-width:1179px) 138px, 168px',
+    'spot-teapot':    { w: 168, h: 187, sizes: '(max-width:719px) 132px, (max-width:1179px) 138px, 168px',
       alt: 'Watercolour of a squat green teapot with a lilac handle, on a pale wash.' },
     'spot-beans':     { w: 132, h: 150, sizes: '(max-width:719px) 126px, (max-width:1179px) 110px, 132px',
       alt: 'Watercolour of a paper bag of coffee, the dark green showing through the sides.' },
