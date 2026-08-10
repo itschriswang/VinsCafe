@@ -790,6 +790,61 @@ html:not(.js) .roundel { display: none; }
 /* Without JS the buttons cannot turn anything. */
 html:not(.js) .daystrip { display: none; }
 
+/* ---------------------------------------------------- the day, scrubbed ---
+   With a wheel to spare, the daystrip grows into a tall passage with the
+   room pinned inside it: scroll drags the sun along the arc and the room
+   through all four paintings, the incoming one arriving wet; the dial's
+   buttons become bookmarks into the same scroll. app.js builds this only
+   when motion is welcome and data is not being saved — everyone else keeps
+   the compact dial exactly as it was, which is also the reduced-motion
+   answer: an instant turn of the room. */
+
+.dayscroll { height: 380vh; }
+.dayscroll-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px var(--gutter) 6px;
+}
+.dayscroll-room {
+  position: relative;
+  /* the painting's own ratio, capped so the dial always fits beneath */
+  width: min(1180px, 100%, calc(60svh * 1376 / 768));
+  aspect-ratio: 1376 / 768;
+  overflow: hidden;
+}
+.dayscroll-room .dayplate {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+.dayscroll-room .dayplate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* A scrubbed sun tracks the finger; the eased glide is for clicks only. */
+.dayscroll .dial-sun { transition: none; }
+
+/* Inside the stage the dial sits directly on the page — the compact strip's
+   paper band would read as a floating box under the painting. */
+.dayscroll .daystrip {
+  background: none;
+  border: 0;
+  padding: 30px 0 0;
+}
+
+@media (max-width: 719px) {
+  .dayscroll { height: 300vh; }
+  .dayscroll-room { width: min(100%, calc(46svh * 1376 / 768)); }
+}
+
 /* -------------------------------------------------------------- footer --- */
 
 .foot {
