@@ -1,0 +1,5 @@
+# Deckle. There is nothing here to crawl but three pages of type.
+User-agent: *
+Allow: /
+
+Sitemap: https://deckle.cafe/sitemap.xml

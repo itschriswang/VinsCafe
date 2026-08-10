@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" width="26" height="26">
+  <!-- The note mark from the sprite in style.css, which is the sun. -->
+  <rect width="26" height="26" fill="#F2EDE0"/>
+  <path d="M13 2.6v20.8M3.8 7.8l18.4 10.4M22.2 7.8L3.8 18.2"
+        fill="none" stroke="#E8695C" stroke-width="2.1" stroke-linecap="round"/>
+</svg>

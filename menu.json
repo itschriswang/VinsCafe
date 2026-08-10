@@ -1,0 +1,66 @@
+[
+  {
+    "section": "Coffee",
+    "note": "Oat, no charge",
+    "standfirst": "This week it is a washed Kirinyaga — blackcurrant, quite bright, better as filter than with milk.",
+    "spots": ["spot-cup", "spot-espresso"],
+    "items": [
+      { "name": "Filter",     "price": "3.20" },
+      { "name": "Espresso",   "price": "2.60" },
+      { "name": "Cortado",    "price": "3.40" },
+      { "name": "Flat white", "price": "3.80" },
+      { "name": "Latte",      "price": "4.00" },
+      { "name": "Cold brew",  "price": "4.20" }
+    ]
+  },
+  {
+    "section": "Tea",
+    "note": "Leaf, in a pot",
+    "spots": ["spot-teapot"],
+    "items": [
+      { "name": "Pot of leaf tea", "price": "4.20" },
+      { "name": "Matcha",          "price": "4.60" },
+      { "name": "Chai",            "price": "4.40" }
+    ]
+  },
+  {
+    "section": "Kitchen",
+    "note": "Eleven till three",
+    "standfirst": "One soup, made in the morning. When it is finished the pot is washed and that is the end of it.",
+    "spots": ["spot-croissant", "spot-toast"],
+    "items": [
+      { "name": "Toast, butter & jam", "price": "4.50" },
+      { "name": "Cheese toastie",      "price": "7.50" },
+      { "name": "Soup of the day",     "price": "7.00" },
+      { "name": "Croissant",           "price": "3.60" }
+    ]
+  },
+  {
+    "section": "Sweet",
+    "note": "Baked here",
+    "spots": ["spot-cake"],
+    "items": [
+      { "name": "Cake of the day", "price": "4.80" },
+      { "name": "Cardamom bun",    "price": "4.20" }
+    ]
+  },
+  {
+    "section": "Cold",
+    "note": "From May",
+    "spots": ["spot-coldbrew", "spot-matcha"],
+    "items": [
+      { "name": "Iced filter",    "price": "4.00" },
+      { "name": "Iced matcha",    "price": "5.00" },
+      { "name": "House lemonade", "price": "3.80" }
+    ]
+  },
+  {
+    "section": "Take home",
+    "note": "Roasted Tuesdays",
+    "spots": ["spot-beans"],
+    "items": [
+      { "name": "Beans, 250g",   "price": "12.00" },
+      { "name": "Filter papers", "price": "4.00" }
+    ]
+  }
+]
