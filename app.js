@@ -429,25 +429,25 @@
      case, so nothing is rewritten and nothing shifts. */
 
   var SPOTS = {
-    'spot-cup':       { w: 206, h: 111, sizes: '(max-width:719px) 156px, (max-width:1179px) 168px, 206px',
+    'spot-cup':       { w: 330, h: 177, sizes: '(max-width:719px) 240px, (max-width:1179px) 260px, 330px',
       alt: 'Watercolour of a green and lilac cup, half full, a small red mark on its side.' },
-    'spot-espresso':  { w: 134, h: 130, sizes: '(max-width:1179px) 112px, 134px',
+    'spot-espresso':  { w: 200, h: 194, sizes: '(max-width:719px) 150px, (max-width:1179px) 160px, 200px',
       alt: 'Watercolour of a green espresso cup with a lilac shadow pooling under it.' },
-    'spot-teapot':    { w: 168, h: 187, sizes: '(max-width:719px) 132px, (max-width:1179px) 138px, 168px',
+    'spot-teapot':    { w: 270, h: 300, sizes: '(max-width:719px) 200px, (max-width:1179px) 215px, 270px',
       alt: 'Watercolour of a squat green teapot with a lilac handle, on a pale wash.' },
-    'spot-beans':     { w: 132, h: 150, sizes: '(max-width:719px) 126px, (max-width:1179px) 110px, 132px',
+    'spot-beans':     { w: 200, h: 228, sizes: '(max-width:719px) 170px, (max-width:1179px) 160px, 200px',
       alt: 'Watercolour of a paper bag of coffee, the dark green showing through the sides.' },
-    'spot-croissant': { w: 198, h: 198, sizes: '(max-width:719px) 168px, (max-width:1179px) 162px, 198px',
+    'spot-croissant': { w: 320, h: 320, sizes: '(max-width:719px) 250px, (max-width:1179px) 255px, 320px',
       alt: 'Watercolour of a croissant in olive and grey, one flake of it catching red.' },
-    'spot-toast':     { w: 146, h: 166, sizes: '(max-width:1179px) 120px, 146px',
+    'spot-toast':     { w: 220, h: 252, sizes: '(max-width:719px) 170px, (max-width:1179px) 175px, 220px',
       alt: 'Watercolour of two thick slices of toast stacked, a red drop of jam below them.' },
-    'spot-cake':      { w: 180, h: 205, sizes: '(max-width:719px) 156px, (max-width:1179px) 148px, 180px',
+    'spot-cake':      { w: 300, h: 342, sizes: '(max-width:719px) 230px, (max-width:1179px) 240px, 300px',
       alt: 'Watercolour of a slice of layer cake on a grey plate, a red cherry on top.' },
-    'spot-coldbrew':  { w: 140, h: 160, sizes: '(max-width:719px) 140px, (max-width:1179px) 114px, 138px',
+    'spot-coldbrew':  { w: 220, h: 251, sizes: '(max-width:719px) 190px, (max-width:1179px) 175px, 220px',
       alt: 'Watercolour of a tumbler of iced coffee, the ice drawn as gaps left in the wash.' },
-    'spot-matcha':    { w: 170, h: 194, sizes: '(max-width:1179px) 140px, 170px',
+    'spot-matcha':    { w: 280, h: 319, sizes: '(max-width:719px) 210px, (max-width:1179px) 225px, 280px',
       alt: 'Watercolour of a matcha bowl and a bamboo whisk, the green settling in the base.' },
-    'spot-flatwhite': { w: 232, h: 232, sizes: '(max-width:719px) 200px, 232px',
+    'spot-flatwhite': { w: 380, h: 380, sizes: '(max-width:719px) 280px, (max-width:1179px) 300px, 380px',
       alt: 'Watercolour of a flat white seen from above, the crema drawn as one olive ring.' }
   };
 

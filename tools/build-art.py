@@ -37,16 +37,16 @@ PLATE_WIDTHS = [960, 1376]
 # Spots are placed at fixed pixel widths, so each one only needs 1x and 2x of
 # its own largest display width. Widths come straight from the menu comp.
 SPOTS = {
-    "spot-cup": 206,          # Coffee, first spot
-    "spot-espresso": 134,     # Coffee, second spot
-    "spot-teapot": 168,       # Tea
-    "spot-beans": 132,        # Take home
-    "spot-croissant": 198,    # Kitchen, first spot
-    "spot-toast": 146,        # Kitchen, second spot
-    "spot-cake": 180,         # Sweet
-    "spot-coldbrew": 140,     # Cold, first spot   (mobile is the wider of the two)
-    "spot-matcha": 170,       # Cold, second spot
-    "spot-flatwhite": 232,    # Find us, margin
+    "spot-cup": 330,          # Coffee, first spot
+    "spot-espresso": 200,     # Coffee, second spot
+    "spot-teapot": 270,       # Tea
+    "spot-beans": 200,        # Take home
+    "spot-croissant": 320,    # Kitchen, first spot
+    "spot-toast": 220,        # Kitchen, second spot
+    "spot-cake": 300,         # Sweet
+    "spot-coldbrew": 220,     # Cold, first spot   (mobile is the wider of the two)
+    "spot-matcha": 280,       # Cold, second spot
+    "spot-flatwhite": 380,    # Find us, margin
 }
 
 PLATES = ["hero-morning", "hero-midday", "hero-lateafternoon", "hero-closed"]
