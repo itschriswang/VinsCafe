@@ -249,12 +249,30 @@ const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
 function siteUrls(src, page) {
   let out = src
     .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${pageUrl(page)}$2`)
-    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`);
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`)
+    /* 404.html carries a <base> so its assets survive being served at any
+       depth; it has to follow the site everywhere the canonicals do. */
+    .replace(/(<base href=")[^"]*(")/, `$1${SITE}$2`);
   if (OG[page]) {
     out = out.replace(/(<meta property="og:image" content=")[^"]*(")/,
       `$1${SITE}art/${OG[page]}.jpg$2`);
   }
   return out;
+}
+
+/* The two steps of each inner page's trail, mirrored as BreadcrumbList so a
+   result page can show Home › The menu instead of a bare URL. */
+const CRUMB = { 'menu.html': 'The menu', 'find-us.html': 'Find us' };
+
+function breadcrumbLd(page) {
+  return '<script type="application/ld+json">\n' + JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: CRUMB[page], item: pageUrl(page) }
+    ]
+  }, null, 2) + '\n</' + 'script>';
 }
 
 function jsonLd(existing, page) {
@@ -305,6 +323,10 @@ for (const page of PAGES) {
     const indent = (/\n([ \t]*)</.exec(body) || [, '          '])[1];
     return '\n' + hoursRows(indent) + '\n';
   });
+
+  if (CRUMB[page]) {
+    after = region(after, 'breadcrumb', () => '\n' + breadcrumbLd(page) + '\n');
+  }
 
   after = region(after, 'hours-summary', () => hoursSummary());
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');
