@@ -199,9 +199,9 @@ function previewHTML() {
     ...slice.map((s, i) => '      ' + previewSectionHTML(s, i)),
     '    </div>',
     '    <div class="preview-tail">',
-    `      <p class="preview-rest">Also on the board: ${rest.others.map(esc).join(', ')}.</p>`,
-    '      <a class="hero-onward preview-more" href="menu.html#board">',
-    `        The whole board, ${rest.total} things`,
+    `      <p class="preview-rest">Also on the menu: ${rest.others.map(esc).join(', ')}.</p>`,
+    '      <a class="hero-onward preview-more" href="menu.html#menu">',
+    `        The whole menu, ${rest.total} things`,
     '        <span class="mark mark--onward" aria-hidden="true"></span>',
     '      </a>',
     '    </div>'

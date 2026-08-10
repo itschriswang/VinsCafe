@@ -29,8 +29,8 @@
   },
   {
     "section": "Desserts",
-    "note": "Baked at six",
-    "standfirst": "Made this morning for this morning. When the cabinet is empty that is the end of it, and the last of it goes cheap rather than in the bin.",
+    "note": "Fresh from the oven",
+    "standfirst": "Made this morning for this morning. When the cabinet is empty, that is the end of it — so come early for the full spread.",
     "spots": ["spot-cake", "spot-croissant"],
     "items": [
       { "name": "Matcha basque cheesecake", "price": "6.50" },

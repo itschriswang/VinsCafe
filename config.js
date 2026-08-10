@@ -8,8 +8,8 @@
    null means shut all day. */
 
 const CAFE = {
-  name: 'Gam Sia',
-  timezone: 'Europe/London',
+  name: 'gam sia',
+  timezone: 'Australia/Melbourne',
 
   /* Where the site lives, with the trailing slash. Every absolute URL on it —
      the canonical links, the social tags, the search-engine data, sitemap.xml
@@ -28,22 +28,22 @@ const CAFE = {
   },
 
   address: {
-    street: '41 Lower Marsh',
-    locality: 'London',
-    postcode: 'SE1 7RG',
-    country: 'GB'
+    street: '5 Kingsway',
+    locality: 'Glen Waverley',
+    postcode: 'VIC 3150',
+    country: 'AU'
   },
 
-  geo: { lat: 51.50086, lon: -0.11342 },
+  geo: { lat: -37.87920, lon: 145.16490 },
 
-  telephone: '+44 20 7946 0417',
+  telephone: '+61 3 9560 0417',
   email: 'hello@gamsia.cafe',
 
   /* Opened in a new tab from Find us. No map is embedded in the page. */
-  mapUrl: 'https://www.openstreetmap.org/?mlat=51.50086&mlon=-0.11342#map=18/51.50086/-0.11342',
+  mapUrl: 'https://www.openstreetmap.org/?mlat=-37.87920&mlon=145.16490#map=18/-37.87920/145.16490',
 
-  station: 'Waterloo',
-  walk: 'four minutes'
+  station: 'Glen Waverley',
+  walk: 'two minutes'
 };
 
 /* Loaded as a plain script in <head> so the hero state is resolved before the
