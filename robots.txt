@@ -1,3 +1,4 @@
+# Sundays only. The rest of the week, this file has the place to itself.
 User-agent: *
 Allow: /
 

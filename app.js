@@ -646,6 +646,8 @@
      The indicator keeps answering the real clock throughout. */
 
   function markDaydial() {
+    /* When the passage is built, the scroll owns the dial. */
+    if (dayscroll) return;
     var strip = $('.daystrip');
     $$('.daystrip-btns button').forEach(function (b, i) {
       var on = b.getAttribute('data-set-state') === state;
@@ -653,6 +655,110 @@
       /* the sun rides the arc to whichever hour is chosen */
       if (on && strip) strip.style.setProperty('--sun-i', i);
     });
+  }
+
+  /* -------------------------------------------------- the day, scrubbed ---
+     The daystrip grown into a tall passage with the room pinned inside it:
+     scroll position maps to a point in the day, the four paintings crossfade
+     through it (the incoming one arriving wet), and the sun is dragged along
+     the arc rather than gliding to a stop. The compact dial stays in the
+     markup as the fallback and the reduced-motion answer, and the hero above
+     keeps answering the real clock, exactly like the indicator. */
+
+  var dayscroll = null;
+
+  function enhanceDayscroll() {
+    var strip = $('.daystrip');
+    if (!strip) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (navigator.connection && navigator.connection.saveData) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    var wrap = document.createElement('section');
+    wrap.className = 'dayscroll';
+    var stage = document.createElement('div');
+    stage.className = 'dayscroll-stage';
+    strip.parentNode.insertBefore(wrap, strip);
+    wrap.appendChild(stage);
+
+    var room = document.createElement('div');
+    room.className = 'dayscroll-room';
+    stage.appendChild(room);
+    stage.appendChild(strip);            /* the dial rides inside the stage */
+
+    var order = ['morning', 'midday', 'late', 'closed'];
+    var plates = null;
+
+    /* All four paintings is the cost of the feature, so they are fetched
+       only once the passage is within a scroll of the viewport. */
+    function buildPlates() {
+      if (plates) return;
+      plates = order.map(function (s) {
+        var p = PLATES[s];
+        var pic = document.createElement('picture');
+        pic.className = 'dayplate';
+        pic.innerHTML =
+          '<source type="image/avif" sizes="92vw" srcset="art/' + p.file + '-960w.avif 960w, art/' + p.file + '-1376w.avif 1376w">' +
+          '<source type="image/webp" sizes="92vw" srcset="art/' + p.file + '-960w.webp 960w, art/' + p.file + '-1376w.webp 1376w">' +
+          '<img src="art/' + p.file + '-1376w.webp" alt="' + p.alt + '" loading="lazy" decoding="async" width="1376" height="768">';
+        room.appendChild(pic);
+        return pic;
+      });
+      scrub();
+    }
+
+    new IntersectionObserver(function (entries, io) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) { buildPlates(); io.disconnect(); return; }
+      }
+    }, { rootMargin: '150% 0%' }).observe(wrap);
+
+    var btns = $$('.daystrip-btns button', stage);
+    var ticking = false;
+
+    function scrub() {
+      ticking = false;
+      var r = wrap.getBoundingClientRect();
+      var span = Math.max(1, r.height - window.innerHeight);
+      var p = Math.min(1, Math.max(0, -r.top / span));
+      var seg = p * (order.length - 1);
+
+      if (plates) {
+        /* Stacked, not dissolved: the settled painting stays whole underneath
+           and the next one washes in over it, so the room never goes thin in
+           the middle of a turn the way a plain crossfade would. */
+        for (var i = 0; i < plates.length; i++) {
+          var w = i === 0 ? 1 : Math.min(1, Math.max(0, 1 + seg - i));
+          plates[i].style.opacity = w.toFixed(3);
+          /* the arriving painting is still wet; the settled one is not */
+          plates[i].style.filter =
+            (i > 0 && w > 0 && w < 1) ? 'blur(' + (2.5 * (1 - w)).toFixed(2) + 'px)' : '';
+        }
+      }
+      strip.style.setProperty('--sun-i', seg.toFixed(3));
+      var near = Math.round(seg);
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].setAttribute('aria-pressed', String(j === near));
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(scrub); }
+    }
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    scrub();
+
+    dayscroll = {
+      /* a button is a bookmark: scroll to that hour's band of the passage */
+      jump: function (s) {
+        var i = order.indexOf(s);
+        if (i < 0) return;
+        var top = wrap.getBoundingClientRect().top + window.scrollY;
+        var span = wrap.offsetHeight - window.innerHeight;
+        scrollTo({ top: top + span * (i / (order.length - 1)), behavior: 'smooth' });
+      }
+    };
   }
 
   /* The browser chrome follows the page: pine while a closed hero is dark,
@@ -668,6 +774,8 @@
     btns.forEach(function (b) {
       b.addEventListener('click', function () {
         var s = b.getAttribute('data-set-state');
+        /* in the scrubbed passage the button is a bookmark into the scroll */
+        if (dayscroll) { dayscroll.jump(s); return; }
         /* choosing the hour we are actually in hands the page back to the clock */
         forcedState = s === stateAt(moment()) ? null : s;
         tick();
@@ -741,13 +849,31 @@
 
   /* ---------------------------------------------------------------- init --- */
 
+  /* For whoever opens the hood: the same word we say at the door. Composed
+     from config.js like everything else, so even the easter egg cannot go
+     stale. */
+  function signOff() {
+    var open = hourRuns().filter(function (r) { return r.hours; })
+      .map(function (r) { return r.label + ' ' + r.value.replace(' – ', '–'); }).join(' · ');
+    try {
+      console.log(
+        '%cgam sia%c\nHokkien for thank you — for reading the source, too.\n' +
+        open + ' · ' + CAFE.address.street + ', ' + CAFE.address.locality,
+        "font: italic 22px Georgia, 'Times New Roman', serif; color: #2E4A30;",
+        'font: 12px ui-monospace, Menlo, monospace; color: #5A6530;'
+      );
+    } catch (e) { /* a console is never load-bearing */ }
+  }
+
   function init() {
     paint();                 /* idempotent: the inline call already did this */
     wireIndicator();
+    enhanceDayscroll();      /* before the dial wires: the buttons ask it first */
     wireDaydial();
     syncSchema();
     hydrateMenu();
     loadPigment();
+    signOff();
 
     /* Fifteen seconds is fine: the timestamp shows minutes and the state can
        only change on the hour. */

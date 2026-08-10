@@ -110,12 +110,15 @@ for (const state of STATES) {
       const [sel, need, label] = TARGETS[i];
       const b = probes[i];
       if (!b) { rows.push({ state, vp: vp.width, element: label, note: 'not shown in this state' }); continue; }
+      /* fullPage, so a target that has slipped below the first fold — the
+         stamp does, once the day dial pushed it down — still lands inside
+         the image instead of crashing the clip. */
       const clip = {
         x: Math.max(0, b.x), y: Math.max(0, b.y),
         width: Math.max(1, Math.min(b.w, vp.width - Math.max(0, b.x))),
-        height: Math.max(1, Math.min(b.h, vp.height - Math.max(0, b.y))),
+        height: Math.max(1, b.h),
       };
-      const px = PNG.decodeRGBA(await page.screenshot({ clip }));
+      const px = PNG.decodeRGBA(await page.screenshot({ clip, fullPage: true }));
       let worst = Infinity, sum = 0, n = 0;
       for (let k = 0; k < px.data.length; k += 4) {
         const c = ratio(b.fg, [px.data[k], px.data[k + 1], px.data[k + 2]]);

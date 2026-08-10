@@ -99,12 +99,14 @@ Neither runs on deploy. The site still has no build step.
 python3 tools/build-art.py           # src-art/*.png -> art/*.avif + *.webp
 node tools/sync-static.mjs           # rewrite the derived blocks in the HTML
 node tools/sync-static.mjs --check   # non-zero exit if anything is stale
+node tools/build-og.mjs              # typeset the social cards -> art/og-*.jpg
 node tools/check-contrast.mjs        # measure type contrast on every state ground
 ```
 
-`sync-static.mjs` regenerates the four regions marked `<!--gen:…-->` in the
-HTML: the JSON-LD, the hours tables, the hours line in the footer, and the
-board. `app.js` regenerates all of the same things at runtime from the same two
+`sync-static.mjs` regenerates the regions marked `<!--gen:…-->` in the
+HTML — the JSON-LD, the breadcrumb lists, the hours tables, the hours line in
+the footer, and the board — plus the 404's `<base>`, `sitemap.xml` and
+`robots.txt`. `app.js` regenerates the clock-dependent ones at runtime from the same two
 source files, so a visitor with JavaScript always sees current data; the static
 copies exist so that a visitor without it, and a crawler that does not execute
 scripts, sees the same thing rather than something stale. Run `--check` in CI
@@ -116,6 +118,14 @@ are paintings, so no static value can tell you whether a word is legible. It
 reports the worst pixel, not the average. Run it after touching the paper strip,
 the plate positions or the pigment layer. It needs the site served locally and
 `npm i --no-save playwright`.
+
+`build-og.mjs` typesets the three social share cards in a real browser with
+the site's own stylesheet: the palette, both faces, the squiggle and the paper
+are read from `style.css`, and the words — headline, prices, hours, address —
+are read live from the pages, `menu.json` and `config.js`. Nothing on a card
+is written down in the tool, so **any UI or copy change means re-running it**
+and committing the JPEGs; the cards cannot update themselves. It needs the
+same `npm i --no-save playwright` as `check-contrast.mjs`.
 
 `build-art.py` needs Pillow with AVIF support (`pip install Pillow numpy`).
 
@@ -177,3 +187,13 @@ the plate positions or the pigment layer. It needs the site served locally and
   the same way.
 - **The masters.** `src-art/` holds the PNGs everything in `art/` is made from,
   including three surfaces the site does not currently use.
+- **The 404 carries a `<base>`.** Pages serves `404.html` for a missing URL at
+  any depth — `/VinsCafe/a/b/` — where relative paths resolve into the void
+  and the page would arrive unstyled. The base pins every relative URL to the
+  site root; `sync-static.mjs` keeps it pointing at `config.js`'s `url`.
+  Previewing `404.html` locally therefore loads its assets from the live site.
+- **The map is drawn, not embedded.** Find us carries an inline SVG sketch of
+  the corner in the site's own palette — the no-third-party-requests rule
+  covers map tiles too. It is decorative to a screen reader beyond its short
+  label; the prose above it gives the same directions, and the real map stays
+  a link.

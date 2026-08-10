@@ -249,12 +249,30 @@ const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
 function siteUrls(src, page) {
   let out = src
     .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${pageUrl(page)}$2`)
-    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`);
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`)
+    /* 404.html carries a <base> so its assets survive being served at any
+       depth; it has to follow the site everywhere the canonicals do. */
+    .replace(/(<base href=")[^"]*(")/, `$1${SITE}$2`);
   if (OG[page]) {
     out = out.replace(/(<meta property="og:image" content=")[^"]*(")/,
       `$1${SITE}art/${OG[page]}.jpg$2`);
   }
   return out;
+}
+
+/* The two steps of each inner page's trail, mirrored as BreadcrumbList so a
+   result page can show Home › The menu instead of a bare URL. */
+const CRUMB = { 'menu.html': 'The menu', 'find-us.html': 'Find us' };
+
+function breadcrumbLd(page) {
+  return '<script type="application/ld+json">\n' + JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: CRUMB[page], item: pageUrl(page) }
+    ]
+  }, null, 2) + '\n</' + 'script>';
 }
 
 function jsonLd(existing, page) {
@@ -306,6 +324,10 @@ for (const page of PAGES) {
     return '\n' + hoursRows(indent) + '\n';
   });
 
+  if (CRUMB[page]) {
+    after = region(after, 'breadcrumb', () => '\n' + breadcrumbLd(page) + '\n');
+  }
+
   after = region(after, 'hours-summary', () => hoursSummary());
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');
   after = region(after, 'preview', () => '\n' + previewHTML() + '\n');
@@ -332,7 +354,8 @@ const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '  </url>').join('\n') +
   '\n</urlset>\n';
 
-const robots = `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
+const robots = '# Sundays only. The rest of the week, this file has the place to itself.\n' +
+  `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
 
 for (const [file, body] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
   if (read(file) === body) { console.log(`  ${file} up to date`); continue; }

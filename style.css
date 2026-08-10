@@ -448,6 +448,13 @@ html:not(.js) .ind-close { display: none; }
 }
 [data-state='morning'] .hero-type::before { left: calc(-1 * var(--bleed) - 52px); }
 [data-state='late'] .hero-type::before { right: calc(-1 * var(--bleed) - 52px); }
+/* Midday's headline reaches into the bottom-left of its box, over the dark
+   of the city window, where the ellipse had already faded out — measured at
+   2.1:1. Reach further left and down so that corner sits on wash too. */
+[data-state='midday'] .hero-type::before {
+  left: calc(-1 * var(--bleed) - 52px);
+  bottom: -110px;
+}
 [data-state='closed'] .hero-type::before { display: none; }
 
 .hero-eyebrow {
@@ -458,7 +465,9 @@ html:not(.js) .ind-close { display: none; }
   font: 700 13.5px/1 var(--sans);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--moss-text);
+  /* Ink, not moss: the eyebrow sits over the paintings' washes, where moss
+     measured as low as 2.4:1. The mark beside it carries the colour. */
+  color: var(--ink);
 }
 .hero-eyebrow .mark { --mark-size: 13px; --mark-color: var(--sun); }
 
@@ -781,6 +790,61 @@ html:not(.js) .roundel { display: none; }
 /* Without JS the buttons cannot turn anything. */
 html:not(.js) .daystrip { display: none; }
 
+/* ---------------------------------------------------- the day, scrubbed ---
+   With a wheel to spare, the daystrip grows into a tall passage with the
+   room pinned inside it: scroll drags the sun along the arc and the room
+   through all four paintings, the incoming one arriving wet; the dial's
+   buttons become bookmarks into the same scroll. app.js builds this only
+   when motion is welcome and data is not being saved — everyone else keeps
+   the compact dial exactly as it was, which is also the reduced-motion
+   answer: an instant turn of the room. */
+
+.dayscroll { height: 380vh; }
+.dayscroll-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px var(--gutter) 6px;
+}
+.dayscroll-room {
+  position: relative;
+  /* the painting's own ratio, capped so the dial always fits beneath */
+  width: min(1180px, 100%, calc(60svh * 1376 / 768));
+  aspect-ratio: 1376 / 768;
+  overflow: hidden;
+}
+.dayscroll-room .dayplate {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+.dayscroll-room .dayplate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* A scrubbed sun tracks the finger; the eased glide is for clicks only. */
+.dayscroll .dial-sun { transition: none; }
+
+/* Inside the stage the dial sits directly on the page — the compact strip's
+   paper band would read as a floating box under the painting. */
+.dayscroll .daystrip {
+  background: none;
+  border: 0;
+  padding: 30px 0 0;
+}
+
+@media (max-width: 719px) {
+  .dayscroll { height: 300vh; }
+  .dayscroll-room { width: min(100%, calc(46svh * 1376 / 768)); }
+}
+
 /* -------------------------------------------------------------- footer --- */
 
 .foot {
@@ -832,6 +896,32 @@ html:not(.js) .daystrip { display: none; }
 
 .page { padding: 0 var(--gutter); }
 .page-inner { max-width: var(--board-w); margin: 0 auto; }
+
+/* The trail above the title. Two levels is all this site has: one link back,
+   an arrow, and where you stand. Search engines read the same two steps from
+   the BreadcrumbList block in each page's head. */
+.crumbs { padding: 34px 0 0; }
+.crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.crumbs li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 700 13.5px/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+}
+.crumbs li + li::before {
+  content: '';
+  flex: none;
+  width: 15px; height: 9px;
+  background-color: var(--sun);
+  -webkit-mask: var(--mk-onward) center / 100% 100% no-repeat;
+          mask: var(--mk-onward) center / 100% 100% no-repeat;
+}
+.crumbs a { color: inherit; text-decoration: none; }
+.crumbs a:hover { color: var(--sun-deep); }
+.crumbs + .page-head { padding-top: 28px; }
 
 .page-head {
   padding: 60px 0 0;
@@ -1137,6 +1227,54 @@ html:not(.js) .daystrip { display: none; }
 }
 .find-links a:hover { color: var(--sun-deep); }
 
+/* ----------------------------------------------------------------- map ---
+   The corner drawn like everything else here: ink lines, a few washes, and
+   the sun where the door is. A sketch, not a survey — the pannable map is
+   one link away in the address section. */
+
+.map-sec {
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
+  margin: 12px var(--board-margin-live) 0;
+}
+.map-wrap { margin-top: 6px; }
+.map-art { width: 100%; height: auto; }
+
+.map-art .mp-rail  { fill: none; stroke: var(--ink-60); stroke-width: 2; stroke-linecap: round; }
+.map-art .mp-ties  { fill: none; stroke: var(--ink-18); stroke-width: 13; stroke-dasharray: 2.5 12.5; }
+.map-art .mp-road  { fill: none; stroke: var(--ink-30); stroke-width: 2; stroke-linecap: round; }
+.map-art .mp-lane  { fill: none; stroke: var(--ink-18); stroke-width: 2; stroke-linecap: round; }
+.map-art .mp-route { fill: none; stroke: var(--sun); stroke-width: 2.8; stroke-linecap: round; stroke-dasharray: 0.5 9.5; }
+.map-art .mp-sun   { fill: none; stroke: var(--sun); stroke-width: 3; stroke-linecap: round; }
+.map-art .mp-compass { fill: none; stroke: var(--ink-60); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.map-art .mp-wash-butter { fill: var(--butter); opacity: 0.32; }
+.map-art .mp-wash-sky    { fill: var(--sky);    opacity: 0.5; }
+.map-art .mp-wash-blush  { fill: var(--blush);  opacity: 0.6; }
+.map-art .mp-front       { fill: var(--pine); }
+
+/* The pen that draws the walk: a solid mask stroke pulled along the route by
+   the scroll (the animation lives with the other scroll-driven ones, in the
+   motion block). --walk is path-length still to draw; at its initial 0 the
+   route is complete, so every browser without the animation sees the whole
+   walk, and the sun by the door is fully lit. */
+@property --walk { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+.map-art .mp-walk-pen {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: var(--walk);
+}
+.map-art .mp-sun { opacity: clamp(0, (26 - var(--walk)) / 26, 1); }
+
+.map-art .mp-label  { font: 700 13px var(--sans); letter-spacing: 0.14em; fill: var(--moss-text); }
+.map-art .mp-street { font: 400 11px var(--mono); letter-spacing: 0.14em; fill: var(--ink-60); }
+.map-art .mp-shop   { font: 400 11px var(--mono); letter-spacing: 0.04em; fill: var(--ink-60); }
+.map-art .mp-name   { font: italic 400 27px var(--serif); fill: var(--ink); }
+.map-art .mp-note   { font: italic 400 17px var(--serif); fill: var(--pine); }
+
 /* --------------------------------------------------------------- mobile --- */
 
 @media (max-width: 719px) {
@@ -1280,6 +1418,21 @@ html:not(.js) .daystrip { display: none; }
   .sec { min-height: 0 !important; }
   .items { max-width: none; }
 
+  .crumbs { padding-top: 26px; }
+  .crumbs + .page-head { padding-top: 22px; }
+
+  /* The map keeps its drawn size and pans inside its own box; the page
+     itself must never scroll sideways. rtl only flips which end the pan
+     starts from — the door, not the station, is what the page opens on. */
+  .map-wrap {
+    overflow-x: auto;
+    direction: rtl;
+    margin: 6px calc(-1 * var(--gutter)) 0;
+    padding: 0 var(--gutter);
+  }
+  /* …but rtl must not reach the drawing itself, or every start-anchored
+     label in the SVG walks left onto its swatch. */
+  .map-art { min-width: 560px; direction: ltr; }
   .page-head { display: block; padding-top: 38px; }
   .page-head h1 { font-size: 72px; line-height: 0.9; margin-bottom: 14px; }
   .page-meta { text-align: left; padding: 0; font-size: 12.5px; }
@@ -1370,7 +1523,7 @@ html:not(.js) .daystrip { display: none; }
   /* The hero settles like a wash drying: each line a beat after the last.
      Opacity, blur and a small lift only — the layout never moves. */
   .hero-eyebrow, .hero-headline, .hero-rule, .hero-body,
-  .hero .hero-onward, .hero-hours, .page-head h1, .page-meta {
+  .hero .hero-onward, .hero-hours, .crumbs, .page-head h1, .page-meta {
     animation: wash-in 640ms var(--ease-out) both;
   }
   .hero-headline, .page-head h1 { animation-delay: 90ms; }
@@ -1385,6 +1538,14 @@ html:not(.js) .daystrip { display: none; }
       animation-timeline: view();
       animation-range: entry 10% entry 60%;
     }
+
+    /* And on Find us, the walk walks: station to door as the map enters,
+       the sun arriving with the walker. */
+    .map-art {
+      animation: walk-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 30% entry 95%;
+    }
   }
 }
 
@@ -1394,6 +1555,10 @@ html:not(.js) .daystrip { display: none; }
 @keyframes rule-draw {
   from { clip-path: inset(0 100% 0 0); }
   to   { clip-path: inset(0); }
+}
+@keyframes walk-draw {
+  from { --walk: 100; }
+  to   { --walk: 0; }
 }
 
 @keyframes dv-out { to { opacity: 0; } }

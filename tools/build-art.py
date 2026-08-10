@@ -294,20 +294,6 @@ def seamless_grey(im, size=512):
     return Image.fromarray(tile, "L")
 
 
-def og(stem, dst, crop=(0.5, 0.5)):
-    """1200x630 social card cut from a painting. No type baked in."""
-    im = flatten(os.path.join(SRC, stem + ".png"))
-    tw, th = 1200, 630
-    scale = max(tw / im.width, th / im.height)
-    r = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
-    x = int((r.width - tw) * crop[0])
-    y = int((r.height - th) * crop[1])
-    r.crop((x, y, x + tw, y + th)).save(
-        os.path.join(OUT, dst), format="JPEG", quality=82, optimize=True, progressive=True
-    )
-    return os.path.getsize(os.path.join(OUT, dst))
-
-
 def main():
     os.makedirs(OUT, exist_ok=True)
     total = 0
@@ -351,10 +337,10 @@ def main():
     total += os.path.getsize(os.path.join(OUT, "tex-paper-height.avif"))
     print("  %-22s  256x256  avif %6.1fkB" % ("tex-paper-height", os.path.getsize(os.path.join(OUT, "tex-paper-height.avif")) / 1024))
 
-    print("social")
-    print("  og-home    %6.1fkB" % (og("hero-midday", "og-home.jpg", (0.5, 0.88)) / 1024))
-    print("  og-menu    %6.1fkB" % (og("spot-cup", "og-menu.jpg", (0.5, 0.5)) / 1024))
-    print("  og-find-us %6.1fkB" % (og("hero-lateafternoon", "og-find-us.jpg", (0.78, 0.5)) / 1024))
+    # The social cards (art/og-*.jpg) are NOT made here any more. They carry
+    # the site's type and copy, so they are typeset in a real browser by
+    # tools/build-og.mjs — run that after this if a painting they use changed.
+    print("social      -> node tools/build-og.mjs")
 
     print("icons")
     icons()
