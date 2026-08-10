@@ -386,6 +386,20 @@ html:not(.js) .ind-close { display: none; }
 }
 .plate img { object-position: var(--plate-pos, center); }
 
+/* The scans keep their own white paper, which sat cold against the site's
+   cream. A multiply wash of the page colour over the whole plate turns the
+   scan's white into this paper, so painting and page share one sheet. Sits
+   above the pigment canvas so the tint holds while the paint moves. */
+.plate-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--paper);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
 .pigment {
   position: absolute;
   inset: 0;
@@ -930,7 +944,9 @@ html:not(.js) .daystrip { display: none; }
    page changes register the moment the hero ends. */
 
 .preview {
-  background: var(--butter);
+  background: var(--paper-2);
+  border-top: 1px solid var(--ink-12);
+  border-bottom: 1px solid var(--ink-12);
   padding-top: clamp(54px, 9vh, 104px);
   padding-bottom: clamp(54px, 9vh, 104px);
 }
@@ -963,9 +979,10 @@ html:not(.js) .daystrip { display: none; }
    like everything else pinned up in the room. */
 .preview .sec {
   background: var(--paper);
+  border: 1px solid var(--ink-12);
   border-radius: 10px;
   padding: 30px 32px 30px;
-  box-shadow: 0 26px 48px -22px rgba(38, 51, 29, 0.45);
+  box-shadow: 0 26px 48px -22px rgba(38, 51, 29, 0.35);
   transform: rotate(-0.7deg);
   transition: transform 300ms var(--ease-spring), box-shadow 300ms var(--ease-out);
 }
