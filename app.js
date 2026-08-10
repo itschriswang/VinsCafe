@@ -69,7 +69,7 @@
          and when it is next open — the headline, then the subhead carries both. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
-      headline: 'Gam sia is thank you in Hokkien.',
+      headline: 'Worth setting a Sunday alarm for.',
       body: null        /* derived: it has to name the day we actually reopen */
     }
   };
@@ -190,7 +190,7 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'Desserts, matcha made how you ask, and coffee. One morning a week. ' + closedHeadline(now);
+    return 'Desserts still warm from the oven, matcha whisked how you ask, coffee done properly. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
@@ -380,6 +380,7 @@
     paintStamp(now, state);
     paintIndicator(now);
     paintHours($('.page-hours'));
+    setThemeColor(state);
   }
   window.GamSia.paint = paint;
 
@@ -429,25 +430,25 @@
      case, so nothing is rewritten and nothing shifts. */
 
   var SPOTS = {
-    'spot-cup':       { w: 206, h: 111, sizes: '(max-width:719px) 156px, (max-width:1179px) 168px, 206px',
+    'spot-cup':       { w: 330, h: 177, sizes: '(max-width:719px) 240px, (max-width:1179px) 260px, 330px',
       alt: 'Watercolour of a green and lilac cup, half full, a small red mark on its side.' },
-    'spot-espresso':  { w: 134, h: 130, sizes: '(max-width:1179px) 112px, 134px',
+    'spot-espresso':  { w: 200, h: 194, sizes: '(max-width:719px) 150px, (max-width:1179px) 160px, 200px',
       alt: 'Watercolour of a green espresso cup with a lilac shadow pooling under it.' },
-    'spot-teapot':    { w: 168, h: 187, sizes: '(max-width:719px) 132px, (max-width:1179px) 138px, 168px',
+    'spot-teapot':    { w: 270, h: 300, sizes: '(max-width:719px) 200px, (max-width:1179px) 215px, 270px',
       alt: 'Watercolour of a squat green teapot with a lilac handle, on a pale wash.' },
-    'spot-beans':     { w: 132, h: 150, sizes: '(max-width:719px) 126px, (max-width:1179px) 110px, 132px',
+    'spot-beans':     { w: 200, h: 228, sizes: '(max-width:719px) 170px, (max-width:1179px) 160px, 200px',
       alt: 'Watercolour of a paper bag of coffee, the dark green showing through the sides.' },
-    'spot-croissant': { w: 198, h: 198, sizes: '(max-width:719px) 168px, (max-width:1179px) 162px, 198px',
+    'spot-croissant': { w: 320, h: 320, sizes: '(max-width:719px) 250px, (max-width:1179px) 255px, 320px',
       alt: 'Watercolour of a croissant in olive and grey, one flake of it catching red.' },
-    'spot-toast':     { w: 146, h: 166, sizes: '(max-width:1179px) 120px, 146px',
+    'spot-toast':     { w: 220, h: 252, sizes: '(max-width:719px) 170px, (max-width:1179px) 175px, 220px',
       alt: 'Watercolour of two thick slices of toast stacked, a red drop of jam below them.' },
-    'spot-cake':      { w: 180, h: 205, sizes: '(max-width:719px) 156px, (max-width:1179px) 148px, 180px',
+    'spot-cake':      { w: 300, h: 342, sizes: '(max-width:719px) 230px, (max-width:1179px) 240px, 300px',
       alt: 'Watercolour of a slice of layer cake on a grey plate, a red cherry on top.' },
-    'spot-coldbrew':  { w: 140, h: 160, sizes: '(max-width:719px) 140px, (max-width:1179px) 114px, 138px',
+    'spot-coldbrew':  { w: 220, h: 251, sizes: '(max-width:719px) 190px, (max-width:1179px) 175px, 220px',
       alt: 'Watercolour of a tumbler of iced coffee, the ice drawn as gaps left in the wash.' },
-    'spot-matcha':    { w: 170, h: 194, sizes: '(max-width:1179px) 140px, 170px',
+    'spot-matcha':    { w: 280, h: 319, sizes: '(max-width:719px) 210px, (max-width:1179px) 225px, 280px',
       alt: 'Watercolour of a matcha bowl and a bamboo whisk, the green settling in the base.' },
-    'spot-flatwhite': { w: 232, h: 232, sizes: '(max-width:719px) 200px, 232px',
+    'spot-flatwhite': { w: 380, h: 380, sizes: '(max-width:719px) 280px, (max-width:1179px) 300px, 380px',
       alt: 'Watercolour of a flat white seen from above, the crema drawn as one olive ring.' }
   };
 
@@ -637,6 +638,48 @@
     });
   }
 
+  /* ------------------------------------------------------------ day dial ---
+     The paintings are keyed to the clock, so on any single visit three of
+     the four can never be seen. The dial under the hero turns the room
+     through its day by setting the same forced state ?state= uses, so the
+     pigment layer bleeds between paintings exactly as an hour change would.
+     The indicator keeps answering the real clock throughout. */
+
+  function markDaydial() {
+    var strip = $('.daystrip');
+    $$('.daystrip-btns button').forEach(function (b, i) {
+      var on = b.getAttribute('data-set-state') === state;
+      b.setAttribute('aria-pressed', String(on));
+      /* the sun rides the arc to whichever hour is chosen */
+      if (on && strip) strip.style.setProperty('--sun-i', i);
+    });
+  }
+
+  /* The browser chrome follows the page: pine while a closed hero is dark,
+     paper everywhere else. */
+  function setThemeColor(s) {
+    var m = $('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#2E4A30' : '#F7EFDF');
+  }
+
+  function wireDaydial() {
+    var btns = $$('.daystrip-btns button');
+    if (!btns.length) return;
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var s = b.getAttribute('data-set-state');
+        /* choosing the hour we are actually in hands the page back to the clock */
+        forcedState = s === stateAt(moment()) ? null : s;
+        tick();
+        markDaydial();
+        /* the hero is above the dial; bring the painting into view to watch it turn */
+        var hero = $('.hero');
+        if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    markDaydial();
+  }
+
   /* ------------------------------------------------------------- pigment --- */
 
   var pigment = null;
@@ -685,6 +728,8 @@
 
     if (pigment && animate) pigment.bleed(img, next, snapped);
     else if (pigment) pigment.setState(next, img);
+    markDaydial();
+    setThemeColor(next);
   }
 
   function tick() {
@@ -699,6 +744,7 @@
   function init() {
     paint();                 /* idempotent: the inline call already did this */
     wireIndicator();
+    wireDaydial();
     syncSchema();
     hydrateMenu();
     loadPigment();
