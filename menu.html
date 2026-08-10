@@ -1,0 +1,179 @@
+<!doctype html>
+<!-- menu.html — developer territory. The board's content comes from menu.json. -->
+<html lang="en-GB" data-state="midday">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>The board — Deckle</title>
+<meta name="description" content="Written up daily. Coffee, tea, the kitchen from eleven, cake baked here and beans to take home. Prices, and nothing else on the page.">
+
+<link rel="canonical" href="https://itschriswang.github.io/VinCafe/menu.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Deckle">
+<meta property="og:title" content="The board — Deckle">
+<meta property="og:description" content="Coffee, tea, the kitchen from eleven, cake baked here and beans to take home. Prices, and nothing else on the page.">
+<meta property="og:url" content="https://itschriswang.github.io/VinCafe/menu.html">
+<meta property="og:image" content="https://itschriswang.github.io/VinCafe/art/og-menu.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Watercolour of a green and lilac cup, half full, a small red mark on its side.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" href="style.css" as="style">
+<link rel="preload" href="fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!--gen:jsonld-->
+<script type="application/ld+json" data-generated>
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "@id": "https://itschriswang.github.io/VinCafe/#cafe",
+  "name": "Deckle",
+  "url": "https://itschriswang.github.io/VinCafe/menu.html",
+  "image": "https://itschriswang.github.io/VinCafe/art/og-menu.jpg",
+  "description": "The board at Deckle: coffee, tea, the kitchen from eleven, cake baked here and beans to take home.",
+  "servesCuisine": [
+    "Coffee",
+    "Breakfast",
+    "Sandwiches"
+  ],
+  "priceRange": "££",
+  "currenciesAccepted": "GBP",
+  "hasMenu": "https://itschriswang.github.io/VinCafe/menu.html",
+  "telephone": "+44 20 7946 0417",
+  "email": "hello@deckle.cafe",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "41 Lower Marsh",
+    "addressLocality": "London",
+    "postalCode": "SE1 7RG",
+    "addressCountry": "GB"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 51.50086,
+    "longitude": -0.11342
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "07:00",
+      "closes": "16:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "08:00",
+      "closes": "16:00"
+    }
+  ]
+}
+</script>
+<!--/gen-->
+</head>
+
+<body>
+
+<header class="bar">
+  <a class="wordmark" href="index.html" aria-label="Deckle, home">Deckle</a>
+
+  <nav class="nav" aria-label="Primary">
+    <a href="menu.html" aria-current="page">Menu</a>
+    <a href="find-us.html">Find us</a>
+    <a href="menu.html#board">The board</a>
+  </nav>
+
+  <div class="ind">
+    <button class="ind-trigger" type="button" aria-expanded="false" aria-controls="ind-panel" hidden>
+      <span class="ind-dot" aria-hidden="true"></span>
+      <span class="ind-label"></span>
+      <span class="mark mark--hours" aria-hidden="true"></span>
+    </button>
+    <div class="ind-panel" id="ind-panel">
+      <button class="ind-close" type="button" aria-label="Close hours">
+        <span class="mark mark--close" aria-hidden="true"></span>
+      </button>
+      <p class="ind-title">Where and when</p>
+      <p class="ind-addr">41 Lower Marsh<br>London SE1 7RG</p>
+      <dl class="hours">
+<!--gen:hours-->
+        <dt>Wed–Fri</dt><dd>07 – 16</dd>
+        <dt>Sat–Sun</dt><dd>08 – 16</dd>
+        <dt>Mon–Tue</dt><dd>Closed</dd>
+<!--/gen-->
+      </dl>
+    </div>
+  </div>
+</header>
+
+<main class="page" id="board">
+  <div class="page-inner">
+
+    <div class="page-head">
+      <h1>The board</h1>
+      <p class="page-meta">Written up daily<br>Kitchen from eleven</p>
+    </div>
+    <div class="page-rule" aria-hidden="true"></div>
+
+    <!-- Everything below comes from menu.json. It is in the markup as well so
+         the page works with no JavaScript and so crawlers can read it; if the
+         two ever disagree the JSON wins and the board is rebuilt. -->
+<!--gen:board-->
+    <div class="board" data-menu-sig="yg1769">
+      <div class="board-col">
+        <section class="sec" data-sec="coffee"><img class="spot spot--cup" width="206" height="111" alt="Watercolour of a green and lilac cup, half full, a small red mark on its side." loading="lazy" decoding="async" sizes="(max-width:719px) 156px, (max-width:1179px) 168px, 206px" srcset="art/spot-cup-206w.avif 206w, art/spot-cup-412w.avif 412w" src="art/spot-cup-412w.webp"><img class="spot spot--espresso" width="134" height="130" alt="Watercolour of a green espresso cup with a lilac shadow pooling under it." loading="lazy" decoding="async" sizes="(max-width:1179px) 112px, 134px" srcset="art/spot-espresso-134w.avif 134w, art/spot-espresso-268w.avif 268w" src="art/spot-espresso-268w.webp"><div class="sec-head"><h2 class="sec-name">Coffee</h2><p class="sec-note">Oat, no charge</p></div><ul class="items"><li class="item"><span class="item-name">Filter</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">3.20</span></li><li class="item"><span class="item-name">Espresso</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">2.60</span></li><li class="item"><span class="item-name">Cortado</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">3.40</span></li><li class="item"><span class="item-name">Flat white</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">3.80</span></li><li class="item"><span class="item-name">Latte</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.00</span></li><li class="item"><span class="item-name">Cold brew</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.20</span></li></ul><p class="standfirst">This week it is a washed Kirinyaga — blackcurrant, quite bright, better as filter than with milk.</p></section>
+        <section class="sec" data-sec="tea"><img class="spot spot--teapot" width="168" height="187" alt="Watercolour of a squat green teapot with a lilac handle, on a pale wash." loading="lazy" decoding="async" sizes="(max-width:719px) 132px, (max-width:1179px) 138px, 168px" srcset="art/spot-teapot-168w.avif 168w, art/spot-teapot-336w.avif 336w" src="art/spot-teapot-336w.webp"><div class="sec-head"><h2 class="sec-name">Tea</h2><p class="sec-note">Leaf, in a pot</p></div><ul class="items"><li class="item"><span class="item-name">Pot of leaf tea</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.20</span></li><li class="item"><span class="item-name">Matcha</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.60</span></li><li class="item"><span class="item-name">Chai</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.40</span></li></ul></section>
+        <section class="sec" data-sec="take-home"><img class="spot spot--beans" width="132" height="150" alt="Watercolour of a paper bag of coffee, the dark green showing through the sides." loading="lazy" decoding="async" sizes="(max-width:719px) 126px, (max-width:1179px) 110px, 132px" srcset="art/spot-beans-132w.avif 132w, art/spot-beans-264w.avif 264w" src="art/spot-beans-264w.webp"><div class="sec-head"><h2 class="sec-name">Take home</h2><p class="sec-note">Roasted Tuesdays</p></div><ul class="items"><li class="item"><span class="item-name">Beans, 250g</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">12.00</span></li><li class="item"><span class="item-name">Filter papers</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.00</span></li></ul></section>
+      </div>
+      <div class="board-col">
+        <section class="sec" data-sec="kitchen"><img class="spot spot--croissant" width="198" height="198" alt="Watercolour of a croissant in olive and grey, one flake of it catching red." loading="lazy" decoding="async" sizes="(max-width:719px) 168px, (max-width:1179px) 162px, 198px" srcset="art/spot-croissant-198w.avif 198w, art/spot-croissant-396w.avif 396w" src="art/spot-croissant-396w.webp"><img class="spot spot--toast" width="146" height="166" alt="Watercolour of two thick slices of toast stacked, a red drop of jam below them." loading="lazy" decoding="async" sizes="(max-width:1179px) 120px, 146px" srcset="art/spot-toast-146w.avif 146w, art/spot-toast-292w.avif 292w" src="art/spot-toast-292w.webp"><div class="sec-head"><h2 class="sec-name">Kitchen</h2><p class="sec-note">Eleven till three</p></div><ul class="items"><li class="item"><span class="item-name">Toast, butter &amp; jam</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.50</span></li><li class="item"><span class="item-name">Cheese toastie</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">7.50</span></li><li class="item"><span class="item-name">Soup of the day</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">7.00</span></li><li class="item"><span class="item-name">Croissant</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">3.60</span></li></ul><p class="standfirst">One soup, made in the morning. When it is finished the pot is washed and that is the end of it.</p></section>
+        <section class="sec" data-sec="sweet"><img class="spot spot--cake" width="180" height="205" alt="Watercolour of a slice of layer cake on a grey plate, a red cherry on top." loading="lazy" decoding="async" sizes="(max-width:719px) 156px, (max-width:1179px) 148px, 180px" srcset="art/spot-cake-180w.avif 180w, art/spot-cake-360w.avif 360w" src="art/spot-cake-360w.webp"><div class="sec-head"><h2 class="sec-name">Sweet</h2><p class="sec-note">Baked here</p></div><ul class="items"><li class="item"><span class="item-name">Cake of the day</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.80</span></li><li class="item"><span class="item-name">Cardamom bun</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.20</span></li></ul></section>
+        <section class="sec" data-sec="cold"><img class="spot spot--coldbrew" width="140" height="160" alt="Watercolour of a tumbler of iced coffee, the ice drawn as gaps left in the wash." loading="lazy" decoding="async" sizes="(max-width:719px) 140px, (max-width:1179px) 114px, 138px" srcset="art/spot-coldbrew-140w.avif 140w, art/spot-coldbrew-280w.avif 280w" src="art/spot-coldbrew-280w.webp"><img class="spot spot--matcha" width="170" height="194" alt="Watercolour of a matcha bowl and a bamboo whisk, the green settling in the base." loading="lazy" decoding="async" sizes="(max-width:1179px) 140px, 170px" srcset="art/spot-matcha-170w.avif 170w, art/spot-matcha-340w.avif 340w" src="art/spot-matcha-340w.webp"><div class="sec-head"><h2 class="sec-name">Cold</h2><p class="sec-note">From May</p></div><ul class="items"><li class="item"><span class="item-name">Iced filter</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">4.00</span></li><li class="item"><span class="item-name">Iced matcha</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">5.00</span></li><li class="item"><span class="item-name">House lemonade</span><span class="item-lead" aria-hidden="true"></span><span class="item-price">3.80</span></li></ul></section>
+      </div>
+    </div>
+<!--/gen-->
+
+    <div class="board-foot">
+      <div class="foot-inner">
+        <span>41 Lower Marsh · London SE1</span>
+        <span class="foot-hours"><!--gen:hours-summary-->Wed–Fri 07–16 · Sat–Sun 08–16<!--/gen--></span>
+        <span class="stamp"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>if (window.Deckle) Deckle.paint();</script>
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="find-us.html">Find us</a>
+      <a href="mailto:hello@deckle.cafe">hello@deckle.cafe</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

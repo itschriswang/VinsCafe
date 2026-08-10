@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- 404.html — developer territory. Locked to the closed state on purpose. -->
+<html lang="en-GB" data-state="closed" data-state-lock>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Nothing here — Deckle</title>
+<meta name="description" content="That page is not on this site. The board and the address are, and both are one click away.">
+<meta name="robots" content="noindex, follow">
+
+<link rel="preload" href="style.css" as="style">
+<link rel="preload" href="fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+
+<body>
+
+<section class="hero">
+
+  <header class="bar">
+    <a class="wordmark" href="index.html" aria-label="Deckle, home">Deckle</a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="menu.html">Menu</a>
+      <a href="find-us.html">Find us</a>
+      <a href="menu.html#board">The board</a>
+    </nav>
+
+    <div class="ind">
+      <button class="ind-trigger" type="button" aria-expanded="false" aria-controls="ind-panel" hidden>
+        <span class="ind-dot" aria-hidden="true"></span>
+        <span class="ind-label"></span>
+        <span class="mark mark--hours" aria-hidden="true"></span>
+      </button>
+      <div class="ind-panel" id="ind-panel">
+        <button class="ind-close" type="button" aria-label="Close hours">
+          <span class="mark mark--close" aria-hidden="true"></span>
+        </button>
+        <p class="ind-title">Where and when</p>
+        <p class="ind-addr">41 Lower Marsh<br>London SE1 7RG</p>
+        <dl class="hours">
+<!--gen:hours-->
+          <dt>Wed–Fri</dt><dd>07 – 16</dd>
+          <dt>Sat–Sun</dt><dd>08 – 16</dd>
+          <dt>Mon–Tue</dt><dd>Closed</dd>
+<!--/gen-->
+        </dl>
+      </div>
+    </div>
+  </header>
+
+  <div class="plate-wrap">
+    <script>if (window.Deckle) Deckle.writePlate(document.currentScript);</script>
+    <noscript>
+      <picture class="plate">
+        <source type="image/avif" sizes="100vw" srcset="art/hero-closed-960w.avif 960w, art/hero-closed-1376w.avif 1376w">
+        <source type="image/webp" sizes="100vw" srcset="art/hero-closed-960w.webp 960w, art/hero-closed-1376w.webp 1376w">
+        <img src="art/hero-closed-1376w.webp" width="1376" height="768" alt="Watercolour of the room after closing: deep blue-green dark, chairs stacked in the one lit window, and a single red light by the door.">
+      </picture>
+    </noscript>
+  </div>
+
+  <div class="hero-type">
+    <p class="hero-eyebrow">
+      <span class="mark mark--close" aria-hidden="true"></span>
+      <span class="hero-eyebrow-text">Chairs up, lights off</span>
+    </p>
+    <h1 class="hero-headline" data-fixed>Nothing here. The kettle is on next door.</h1>
+    <div class="hero-rule" aria-hidden="true"></div>
+    <p class="hero-body" data-fixed>The board is at <a href="menu.html">menu</a>, the address is at <a href="find-us.html">find us</a>, and everything else on this site is one of those two.</p>
+    <dl class="hero-hours">
+<!--gen:hours-->
+      <dt>Wed–Fri</dt><dd>07 – 16</dd>
+      <dt>Sat–Sun</dt><dd>08 – 16</dd>
+      <dt>Mon–Tue</dt><dd>Closed</dd>
+<!--/gen-->
+    </dl>
+  </div>
+
+  <p class="stamp"></p>
+
+  <script>if (window.Deckle) Deckle.paint();</script>
+
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <span>41 Lower Marsh · London SE1</span>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="find-us.html">Find us</a>
+    </nav>
+    <span class="foot-hours"><!--gen:hours-summary-->Wed–Fri 07–16 · Sat–Sun 08–16<!--/gen--></span>
+  </div>
+</footer>
+
+</body>
+</html>

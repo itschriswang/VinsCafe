@@ -1,0 +1,899 @@
+/* style.css — developer territory. The owner edits menu.json and config.js, not this. */
+
+/* ---------------------------------------------------------------- type ---
+   Two families, both OFL, self-hosted, subset to latin.
+   font-display:optional is deliberate: paired with the preloads in <head> it
+   is the only setting that cannot shift layout, and zero CLS is a hard
+   requirement. Instrument Serif has no bold, so synthesis is off everywhere. */
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: optional;
+  src: url('fonts/instrument-serif-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Fragment Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url('fonts/fragment-mono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* -------------------------------------------------------------- tokens ---
+   Four interface colours and nothing else. They are written in Oklch so that
+   every interpolation the browser performs — hover, state change, colour-mix —
+   runs through Oklch rather than sRGB. Pigment does not mix through grey.
+   The hex on each line is the same colour, for anyone matching to the comps.
+   Lichen, butter, blush, dusty blue and lavender grey live in the paintings
+   only and must never appear here. */
+
+:root {
+  --forest: oklch(28.97% 0.0426 134.78);   /* #22301A */
+  --olive:  oklch(56.69% 0.1011 119.93);   /* #6F7F35 */
+  --coral:  oklch(67.29% 0.1603 28.00);    /* #E8695C */
+  --cream:  oklch(94.65% 0.0181 89.36);    /* #F2EDE0 */
+
+  --forest-12: oklch(28.97% 0.0426 134.78 / 0.12);
+  --forest-18: oklch(28.97% 0.0426 134.78 / 0.18);
+  --forest-26: oklch(28.97% 0.0426 134.78 / 0.26);
+  --forest-30: oklch(28.97% 0.0426 134.78 / 0.30);
+  --forest-34: oklch(28.97% 0.0426 134.78 / 0.34);
+  --forest-42: oklch(28.97% 0.0426 134.78 / 0.42);
+  --forest-55: oklch(28.97% 0.0426 134.78 / 0.55);
+  --forest-60: oklch(28.97% 0.0426 134.78 / 0.60);
+  --forest-66: oklch(28.97% 0.0426 134.78 / 0.66);
+  --forest-72: oklch(28.97% 0.0426 134.78 / 0.72);
+  --forest-78: oklch(28.97% 0.0426 134.78 / 0.78);
+  --cream-82:  oklch(94.65% 0.0181 89.36 / 0.82);
+
+  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --mono: 'Fragment Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bar-h: 74px;
+  --gutter: clamp(20px, 3.57vw, 56px);
+
+  /* Menu page: the two type columns hold 660px between them and the margins
+     take whatever is left, up to the 230px the comp specifies. */
+  --board-w: 1120px;
+  --board-margin: 230px;
+}
+
+/* ---------------------------------------------------------------- base --- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--cream);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--forest);
+  font: 400 13px/1.8 var(--mono);
+  font-synthesis: none;                 /* no synthetic bold on Instrument Serif, anywhere */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, p, figure, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, svg, canvas { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+a {
+  color: var(--olive);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 120ms linear;       /* both ends are Oklch, so the ramp is too */
+}
+a:hover { color: var(--coral); }
+
+:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+[data-state='closed'] .bar :focus-visible { outline-color: var(--cream); }
+
+.vh {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- marks ---
+   Six marks, one place. They are CSS masks rather than an inline <svg> sprite
+   so that there is exactly one edit point for all three pages, and so the
+   coral comes from the palette rather than from a fill attribute. When the
+   hand-painted versions arrive, swap the six url()s below and nothing else.
+   Single coral stroke at 1.7, no fills, no second weight. */
+
+:root {
+  --mk-hours:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='13' cy='13' r='10.4'/%3E%3Cpath d='M13 7.4V13l4.4 2.8'/%3E%3C/svg%3E");
+  --mk-findus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 24.2s8.4-8.2 8.4-13.4a8.4 8.4 0 10-16.8 0C4.6 16 13 24.2 13 24.2z'/%3E%3Ccircle cx='13' cy='10.6' r='2.9'/%3E%3C/svg%3E");
+  --mk-onward: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' preserveAspectRatio='none' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.6 13h19M16.6 7.4L22.2 13l-5.6 5.6'/%3E%3C/svg%3E");
+  --mk-note:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M13 2.6v20.8M3.8 7.8l18.4 10.4M22.2 7.8L3.8 18.2'/%3E%3C/svg%3E");
+  --mk-board:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M3.4 8.2h19.2M3.4 13h14.2M3.4 17.8h17'/%3E%3C/svg%3E");
+  --mk-close:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M6.4 6.4l13.2 13.2M19.6 6.4L6.4 19.6'/%3E%3C/svg%3E");
+}
+
+.mark {
+  flex: none;
+  display: block;
+  width: var(--mark-size, 13px);
+  height: var(--mark-size, 13px);
+  background-color: var(--coral);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center;  mask-position: center;
+  -webkit-mask-size: contain;     mask-size: contain;
+}
+.mark--hours  { -webkit-mask-image: var(--mk-hours);  mask-image: var(--mk-hours); }
+.mark--findus { -webkit-mask-image: var(--mk-findus); mask-image: var(--mk-findus); }
+.mark--note   { -webkit-mask-image: var(--mk-note);   mask-image: var(--mk-note); }
+.mark--board  { -webkit-mask-image: var(--mk-board);  mask-image: var(--mk-board); }
+.mark--close  { -webkit-mask-image: var(--mk-close);  mask-image: var(--mk-close); }
+.mark--onward {
+  -webkit-mask-image: var(--mk-onward); mask-image: var(--mk-onward);
+  width: 16px; height: 9px;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+}
+
+/* ----------------------------------------------------------------- bar --- */
+
+.bar {
+  position: relative;
+  z-index: 4;
+  height: var(--bar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 var(--gutter);
+  border-bottom: 1px solid var(--forest-26);
+  background: var(--cream);
+}
+
+.hero > .bar {
+  position: absolute;
+  inset: 0 0 auto;
+  background: none;
+}
+
+.wordmark {
+  font: italic 400 30px/1 var(--serif);
+  color: var(--forest);
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+.wordmark:hover { color: var(--forest); }
+
+.nav {
+  display: flex;
+  gap: 28px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.nav a {
+  color: var(--forest);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+}
+.nav a:hover { color: var(--forest); border-bottom-color: var(--forest); }
+.nav a[aria-current='page'] { border-bottom-color: var(--forest); }
+
+/* Closed takes a solid forest bar; nav text and the indicator label go cream. */
+[data-state='closed'] .hero > .bar { background: var(--forest); border-bottom-color: transparent; }
+[data-state='closed'] .hero .wordmark { color: var(--cream); }
+[data-state='closed'] .hero .nav a { color: var(--cream-82); }
+[data-state='closed'] .hero .nav a:hover,
+[data-state='closed'] .hero .nav a[aria-current='page'] { color: var(--cream); border-bottom-color: var(--cream); }
+[data-state='closed'] .hero .ind-label { color: var(--cream); }
+
+/* ----------------------------------------------------------- indicator ---
+   Top right of every page. Without JS the trigger is hidden and the panel is
+   in flow, expanded: a page with no clock must never claim to be open. */
+
+.ind { position: relative; }
+
+.ind-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.ind-dot {
+  flex: none;
+  width: 10px; height: 10px;
+  background: var(--coral);
+  border-radius: 50%;                   /* the one circle on the site: it is a dot, not a card */
+}
+.ind-label {
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--forest);
+  white-space: nowrap;
+}
+.ind-trigger .mark { --mark-size: 14px; }
+
+.ind-panel {
+  padding: 22px 24px 24px;
+  background: var(--cream);
+  border: 1px solid var(--forest-30);
+  border-radius: 0;
+  box-shadow: none;
+}
+html.js .ind-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  z-index: 20;
+  width: 290px;
+}
+/* Without JavaScript there is no clock, so the trigger — the one element that
+   says Open or Closed — is not rendered at all, and the panel stands in flow,
+   already expanded. The rest of the no-JS hero is at the end of this file,
+   after the state variants it has to override. */
+html:not(.js) .ind-trigger { display: none; }
+html:not(.js) .ind { margin: 4px 0; }
+html:not(.js) .stamp { display: none; }
+html:not(.js) .bar { align-items: flex-start; }
+
+.ind-title {
+  font: 400 9.5px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--forest-55);
+  margin: 0 0 12px;
+}
+.ind-addr { font: 400 12.5px/1.7 var(--mono); color: var(--forest); margin: 0 0 18px; }
+.ind-panel .hours { margin-top: 4px; }
+.ind-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  padding: 4px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.ind-close .mark { --mark-size: 12px; }
+html:not(.js) .ind-close { display: none; }
+
+.hours, .hero-hours {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 20px;
+  font: 400 12.5px/1.6 var(--mono);
+  color: var(--forest);
+}
+.hours dt, .hero-hours dt { color: var(--forest-60); }
+.hours dd, .hero-hours dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------- hero ---
+   One component, four variants. The only thing that changes is which side the
+   type column sits on and where the masked paper strip is laid over the plate.
+   Everything keys off [data-state] on <html>; there is no per-state JS. */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  background: var(--cream);
+  isolation: isolate;
+}
+
+.plate-wrap { position: absolute; inset: 0; z-index: 0; }
+.plate, .plate img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.plate img { object-position: var(--plate-pos, center); }
+
+/* The WebGL layer sits over the plate and under the paper strip, so type is
+   always carried by crisp paper and never by a warped painting. */
+.pigment {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+}
+.pigment.is-lit { opacity: 1; transition: opacity 300ms linear; }
+
+.strip {
+  position: absolute;
+  z-index: 2;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.hero-type { position: absolute; z-index: 3; }
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--olive);
+}
+.hero-eyebrow .mark { --mark-size: 13px; }
+.hero-headline {
+  font: italic 400 var(--h1, 62px)/1.02 var(--serif);
+  letter-spacing: -0.012em;
+  color: var(--forest);
+  text-wrap: pretty;
+}
+.hero-rule { height: 1px; background: var(--forest-30); }
+.hero-body { font: 400 13px/1.8 var(--mono); color: var(--forest); text-wrap: pretty; }
+.hero-onward {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--forest);
+  text-decoration: none;
+  width: max-content;
+}
+.hero-onward:hover { color: var(--forest); text-decoration: underline; }
+.hero-hours { display: none; }   /* only the closed state shows a table in the hero */
+
+.stamp {
+  position: absolute;
+  z-index: 3;
+  left: var(--gutter);
+  bottom: clamp(18px, 4.1%, 40px);
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--forest-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -- morning: type column right, strip masked in from the right ----------- */
+[data-state='morning'] { --plate-pos: 22% center; }
+[data-state='morning'] .strip {
+  inset: 0 0 0 auto;
+  width: 44%;
+  opacity: 0.97;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 40%);
+          mask-image: linear-gradient(to right, transparent, #000 40%);
+}
+[data-state='morning'] .hero-type {
+  top: 23.8%;
+  right: var(--gutter);
+  width: clamp(300px, 33.6%, 430px);
+  display: flex;
+  flex-direction: column;
+  --h1: clamp(48px, 5.54vw, 76px);
+}
+[data-state='morning'] .hero-eyebrow { letter-spacing: 0.22em; margin-bottom: 18px; }
+[data-state='morning'] .hero-headline { margin-bottom: 22px; }
+[data-state='morning'] .hero-rule { margin-bottom: 18px; }
+[data-state='morning'] .hero-onward { margin-top: 24px; }
+
+/* -- midday: type across the upper third, strip masked in from the top ---- */
+[data-state='midday'] { --plate-pos: center 88%; }
+[data-state='midday'] .strip {
+  inset: 0 0 auto 0;
+  height: 39.7%;
+  opacity: 0.95;
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent);
+          mask-image: linear-gradient(to bottom, #000 58%, transparent);
+}
+[data-state='midday'] .hero-type {
+  top: 16.5%;
+  left: var(--gutter);
+  right: var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr clamp(240px, 26.8%, 340px);
+  column-gap: 44px;
+  align-items: end;
+  --h1: clamp(52px, 6.79vw, 76px);
+}
+[data-state='midday'] .hero-headline {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: end;
+  line-height: 1;
+  letter-spacing: -0.018em;
+}
+[data-state='midday'] .hero-eyebrow { grid-column: 2; grid-row: 1; margin-bottom: 14px; }
+[data-state='midday'] .hero-rule    { grid-column: 2; grid-row: 2; margin-bottom: 14px; }
+[data-state='midday'] .hero-body    { grid-column: 2; grid-row: 3; padding-bottom: 8px; }
+[data-state='midday'] .hero-onward  { display: none; }
+[data-state='midday'] .hero-eyebrow .mark { --mark-size: 14px; }
+
+/* -- late: type column left, strip masked in from the left ---------------- */
+[data-state='late'] { --plate-pos: 78% center; }
+[data-state='late'] .strip {
+  inset: 0 auto 0 0;
+  width: 46%;
+  opacity: 0.97;
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 42%);
+          mask-image: linear-gradient(to left, transparent, #000 42%);
+}
+[data-state='late'] .hero-type {
+  top: 26.7%;
+  left: var(--gutter);
+  width: clamp(300px, 33.9%, 430px);
+  display: flex;
+  flex-direction: column;
+  --h1: clamp(48px, 5.36vw, 74px);
+}
+[data-state='late'] .hero-eyebrow { letter-spacing: 0.22em; margin-bottom: 18px; }
+[data-state='late'] .hero-headline { margin-bottom: 22px; }
+[data-state='late'] .hero-rule { margin-bottom: 18px; }
+[data-state='late'] .hero-onward { display: none; }
+
+/* -- closed: no strip, plate cropped to a band, the base is real page ----- */
+[data-state='closed'] { --plate-pos: center 42%; }
+[data-state='closed'] .plate-wrap {
+  inset: var(--bar-h) 0 auto 0;
+  height: 54%;
+  background: var(--forest);
+}
+[data-state='closed'] .strip { display: none; }
+[data-state='closed'] .hero-type {
+  top: calc(var(--bar-h) + 54% + var(--gutter));
+  left: var(--gutter);
+  right: var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr clamp(260px, 29.5%, 380px);
+  column-gap: 48px;
+  align-items: start;
+  --h1: clamp(48px, 5.36vw, 72px);
+}
+[data-state='closed'] .hero-headline {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+[data-state='closed'] .hero-eyebrow { grid-column: 2; grid-row: 1; margin-bottom: 14px; }
+[data-state='closed'] .hero-rule    { grid-column: 2; grid-row: 2; margin-bottom: 14px; }
+[data-state='closed'] .hero-hours   { display: grid; grid-column: 2; grid-row: 3; }
+[data-state='closed'] .hero-onward  { display: none; }
+/* The subhead sits under the headline; the table beside it is for scanning. */
+[data-state='closed'] .hero-body {
+  grid-column: 1;
+  grid-row: 4;
+  margin-top: 22px;
+  max-width: 46ch;
+  color: var(--forest-78);
+}
+
+/* --------------------------------------------------------------- no JS ---
+   State is midday, and the hero takes the same stacked construction the phone
+   uses: bar, plate band, type on the page below. These have to sit after the
+   state variants above to beat them, and to carry the same specificity. */
+
+html:not(.js) .hero {
+  height: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+html:not(.js) .hero > .bar {
+  position: static;
+  order: 1;
+  height: auto;
+  padding-block: 18px;
+  background: var(--cream);
+  flex-wrap: wrap;
+  gap: 18px;
+}
+html:not(.js) [data-state] .plate-wrap,
+html:not(.js) .plate-wrap {
+  position: relative;
+  inset: auto;
+  order: 2;
+  width: 100%;
+  height: min(56vh, 430px);
+}
+html:not(.js) [data-state='midday'] .hero-type,
+html:not(.js) [data-state='closed'] .hero-type,
+html:not(.js) .hero-type {
+  position: static;
+  order: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  grid-template-columns: none;
+  width: auto;
+  max-width: 68ch;
+  padding: 32px var(--gutter) 44px;
+}
+html:not(.js) .hero-eyebrow { margin-bottom: 18px; }
+html:not(.js) .hero-headline { margin-bottom: 22px; }
+html:not(.js) .hero-rule { margin-bottom: 18px; }
+
+/* -------------------------------------------------------------- footer --- */
+
+.foot {
+  padding: 0 var(--gutter);
+}
+.foot-inner {
+  max-width: var(--board-w);
+  margin: 0 auto;
+  padding: 34px 0 30px;
+  border-top: 1px solid var(--forest-34);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 400 10px/1.7 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--forest-66);
+}
+.foot-inner a { color: var(--forest-66); text-decoration: none; }
+.foot-inner a:hover { color: var(--coral); }
+.foot-nav { display: flex; flex-wrap: wrap; gap: 22px; }
+/* the same timestamp component, sitting in the footer rather than over a plate */
+.foot-inner .stamp { position: static; color: inherit; letter-spacing: 0.16em; }
+
+/* ---------------------------------------------------------------- page ---
+   Menu and Find us share the board's print grid: one page, two type columns,
+   230px outer margins, nothing boxed and nothing with a background. */
+
+.page { padding: 0 var(--gutter); }
+.page-inner { max-width: var(--board-w); margin: 0 auto; }
+
+.page-head {
+  padding: 52px 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+.page-head h1 {
+  font: italic 400 clamp(52px, 7.86vw, 96px)/0.94 var(--serif);
+  letter-spacing: -0.02em;
+  color: var(--forest);
+}
+.page-meta {
+  padding-bottom: 12px;
+  text-align: right;
+  font: 400 10px/1.8 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--forest-66);
+}
+.page-rule { height: 1px; background: var(--forest-34); margin-top: 26px; }
+
+/* Spots live in the margins. The board's own margin variable collapses on
+   narrow screens so the two type columns keep their measure. */
+.board {
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
+  padding: 34px var(--board-margin-live) 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+  align-items: start;
+  overflow-x: clip;                     /* a bled spot must never make the page scroll */
+}
+.board-col { display: flex; flex-direction: column; gap: 44px; }
+
+.sec { position: relative; }
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 18px;
+}
+.sec-name { font: italic 400 30px/1 var(--serif); color: var(--forest); }
+.sec-note {
+  font: 400 9.5px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--forest-55);
+  text-align: right;
+}
+.items { display: flex; flex-direction: column; gap: 11px; }
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font: 400 13.5px/1.4 var(--mono);
+  color: var(--forest);
+}
+.item-lead {
+  flex: 1;
+  height: 0;
+  border-bottom: 1px dotted var(--forest-42);
+  transform: translateY(-3px);
+}
+.item-price { font-variant-numeric: tabular-nums; }
+.standfirst {
+  margin: 16px 0 0;
+  font: italic 400 19px/1.45 var(--serif);
+  color: var(--forest-78);
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+/* Short sections carry a min-height that clears their own spot, so adding an
+   item to menu.json can never push a painting into the section below. */
+.sec[data-sec='tea']       { min-height: 200px; }
+.sec[data-sec='take-home'] { min-height: 180px; }
+.sec[data-sec='sweet']     { min-height: 210px; }
+.sec[data-sec='cold']      { min-height: 250px; }
+
+/* The spots carry their own alpha, cut from the scans by tools/build-art.py:
+   the paper is gone, the sheet's torn border is gone, and the edge is feathered
+   from each painting's own extent rather than by a fixed ellipse over the whole
+   image. So there is no mask here to clip anything and no levels lift to hide a
+   backdrop with — only multiply, which is how pigment sits on paper. */
+.spot {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Desktop placement, straight from the comp. Every offset is relative to the
+   spot's own section, never to the page. */
+.spot--cup       { top: -14px; left: -214px;  width: 206px; transform: rotate(-1.4deg); }
+.spot--espresso  { top: 190px; left: -196px;  width: 134px; transform: rotate(2deg); }
+.spot--teapot    { top: -16px; left: -210px;  width: 168px; transform: rotate(-2.2deg); }
+.spot--beans     { top: -10px; left: -192px;  width: 132px; transform: rotate(1.2deg); }
+.spot--croissant { top: -22px; right: -214px; width: 198px; transform: rotate(1.6deg); }
+.spot--toast     { top: 185px; right: -196px; width: 146px; transform: rotate(-1.8deg); }
+.spot--cake      { top: -8px;  right: -208px; width: 180px; transform: rotate(1.1deg); }
+.spot--coldbrew  { top: -12px; right: -192px; width: 138px; transform: rotate(-1.5deg); }
+.spot--matcha    { top: 190px; right: -206px; width: 170px; transform: rotate(2.4deg); }
+.spot--flatwhite { top: -26px; left: -246px;  width: 232px; transform: rotate(-1.7deg); }
+
+.board-foot { padding: 150px 0 34px; }
+.board-foot .foot-inner { padding-top: 18px; }
+
+/* ------------------------------------------------------------- find us --- */
+
+.find {
+  padding: 34px var(--board-margin-live, 0) 0;
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+  align-items: start;
+  overflow-x: clip;
+}
+.find .sec { margin-bottom: 44px; }
+.find address {
+  font: italic 400 clamp(28px, 3.2vw, 38px)/1.28 var(--serif);
+  font-style: italic;
+  color: var(--forest);
+  margin: 0 0 20px;
+}
+.find p { font: 400 13px/1.8 var(--mono); color: var(--forest); max-width: 42ch; text-wrap: pretty; }
+.find p + p { margin-top: 14px; }
+.find .hero-onward { margin-top: 20px; }
+.find-links { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+
+/* --------------------------------------------------------------- mobile ---
+   Nav bar, then the plate as a band, then type on the page below. Per-state
+   band heights and object-positions are the comp's. */
+
+@media (max-width: 719px) {
+  :root { --bar-h: 60px; --gutter: 20px; }
+
+  .wordmark { font-size: 24px; }
+  .nav { display: none; }
+  .ind-dot { width: 9px; height: 9px; }
+  .ind-label { font-size: 9.5px; letter-spacing: 0.14em; }
+  .ind-trigger .mark { --mark-size: 12px; }
+  html.js .ind-panel { width: min(300px, calc(100vw - 40px)); }
+
+  .hero {
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero > .bar { position: static; order: 1; background: var(--cream); }
+  [data-state='closed'] .hero > .bar { background: var(--forest); }
+  .plate-wrap { position: relative; inset: auto; order: 2; height: var(--band, 290px); width: 100%; }
+  [data-state='closed'] .plate-wrap { inset: auto; height: var(--band, 300px); }
+  .hero-type {
+    position: static;
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    padding: 28px var(--gutter) 0;
+  }
+  .hero .stamp { position: static; order: 4; padding: 26px var(--gutter) 24px; }
+
+  [data-state='morning'] { --band: 290px; --plate-pos: 22% 50%; }
+  [data-state='late']    { --band: 290px; --plate-pos: 78% 50%; }
+  [data-state='midday']  { --band: 430px; --plate-pos: 55% 100%; }
+  [data-state='closed']  { --band: 300px; --plate-pos: 50% 45%; }
+
+  [data-state='morning'] .hero-type { --h1: 50px; }
+  [data-state='late']    .hero-type { --h1: 48px; }
+  [data-state='closed']  .hero-type { --h1: 48px; }
+  [data-state='midday']  .hero-type { --h1: 52px; }
+
+  .hero-eyebrow { font-size: 9.5px; margin-bottom: 16px; }
+  .hero-eyebrow .mark { --mark-size: 12px; }
+  .hero-headline { margin-bottom: 20px; }
+  .hero-rule { margin-bottom: 16px; }
+
+  /* morning + late strips are a desktop device; the band has no type over it */
+  [data-state='morning'] .strip, [data-state='late'] .strip { display: none; }
+
+  /* midday keeps its headline inside the plate, so the strip stays too */
+  [data-state='midday'] .strip { inset: 0 0 auto 0; height: 48.8%; }
+  [data-state='midday'] .hero-type { padding-top: 26px; }
+  [data-state='midday'] .hero-headline {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--bar-h) + 22px);
+    left: var(--gutter);
+    right: var(--gutter);
+    margin: 0;
+  }
+  [data-state='midday'] .hero-eyebrow { margin-bottom: 14px; }
+  [data-state='midday'] .hero-body { padding-bottom: 0; }
+
+  /* closed on mobile follows the comp: headline, then eyebrow, rule, hours,
+     with the derived subhead last */
+  [data-state='closed'] .hero-headline { order: -1; margin-bottom: 22px; }
+  [data-state='closed'] .hero-eyebrow { order: 1; }
+  [data-state='closed'] .hero-rule    { order: 2; }
+  [data-state='closed'] .hero-hours   { order: 3; }
+  [data-state='closed'] .hero-body    { order: 4; margin-top: 20px; max-width: none; }
+
+  /* The two-column hero variants collapse to one column of type. align-items
+     has to be reset with them: `end` and `start` mean the cross axis, and in a
+     column flex box that is left/right, which would shrink-wrap every line. */
+  [data-state='midday'] .hero-type,
+  [data-state='closed'] .hero-type {
+    grid-template-columns: none;
+    display: flex;
+    align-items: stretch;
+  }
+  [data-state='closed'] .hero-hours { margin-top: 0; }
+
+  /* The board loses its margins: spots bleed off the edges instead. Sections
+     must still take the full width — `align-items: start` from the desktop
+     grid would shrink-wrap them and pull the spots in over the type. */
+  .board, .find {
+    padding-left: 0;
+    padding-right: 0;
+    grid-template-columns: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 34px;
+    padding-top: 26px;
+  }
+  .board-col, .find > div { display: contents; }
+  .sec { min-height: 0 !important; }
+  .items { max-width: 250px; }
+
+  .page-head { display: block; padding-top: 34px; }
+  .page-head h1 { font-size: 58px; line-height: 0.96; margin-bottom: 14px; }
+  .page-meta { text-align: left; padding: 0; font-size: 9.5px; }
+  .page-rule { margin-top: 20px; }
+  .sec-head { display: block; margin-bottom: 16px; }
+  .sec-name { font-size: 28px; display: block; }
+  .sec-note { text-align: inherit; display: block; margin-top: 6px; }
+  .item { font-size: 13px; }
+  .standfirst { font-size: 18px; max-width: 26ch; }
+  .board-foot { padding-top: 120px; }
+
+  /* alternating: even sections take the right gutter, odd ones the left */
+  .sec[data-sec='coffee']    { order: 1; }
+  .sec[data-sec='tea']       { order: 2; }
+  .sec[data-sec='kitchen']   { order: 3; }
+  .sec[data-sec='sweet']     { order: 4; }
+  .sec[data-sec='cold']      { order: 5; }
+  .sec[data-sec='take-home'] { order: 6; }
+
+  .sec[data-sec='tea'] .sec-head,
+  .sec[data-sec='sweet'] .sec-head,
+  .sec[data-sec='take-home'] .sec-head { text-align: right; }
+  .sec[data-sec='tea'] .items,
+  .sec[data-sec='sweet'] .items,
+  .sec[data-sec='take-home'] .items { margin-left: 96px; max-width: none; }
+  .sec[data-sec='sweet'] .items { margin-left: 106px; }
+  .sec[data-sec='cold'] .items { max-width: 236px; }
+
+  .sec .items, .sec .standfirst, .sec .sec-head { position: relative; }
+
+  .spot--espresso, .spot--toast, .spot--matcha { display: none; }
+  .spot--cup       { top: -18px; left: auto; right: -46px; width: 156px; }
+  .spot--teapot    { top: -6px;  left: -48px;  width: 132px; }
+  .spot--croissant { top: -26px; right: -52px; width: 168px; }
+  .spot--cake      { top: -14px; right: auto; left: -50px; width: 156px; }
+  .spot--coldbrew  { top: -20px; right: -44px; width: 140px; }
+  .spot--beans     { top: -16px; left: -44px;  width: 126px; }
+  .spot--flatwhite { top: -30px; right: -56px; left: auto; width: 200px; }
+
+  .foot-inner { padding: 26px 0 24px; font-size: 9.5px; }
+}
+
+/* Between the mobile comp and the full 1120 board there is no margin wide
+   enough for a 206px spot. Scale them down and let them sit closer in. */
+@media (min-width: 720px) and (max-width: 1179px) {
+  .spot { transform-origin: center; }
+  .spot--cup       { width: 168px; left: -178px; }
+  .spot--espresso  { width: 112px; left: -160px; }
+  .spot--teapot    { width: 138px; left: -172px; }
+  .spot--beans     { width: 110px; left: -158px; }
+  .spot--croissant { width: 162px; right: -176px; }
+  .spot--toast     { width: 120px; right: -160px; }
+  .spot--cake      { width: 148px; right: -172px; }
+  .spot--coldbrew  { width: 114px; right: -158px; }
+  .spot--matcha    { width: 140px; right: -170px; }
+  .spot--flatwhite { width: 188px; left: -202px; }
+}
+
+/* -------------------------------------------------------------- motion ---
+   The only animation on the site other than the pigment layer: a cross-fade
+   between pages that passes through the paper. Removed entirely under
+   reduced motion, along with the canvas. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  ::view-transition-group(root) {
+    background-color: var(--cream);
+    background-image: image-set(
+      url('art/tex-paper-900w.avif') type('image/avif'),
+      url('art/tex-paper-900w.webp') type('image/webp'));
+    background-size: cover;
+    background-position: center;
+  }
+  ::view-transition-old(root) { animation: dv-out 190ms ease-in both; }
+  ::view-transition-new(root) { animation: dv-in 230ms 170ms ease-out both; }
+}
+
+@keyframes dv-out { to { opacity: 0; } }
+@keyframes dv-in  { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pigment { display: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------------------------------------------------------------- print --- */
+
+@media print {
+  .bar, .ind, .pigment, .strip, .spot, .stamp { display: none !important; }
+  body { color: #000; background: #fff; }
+  .board { display: block; }
+}

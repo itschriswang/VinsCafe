@@ -1,0 +1,187 @@
+<!doctype html>
+<!-- index.html — developer territory. The owner edits menu.json and config.js. -->
+<html lang="en-GB" data-state="midday">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Deckle — the first pour is at seven</title>
+<meta name="description" content="A small cafe on Lower Marsh. Filter, cortado, one sandwich and one soup, and a corner table nobody will move you from. Wednesday to Sunday.">
+
+<link rel="canonical" href="https://itschriswang.github.io/VinCafe/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Deckle">
+<meta property="og:title" content="Deckle — the first pour is at seven">
+<meta property="og:description" content="A small cafe on Lower Marsh. Filter, cortado, one sandwich and one soup. Wednesday to Sunday, seven till four.">
+<meta property="og:url" content="https://itschriswang.github.io/VinCafe/">
+<meta property="og:image" content="https://itschriswang.github.io/VinCafe/art/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Watercolour of the counter at midday, a row of mismatched cups set out under a yellow wash.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" href="style.css" as="style">
+<link rel="preload" href="fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- config.js then app.js, both blocking, both tiny: the hero state has to be
+     resolved before the first paint or the page shows the wrong time of day. -->
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!--gen:jsonld-->
+<script type="application/ld+json" data-generated>
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "@id": "https://itschriswang.github.io/VinCafe/#cafe",
+  "name": "Deckle",
+  "url": "https://itschriswang.github.io/VinCafe/",
+  "image": "https://itschriswang.github.io/VinCafe/art/og-home.jpg",
+  "description": "A small independent cafe on Lower Marsh. Filter, cortado, one sandwich and one soup.",
+  "servesCuisine": [
+    "Coffee",
+    "Breakfast",
+    "Sandwiches"
+  ],
+  "priceRange": "££",
+  "currenciesAccepted": "GBP",
+  "hasMenu": "https://itschriswang.github.io/VinCafe/menu.html",
+  "telephone": "+44 20 7946 0417",
+  "email": "hello@deckle.cafe",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "41 Lower Marsh",
+    "addressLocality": "London",
+    "postalCode": "SE1 7RG",
+    "addressCountry": "GB"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 51.50086,
+    "longitude": -0.11342
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "07:00",
+      "closes": "16:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "08:00",
+      "closes": "16:00"
+    }
+  ]
+}
+</script>
+<!--/gen-->
+</head>
+
+<body>
+
+<section class="hero">
+
+  <header class="bar">
+    <a class="wordmark" href="index.html" aria-label="Deckle, home">Deckle</a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="menu.html">Menu</a>
+      <a href="find-us.html">Find us</a>
+      <a href="menu.html#board">The board</a>
+    </nav>
+
+    <div class="ind">
+      <button class="ind-trigger" type="button" aria-expanded="false" aria-controls="ind-panel" hidden>
+        <span class="ind-dot" aria-hidden="true"></span>
+        <span class="ind-label"></span>
+        <span class="mark mark--hours" aria-hidden="true"></span>
+      </button>
+      <div class="ind-panel" id="ind-panel">
+        <button class="ind-close" type="button" aria-label="Close hours">
+          <span class="mark mark--close" aria-hidden="true"></span>
+        </button>
+        <p class="ind-title">Where and when</p>
+        <p class="ind-addr">41 Lower Marsh<br>London SE1 7RG</p>
+        <dl class="hours">
+<!--gen:hours-->
+          <dt>Wed–Fri</dt><dd>07 – 16</dd>
+          <dt>Sat–Sun</dt><dd>08 – 16</dd>
+          <dt>Mon–Tue</dt><dd>Closed</dd>
+<!--/gen-->
+        </dl>
+      </div>
+    </div>
+  </header>
+
+  <div class="plate-wrap">
+    <!-- The plate is written here, in place, so the parser fetches the painting
+         for the hour you actually arrived at and never one of the other three.
+         Without JavaScript the <noscript> copy below is the midday plate. -->
+    <script>if (window.Deckle) Deckle.writePlate(document.currentScript);</script>
+    <noscript>
+      <picture class="plate">
+        <source type="image/avif" sizes="100vw" srcset="art/hero-midday-960w.avif 960w, art/hero-midday-1376w.avif 1376w">
+        <source type="image/webp" sizes="100vw" srcset="art/hero-midday-960w.webp 960w, art/hero-midday-1376w.webp 1376w">
+        <img src="art/hero-midday-1376w.webp" width="1376" height="768" alt="Watercolour of the counter at midday under a yellow wash, a row of mismatched cups and saucers set out along it, and a grey city window to the left.">
+      </picture>
+      <img class="strip" alt="" aria-hidden="true" width="1376" height="768" sizes="100vw" srcset="art/tex-paper-900w.avif 900w, art/tex-paper-1376w.avif 1376w" src="art/tex-paper-900w.webp">
+    </noscript>
+  </div>
+
+  <div class="hero-type">
+    <p class="hero-eyebrow">
+      <span class="mark mark--board" aria-hidden="true"></span>
+      <span class="hero-eyebrow-text">Board up at eleven</span>
+    </p>
+    <h1 class="hero-headline">Lunch is one thing, done well.</h1>
+    <div class="hero-rule" aria-hidden="true"></div>
+    <p class="hero-body">One sandwich, one soup, one cake. Gone by two, usually.</p>
+    <a class="hero-onward" href="menu.html#board">
+      Today’s board
+      <span class="mark mark--onward" aria-hidden="true"></span>
+    </a>
+    <dl class="hero-hours">
+<!--gen:hours-->
+      <dt>Wed–Fri</dt><dd>07 – 16</dd>
+      <dt>Sat–Sun</dt><dd>08 – 16</dd>
+      <dt>Mon–Tue</dt><dd>Closed</dd>
+<!--/gen-->
+    </dl>
+  </div>
+
+  <p class="stamp"></p>
+
+  <script>if (window.Deckle) Deckle.paint();</script>
+
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <span>41 Lower Marsh · London SE1</span>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="menu.html">Menu</a>
+      <a href="find-us.html">Find us</a>
+      <a href="mailto:hello@deckle.cafe">hello@deckle.cafe</a>
+    </nav>
+    <span class="foot-hours"><!--gen:hours-summary-->Wed–Fri 07–16 · Sat–Sun 08–16<!--/gen--></span>
+  </div>
+</footer>
+
+</body>
+</html>

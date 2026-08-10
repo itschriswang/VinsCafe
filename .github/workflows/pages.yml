@@ -1,0 +1,68 @@
+name: Deploy
+
+# The site has no build step. This workflow only checks that the blocks derived
+# from config.js and menu.json are current, assembles the files that actually
+# ship — leaving the PNG masters and the developer tools behind — and publishes
+# them to GitHub Pages.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Derived blocks are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/sync-static.mjs --check
+
+  deploy:
+    name: Publish
+    needs: check
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp -r \
+            index.html menu.html find-us.html 404.html \
+            style.css app.js pigment.js config.js menu.json \
+            robots.txt sitemap.xml \
+            favicon.svg favicon.ico apple-touch-icon.png \
+            art fonts \
+            _site/
+          touch _site/.nojekyll
+          du -sh _site
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

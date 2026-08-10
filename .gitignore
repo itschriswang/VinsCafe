@@ -1,0 +1,7 @@
+# Nothing here is part of the site. The site has no dependencies.
+node_modules/
+package.json
+package-lock.json
+.DS_Store
+__pycache__/
+*.pyc
