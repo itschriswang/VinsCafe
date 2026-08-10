@@ -11,6 +11,12 @@ const CAFE = {
   name: 'Gam Sia',
   timezone: 'Europe/London',
 
+  /* Where the site lives, with the trailing slash. Every absolute URL on it —
+     the canonical links, the social tags, the search-engine data, sitemap.xml
+     and robots.txt — is built from this by tools/sync-static.mjs. Moving to a
+     custom domain is this one line and a CNAME. */
+  url: 'https://itschriswang.github.io/VinsCafe/',
+
   hours: {
     0: [8, 14],   // Sunday      — the one day
     1: null,      // Monday      — shut

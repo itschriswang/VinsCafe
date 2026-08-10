@@ -238,8 +238,31 @@ function boardHTML() {
 
 /* ---- page-level JSON-LD ----------------------------------------------------- */
 
-function jsonLd(existing) {
+/* Every absolute URL on the site is built here from CAFE.url, so the domain is
+   written down exactly once. It was written down 22 times across three heads,
+   sitemap.xml and robots.txt, and renaming the repository silently pointed all
+   of them at a 404 — canonicals, social cards and the search-engine data. */
+const SITE = CAFE.url.replace(/\/*$/, '/');
+const OG = { 'index.html': 'og-home', 'menu.html': 'og-menu', 'find-us.html': 'og-find-us' };
+const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
+
+function siteUrls(src, page) {
+  let out = src
+    .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${pageUrl(page)}$2`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${pageUrl(page)}$2`);
+  if (OG[page]) {
+    out = out.replace(/(<meta property="og:image" content=")[^"]*(")/,
+      `$1${SITE}art/${OG[page]}.jpg$2`);
+  }
+  return out;
+}
+
+function jsonLd(existing, page) {
   const data = JSON.parse(existing);
+  data['@id'] = SITE + '#cafe';
+  data.url = pageUrl(page);
+  data.hasMenu = SITE + 'menu.html';
+  if (OG[page]) data.image = SITE + `art/${OG[page]}.jpg`;
   data.name = CAFE.name;
   data.telephone = CAFE.telephone;
   data.email = CAFE.email;
@@ -271,9 +294,11 @@ for (const page of PAGES) {
   const before = read(page);
   let after = before;
 
+  after = siteUrls(after, page);
+
   after = region(after, 'jsonld', (body) => {
     const m = /<script[^>]*>([\s\S]*?)<\/script>/.exec(body);
-    return m ? '\n' + jsonLd(m[1]) + '\n' : body;
+    return m ? '\n' + jsonLd(m[1], page) + '\n' : body;
   });
 
   after = region(after, 'hours', (body) => {
@@ -292,6 +317,28 @@ for (const page of PAGES) {
   if (check) { console.error(`  ${page} OUT OF DATE`); stale++; continue; }
   writeFileSync(join(ROOT, page), after);
   console.log(`  ${page} rewritten`);
+}
+
+/* sitemap.xml and robots.txt carry the same absolute URLs, so they are written
+   from the same constant rather than kept in step by hand. */
+const LASTMOD = (/<lastmod>([^<]+)<\/lastmod>/.exec(read('sitemap.xml')) || [, '2026-08-10'])[1];
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  ['index.html', 'menu.html', 'find-us.html'].map((p, i) =>
+    '  <url>\n' +
+    `    <loc>${pageUrl(p)}</loc>\n` +
+    `    <lastmod>${LASTMOD}</lastmod>\n` +
+    `    <priority>${['1.0', '0.8', '0.8'][i]}</priority>\n` +
+    '  </url>').join('\n') +
+  '\n</urlset>\n';
+
+const robots = `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`;
+
+for (const [file, body] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
+  if (read(file) === body) { console.log(`  ${file} up to date`); continue; }
+  if (check) { console.error(`  ${file} OUT OF DATE`); stale++; continue; }
+  writeFileSync(join(ROOT, file), body);
+  console.log(`  ${file} rewritten`);
 }
 
 if (check && stale) {

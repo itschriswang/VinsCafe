@@ -34,7 +34,7 @@ Not deployed: `src-art/` (the PNG masters), `tools/`, `.github/`, `EDITING.md`,
 
 ## Deploying
 
-Live at **https://itschriswang.github.io/VinCafe/**, published by
+Live at **https://itschriswang.github.io/VinsCafe/**, published by
 `.github/workflows/pages.yml` on every push to `main`. The workflow checks that
 the derived blocks are current, copies the files listed above into `_site` and
 hands that to GitHub Pages. Nothing is compiled; the deployed files are the
@@ -43,15 +43,20 @@ files in this repository.
 Every asset path is relative, so the site also runs from any subdirectory, from
 `file://`, or from any other static host — copy the same list of files up.
 
-The absolute site URL appears in the canonical links, the Open Graph tags, the
-JSON-LD, `sitemap.xml` and `robots.txt`. To move to a custom domain, replace it
-everywhere and add a `CNAME`:
+The absolute site URL is written down once, as `url` in `config.js`. The
+canonical links, the Open Graph tags, the JSON-LD, `sitemap.xml` and
+`robots.txt` are all generated from it. To move to a custom domain:
 
 ```sh
-grep -rl 'itschriswang.github.io/VinCafe/' index.html menu.html find-us.html 404.html sitemap.xml robots.txt README.md \
-  | xargs sed -i 's#https://itschriswang.github.io/VinCafe/#https://gamsia.cafe/#g'
+# edit config.js:  url: 'https://gamsia.cafe/'
+node tools/sync-static.mjs
 echo 'gamsia.cafe' > CNAME     # and add CNAME to the cp list in the workflow
 ```
+
+It used to be 22 copies of the string across three heads, `sitemap.xml` and
+`robots.txt`. Renaming the repository pointed every one of them at a 404 —
+canonicals, social cards and the search-engine data — with nothing failing
+loudly. `--check` now catches it.
 
 ## How it works
 
