@@ -143,11 +143,27 @@ function previewPick(data) {
 const previewSlice = (data) => previewPick(data).map((sec) => ({
   section: sec.section,
   note: sec.note,
-  items: (sec.items || []).slice(0, PREVIEW_ITEMS)
+  /* One spot per column, not the section's whole set: the preview columns are
+     narrower than the board's and a second spot would land on the type. */
+  spot: (sec.spots || [])[0] || null,
+  items: (sec.items || []).slice(0, PREVIEW_ITEMS),
+  of: (sec.items || []).length
 }));
+
+/* What the preview is NOT showing. Without this the four items under each
+   heading read as the entire menu, which is the one thing a cafe site must
+   never get wrong. Both numbers come from menu.json, so they cannot drift. */
+function previewRest(data) {
+  const shown = previewPick(data);
+  return {
+    others: data.filter((s) => !shown.includes(s)).map((s) => s.section),
+    total: data.reduce((n, s) => n + (s.items || []).length, 0)
+  };
+}
 
 function previewSectionHTML(sec) {
   let h = `<section class="sec" data-sec="${slug(sec.section)}">`;
+  if (sec.spot) h += spotHTML(sec.spot);
   h += `<div class="sec-head"><h3 class="sec-name">${esc(sec.section)}</h3>`;
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
   h += '</div><ul class="items">';
@@ -156,15 +172,25 @@ function previewSectionHTML(sec) {
       '<span class="item-lead" aria-hidden="true"></span>' +
       `<span class="item-price">${esc(it.price)}</span></li>`;
   }
-  return h + '</ul></section>';
+  h += '</ul>';
+  if (sec.of > sec.items.length) h += `<p class="sec-more">and ${sec.of - sec.items.length} more</p>`;
+  return h + '</section>';
 }
 
 function previewHTML() {
   const slice = previewSlice(MENU);
-  const sig = signature(JSON.stringify(slice));
+  const rest = previewRest(MENU);
+  const sig = signature(JSON.stringify([slice, rest]));
   return [
     `    <div class="preview-cols" data-preview-sig="${sig}">`,
     ...slice.map((s) => '      ' + previewSectionHTML(s)),
+    '    </div>',
+    '    <div class="preview-tail">',
+    `      <p class="preview-rest">Also on the board: ${rest.others.map(esc).join(', ')}.</p>`,
+    '      <a class="hero-onward preview-more" href="menu.html#board">',
+    `        The whole board, ${rest.total} things`,
+    '        <span class="mark mark--onward" aria-hidden="true"></span>',
+    '      </a>',
     '    </div>'
   ].join('\n');
 }

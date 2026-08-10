@@ -54,6 +54,7 @@
   --forest-72: oklch(28.97% 0.0426 134.78 / 0.72);
   --forest-78: oklch(28.97% 0.0426 134.78 / 0.78);
   --cream-82:  oklch(94.65% 0.0181 89.36 / 0.82);
+  --cream-30:  oklch(94.65% 0.0181 89.36 / 0.30);
 
   --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --mono: 'Fragment Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -346,6 +347,49 @@ html:not(.js) .ind-close { display: none; }
 }
 
 .hero-type { position: absolute; z-index: 3; }
+
+/* The type carries its own sheet of paper, sized by the type itself.
+ *
+ * The fixed .strip could not do this: it is a percentage of the hero, while
+ * the copy is however many lines the owner happens to write, so a longer
+ * headline or one extra line of body pushed type off the paper and onto bare
+ * painting — measured at 1.88:1. Because this is sized by the block it sits
+ * behind, no edit to config.js, menu.json or COPY can put type on a ground
+ * that was not measured.
+ *
+ * It is also the better join. A hard-edged band reads as a box pasted on the
+ * picture; a feathered wash at 90% reads as paper laid on wet paint, which is
+ * what the whole site is made of, and the painting still comes through it. */
+.hero-type::before {
+  content: '';
+  position: absolute;
+  inset: -76px -104px -64px -104px;
+  z-index: -1;
+  opacity: 0.74;
+  background-image: image-set(
+    url('art/tex-paper-1376w.avif') type('image/avif'),
+    url('art/tex-paper-1376w.webp') type('image/webp'));
+  background-size: cover;
+  background-position: 45% 55%;
+  /* The ellipse is inscribed in the box — 50% 50% — so the fade reaches zero
+     exactly at the edge and the element's own clip is never visible. Sized any
+     larger, the mask is still half-opaque where the box ends and you get a
+     faint vertical seam down the painting. Solid only in the core, so what is
+     left reads as paper coming up through the paint where the writing is,
+     not as a panel laid on top of it. */
+  -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 36%, rgba(0,0,0,0) 100%);
+          mask-image: radial-gradient(50% 50% at 50% 50%, #000 36%, rgba(0,0,0,0) 100%);
+}
+
+/* Morning and late let the headline hang past the type column onto the paint.
+   The wash has to reach with it, or the bled end is the one part of the
+   headline with no ground under it — which is exactly where 1024 failed. */
+[data-state='morning'] .hero-type::before { left: calc(-1 * var(--bleed) - 52px); }
+[data-state='late'] .hero-type::before { right: calc(-1 * var(--bleed) - 52px); }
+
+/* Closed sets its type on the page below the painting, not over it, so the
+   wash would only be paper on paper. */
+[data-state='closed'] .hero-type::before { display: none; }
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -460,7 +504,10 @@ html:not(.js) .ind-close { display: none; }
 [data-state='midday'] .hero-headline {
   grid-column: 1;
   grid-row: 1 / span 3;
-  align-self: end;
+  /* start, not end: end-aligned, the headline's position depended on how tall
+     the right-hand column happened to be, so lengthening the body by one line
+     pushed the headline down off the strip and onto the dark window frame. */
+  align-self: start;
   line-height: 1;
   letter-spacing: -0.018em;
 }
@@ -736,20 +783,52 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   letter-spacing: -0.015em;
   color: var(--forest);
 }
+/* The preview borrows the board's margins so its two sections can carry a spot
+   each. Without them the home page has no paint below the hero at all, which
+   is what made the lower half read as a newsletter. */
 .preview-cols {
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 56px;
   row-gap: 40px;
   margin-top: 34px;
+  padding: 0 var(--board-margin-live);
+  overflow-x: clip;                     /* a bled spot must never make the page scroll */
 }
-.preview-more { margin-top: 40px; }
+
+/* Truncation, said three ways: per column, by naming the sections we left out,
+   and by counting the whole board on the link. A visitor should never be able
+   to mistake eight items for the menu. */
+.sec-more {
+  margin-top: 12px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--forest-55);
+}
+.preview-tail {
+  margin-top: 40px;
+  padding: 0 var(--board-margin-live, 0);
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
+}
+.preview-rest {
+  font: 400 13px/1.65 var(--mono);
+  color: var(--forest-72);
+}
+.preview-more { margin-top: 18px; }
 
 @media (max-width: 719px) {
   .preview-head { display: block; }
   .preview-head h2 { font-size: 34px; margin-bottom: 12px; }
-  .preview-cols { grid-template-columns: none; row-gap: 34px; margin-top: 26px; }
-  .preview-more { margin-top: 30px; }
+  .preview-cols {
+    grid-template-columns: none;
+    row-gap: 40px;
+    margin-top: 26px;
+    padding: 0;
+  }
+  .preview-tail { margin-top: 34px; padding: 0; }
+  .preview-more { margin-top: 16px; }
 }
 
 /* ------------------------------------------------------------- find us --- */
@@ -780,10 +859,35 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
    band heights and object-positions are the comp's. */
 
 @media (max-width: 719px) {
-  :root { --bar-h: 60px; --gutter: 20px; }
+  :root { --bar-h: 60px; --gutter: 20px; --lap: 118px; }
 
   .wordmark { font-size: 24px; }
-  .nav { display: none; }
+
+  /* A phone had no navigation at all: .nav was display:none, and when we are
+     closed the hero's board link is hidden too, so the menu could only be
+     reached by scrolling the entire hero. The bar becomes a two-row masthead —
+     name and status on the first line, the two links under a hairline. Three
+     items will not fit on one 360px row without shrinking the wordmark past
+     the point where it reads as a wordmark. */
+  .bar {
+    height: auto;
+    min-height: var(--bar-h);
+    flex-wrap: wrap;
+    padding-top: 13px;
+  }
+  .nav {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: 24px;
+    margin-top: 13px;
+    padding: 10px 0;
+    border-top: 1px solid var(--forest-26);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+  }
+  [data-state='closed'] .hero .nav { border-top-color: var(--cream-30); }
+
   .ind-dot { width: 9px; height: 9px; }
   .ind-label { font-size: 9.5px; letter-spacing: 0.14em; }
   .ind-trigger .mark { --mark-size: 12px; }
@@ -799,22 +903,62 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   [data-state='closed'] .hero > .bar { background: var(--forest); }
   .plate-wrap { position: relative; inset: auto; order: 2; height: var(--band, 290px); width: 100%; }
   [data-state='closed'] .plate-wrap { inset: auto; height: var(--band, 300px); }
+
+  /* The phone layout used to be a squat image band with the copy stacked under
+     it on flat cream, which reads as a newsletter rather than as the same
+     painted sheet the desktop hero is. The plate is taller now and the type
+     sits on a sheet of paper laid over the bottom of it — the site's own
+     metaphor, and the same construction as the desktop strip. */
   .hero-type {
-    position: static;
+    position: relative;
+    z-index: 2;
     order: 3;
     display: flex;
     flex-direction: column;
     width: auto;
-    padding: 28px var(--gutter) 0;
+    margin-top: calc(-1 * var(--lap));
+    padding: calc(var(--lap) * 0.58) var(--gutter) 0;
+  }
+  .hero-type::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -54px 0;
+    z-index: -1;
+    opacity: 0.94;
+    background-image: image-set(
+      url('art/tex-paper-900w.avif') type('image/avif'),
+      url('art/tex-paper-900w.webp') type('image/webp'));
+    background-size: cover;
+    background-position: 40% 62%;
+    /* Feathered at the top so the sheet meets the painting as a wash rather
+       than a ruled line; feathered at the foot so it dissolves into the page. */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 var(--lap), #000 calc(100% - 54px), rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 var(--lap), #000 calc(100% - 54px), rgba(0,0,0,0) 100%);
   }
   /* on the phone the timestamp is on the page, not on the plate */
   .hero .stamp { position: static; order: 4; padding: 26px var(--gutter) 24px; }
   .hero .stamp::before { display: none; }
 
-  [data-state='morning'] { --band: 290px; --plate-pos: 22% 50%; }
-  [data-state='late']    { --band: 290px; --plate-pos: 78% 50%; }
-  [data-state='midday']  { --band: 430px; --plate-pos: 55% 100%; }
-  [data-state='closed']  { --band: 300px; --plate-pos: 50% 45%; }
+  /* Bands are deeper than the comp's: the comp had the type below the plate,
+     and 118px of it now sits back over the painting, so the visible painting
+     would otherwise shrink. */
+  [data-state='morning'] { --band: 420px; --plate-pos: 22% 46%; }
+  [data-state='late']    { --band: 420px; --plate-pos: 78% 46%; }
+  [data-state='midday']  { --band: 500px; --plate-pos: 55% 92%; }
+  [data-state='closed']  { --band: 410px; --plate-pos: 50% 42%; }
+
+  /* The desktop per-state rules pin .hero-type into a corner and cap it around
+     430px. On the phone it is a block in flow and must be full width. Without
+     this the copy column was 300px inside a 390px screen — invisible while it
+     had no background, a hard edge down the page once it did. */
+  [data-state='morning'] .hero-type,
+  [data-state='midday']  .hero-type,
+  [data-state='late']    .hero-type,
+  [data-state='closed']  .hero-type {
+    inset: auto;
+    width: auto;
+    max-width: none;
+  }
 
   [data-state='morning'] .hero-type { --h1: 50px; }
   [data-state='late']    .hero-type { --h1: 48px; }
@@ -832,20 +976,14 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   .hero-headline { margin-bottom: 20px; }
   .hero-rule { margin-bottom: 16px; }
 
-  /* morning + late strips are a desktop device; the band has no type over it */
-  [data-state='morning'] .strip, [data-state='late'] .strip { display: none; }
-
-  /* midday keeps its headline inside the plate, so the strip stays too */
-  [data-state='midday'] .strip { inset: 0 0 auto 0; height: 48.8%; }
-  [data-state='midday'] .hero-type { padding-top: 26px; }
-  [data-state='midday'] .hero-headline {
-    position: absolute;
-    z-index: 3;
-    top: calc(var(--bar-h) + 22px);
-    left: var(--gutter);
-    right: var(--gutter);
-    margin: 0;
-  }
+  /* The strips are a desktop device. On the phone every state now shares one
+     composition — plate, then the paper sheet laid over its foot carrying all
+     the type — so midday no longer needs its headline pinned inside the plate
+     with a strip behind it. One layout for four states instead of two, and it
+     drops the last thing measured off --bar-h, which the second nav row
+     changed the height of. */
+  .strip { display: none; }
+  [data-state='midday'] .hero-headline { position: static; margin: 0 0 18px; }
   [data-state='midday'] .hero-eyebrow { margin-bottom: 14px; }
   [data-state='midday'] .hero-body { padding-bottom: 0; }
 

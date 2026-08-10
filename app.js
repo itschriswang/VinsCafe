@@ -38,34 +38,38 @@
 
   var LABEL = { morning: 'Morning', midday: 'Midday', late: 'Late afternoon', closed: 'Closed' };
 
+  /* Copy rule: name a real thing in the room. No adverbs doing the work of a
+     detail — "toasted properly" tells you nothing, "under the grill" is a
+     kitchen you can picture. Every line here should be false of the cafe two
+     doors down. */
   var COPY = {
     morning: {
       eyebrow: 'Seven till eleven',
       mark: 'note',
-      headline: 'The first pour is at seven.',
-      body: 'Filter, cortado, and yesterday’s loaf toasted properly. Quiet until about half eight.'
+      headline: 'The grinder goes on at ten to seven.',
+      body: 'Filter, cortado, yesterday’s loaf under the grill. Nobody says much before half eight.'
     },
     midday: {
       eyebrow: 'Board up at eleven',
       mark: 'board',
-      headline: 'Lunch is one thing, done well.',
-      body: 'One sandwich, one soup, one cake. Gone by two, usually.'
+      headline: 'One soup. When it goes, it goes.',
+      body: 'A sandwich, a cake, and whatever the kitchen felt like. Usually finished by two.'
     },
     late: {
       /* The brief’s eyebrow read “half five”, which contradicts the four o’clock
          close in config.js. The hour here is derived so the two cannot disagree. */
       eyebrow: null,
       mark: 'hours',
-      headline: 'The light gets long. We stay open.',
-      body: 'The corner table is free most afternoons. Nobody will ask you to order again.'
+      headline: 'The corner table is free. It usually is.',
+      body: 'The sun comes round the bookshop at three and sits on the back wall until we shut.'
     },
     closed: {
-      /* The cafe is shut for about three quarters of the week, so this is the
-         page most visitors land on. It leads with what the place is; the
-         reopening is the subhead, and the hours table sits beside it. */
+      /* Shut about three quarters of the week, so this is the page most people
+         land on — and the only page where there is room to say what the name
+         means. The subhead carries both the room and the day we reopen. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
-      headline: 'A long counter, six stools, and one soup a day.',
+      headline: 'Gam sia is thank you in Hokkien.',
       body: null        /* derived: it has to name the day we actually reopen */
     }
   };
@@ -153,6 +157,12 @@
              : n.days === 1 ? 'tomorrow'
              : 'on ' + DAY_LONG[n.weekday];
     return 'Closed until ' + hour12(n.hour) + ' ' + when + '.';
+  }
+
+  /* Closed says what the room is first, then when it opens again. One line,
+     because on a phone it sits directly under the headline. */
+  function closedBody(now) {
+    return 'A long counter, six stools, one soup a day. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
@@ -299,7 +309,7 @@
     var head = $('.hero-headline', hero);
     if (head && !head.hasAttribute('data-fixed')) setText(head, c.headline || closedHeadline(now));
     var body = $('.hero-body', hero);
-    if (body && !body.hasAttribute('data-fixed')) setText(body, c.body || closedHeadline(now));
+    if (body && !body.hasAttribute('data-fixed')) setText(body, c.body || closedBody(now));
     paintHours($('.hero-hours', hero));
   }
 
@@ -457,13 +467,30 @@
       return {
         section: sec.section,
         note: sec.note,
-        items: (sec.items || []).slice(0, PREVIEW_ITEMS)
+        /* One spot, not the section's whole set: the preview columns are
+           narrower than the board's and a second spot would land on the type. */
+        spot: (sec.spots || [])[0] || null,
+        items: (sec.items || []).slice(0, PREVIEW_ITEMS),
+        of: (sec.items || []).length
       };
     });
   }
 
+  /* What the preview is NOT showing. Without this the four items under each
+     heading read as the entire menu, which is the one thing a cafe site must
+     never get wrong. Both numbers come from menu.json, so they cannot drift. */
+  function previewRest(data) {
+    var shown = previewPick(data);
+    return {
+      others: data.filter(function (s) { return shown.indexOf(s) < 0; })
+                  .map(function (s) { return s.section; }),
+      total: data.reduce(function (n, s) { return n + (s.items || []).length; }, 0)
+    };
+  }
+
   function previewHTML(sec) {
     var h = '<section class="sec" data-sec="' + slug(sec.section) + '">';
+    if (sec.spot) h += spotHTML(sec.spot);
     h += '<div class="sec-head"><h3 class="sec-name">' + esc(sec.section) + '</h3>';
     if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
     h += '</div><ul class="items">';
@@ -472,7 +499,19 @@
         '</span><span class="item-lead" aria-hidden="true"></span>' +
         '<span class="item-price">' + esc(it.price) + '</span></li>';
     });
-    return h + '</ul></section>';
+    h += '</ul>';
+    if (sec.of > sec.items.length) {
+      h += '<p class="sec-more">and ' + (sec.of - sec.items.length) + ' more</p>';
+    }
+    return h + '</section>';
+  }
+
+  function previewRestHTML(rest) {
+    var h = '<p class="preview-rest">Also on the board: ' + rest.others.map(esc).join(', ') + '.</p>';
+    h += '<a class="hero-onward preview-more" href="menu.html#board">' +
+      'The whole board, ' + rest.total + ' things' +
+      ' <span class="mark mark--onward" aria-hidden="true"></span></a>';
+    return h;
   }
 
   function signature(str) {
@@ -492,10 +531,15 @@
     }).then(function (data) {
       if (!Array.isArray(data)) return;
       if (preview) {
-        var psig = signature(JSON.stringify(previewSlice(data)));
+        /* The signature covers the rest-line too, so an edit that only changes
+           a section we are not showing still updates "and 15 more". */
+        var rest = previewRest(data);
+        var psig = signature(JSON.stringify([previewSlice(data), rest]));
         if (psig !== preview.getAttribute('data-preview-sig')) {
           preview.innerHTML = previewSlice(data).map(previewHTML).join('');
           preview.setAttribute('data-preview-sig', psig);
+          var tail = $('.preview-tail');
+          if (tail) tail.innerHTML = previewRestHTML(rest);
         }
       }
       if (!board) return;

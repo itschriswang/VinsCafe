@@ -35,7 +35,14 @@ This is the menu. Each block is one section of the board.
   standfirst are the two shown under the hero on the home page, four items each.
   Move it to another section and the front page follows.
 - **`spots`** are the paintings in the margin. Leave these alone unless you have
-  had new ones painted.
+  had new ones painted. The first spot of each front-page section is also the
+  painting that appears beside it on the home page.
+
+Everything the front page says about the size of the menu counts itself. "And 2
+more" under a column, "Also on the board: Tea, Sweet, Cold, Take home", and "The
+whole board, 23 things" are all read off `menu.json` when the page is built — so
+adding a drink or a whole section updates them on its own, and the front page
+can never imply that the eight items it shows are the entire menu.
 
 Adding or removing items is safe: the paintings stay exactly where they are.
 

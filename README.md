@@ -122,11 +122,19 @@ the plate positions or the pigment layer. It needs the site served locally and
   reopening in the subhead, and every state carries a short board preview
   underneath: the two sections of `menu.json` that have a `standfirst`, four
   items each. This departs from the brief's "hero, then nothing".
-- **Type on the paint.** The paper strip is translucent and the headline hangs
-  past it onto the painting; the eyebrow, rule and body stay on paper, because
-  48px holds its own over a wash and 13px does not. Midday is the exception —
-  below 19% its headline reaches the window frame and measures 2.72:1 — so it
-  stays above the paint and gets its integration from the strip instead.
+- **The type carries its own paper.** Each hero's copy sits on a wash sized by
+  the copy itself (`.hero-type::before`), not on the fixed `.strip`. The strip
+  is a percentage of the hero while the copy is however many lines someone
+  writes, so a longer headline or one extra line of body used to push type onto
+  bare painting — measured at 1.88:1. The wash is an ellipse inscribed in its
+  own box so the fade reaches zero before the element clips; sized any larger
+  you get a faint seam down the painting where the mask is cut off.
+- **The phone gets the same composition, not a cut-down one.** Plate, then the
+  paper sheet laid over its foot carrying all four states' type. It used to be
+  an image band with the copy stacked underneath on flat cream, which read as a
+  newsletter. The nav is a second row under the wordmark: it was `display:none`
+  below 720px, which left the menu reachable only by scrolling the whole hero —
+  and unreachable from the closed hero, the one most visitors land on.
 
 - **Colour.** Four interface colours, written in Oklch so every interpolation
   the browser performs runs through Oklch rather than sRGB. Lichen, butter,
