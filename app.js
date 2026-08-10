@@ -69,7 +69,7 @@
          and when it is next open — the headline, then the subhead carries both. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
-      headline: 'Gam sia is thank you in Hokkien.',
+      headline: 'Worth setting a Sunday alarm for.',
       body: null        /* derived: it has to name the day we actually reopen */
     }
   };
@@ -190,7 +190,7 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'Desserts, matcha made how you ask, and coffee. One morning a week. ' + closedHeadline(now);
+    return 'Desserts still warm from the oven, matcha whisked how you ask, coffee done properly. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {

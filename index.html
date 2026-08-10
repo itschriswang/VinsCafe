@@ -21,7 +21,9 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preload" href="style.css" as="style">
-<link rel="preload" href="fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/oskon-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/oskon-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/darker-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- config.js then app.js, both blocking, both tiny: the hero state has to be
@@ -153,9 +155,27 @@
 
   <p class="stamp"></p>
 
+  <svg class="roundel" viewBox="0 0 120 120" aria-hidden="true">
+    <defs>
+      <path id="roundel-arc" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/>
+    </defs>
+    <circle cx="60" cy="60" r="27" fill="#D9543E"/>
+    <circle cx="60" cy="60" r="33" fill="none" stroke="#D9543E" stroke-width="1.5" opacity="0.5"/>
+    <text font-size="14" letter-spacing="3" fill="#26331D" font-family="'Darker Grotesque', sans-serif" font-weight="800">
+      <textPath href="#roundel-arc">SUNDAYS ONLY&#160;&#160;·&#160;&#160;LOWER MARSH&#160;&#160;·&#160;&#160;</textPath>
+    </text>
+  </svg>
+
   <script>if (window.GamSia) GamSia.paint();</script>
 
 </section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Desserts out of the oven at six <em>✳</em> matcha whisked to order <em>✳</em> coffee done properly <em>✳</em> one morning a week <em>✳</em> 41 Lower Marsh <em>✳</em> four minutes from Waterloo <em>✳</em> </span>
+    <span>Desserts out of the oven at six <em>✳</em> matcha whisked to order <em>✳</em> coffee done properly <em>✳</em> one morning a week <em>✳</em> 41 Lower Marsh <em>✳</em> four minutes from Waterloo <em>✳</em> </span>
+  </div>
+</div>
 
 <!-- The cafe is shut about three quarters of the week, so the hero alone would
      leave most visitors on a page that only says we are closed. This is here in
@@ -163,7 +183,7 @@
 <section class="page preview" id="on-the-board">
   <div class="page-inner">
     <div class="preview-head">
-      <h2>Some of what’s on</h2>
+      <h2>What comes out of this kitchen</h2>
       <p class="page-meta">Baked that morning<br>Matcha to order</p>
     </div>
     <div class="page-rule" aria-hidden="true"></div>
@@ -184,7 +204,25 @@
   </div>
 </section>
 
+<section class="visit">
+  <div class="visit-inner">
+    <h2>One room, six stools, <span class="u-sun">one morning a week.</span></h2>
+    <p>The cabinet is full at eight and gone by two. Come early for the warm trays, late for the quiet — either way, come Sunday.</p>
+    <div class="visit-actions">
+      <a class="hero-onward" href="menu.html#board">
+        See the whole board
+        <span class="mark mark--onward" aria-hidden="true"></span>
+      </a>
+      <a class="hero-onward hero-onward--ghost" href="find-us.html">
+        Four minutes from Waterloo
+        <span class="mark mark--onward" aria-hidden="true"></span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <footer class="foot">
+  <p class="foot-sign" aria-hidden="true">Gam Sia<span class="foot-sun"></span></p>
   <div class="foot-inner">
     <span>41 Lower Marsh · London SE1</span>
     <nav class="foot-nav" aria-label="Footer">
