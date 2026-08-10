@@ -372,7 +372,9 @@ html:not(.js) .ind-close { display: none; }
 
 .hero {
   position: relative;
-  height: 100svh;
+  /* Short of the full viewport by the day dial's height, so the dial —
+     the way into the other three paintings — is on screen from the start. */
+  height: calc(100svh - 114px);
   min-height: 640px;
   overflow: hidden;
   background: var(--paper);
@@ -1345,14 +1347,6 @@ html:not(.js) .daystrip { display: none; }
 
   .preview .sec > .spot { --w: 170px; }
 }
-
-/* Shared elements: the wordmark, title, nav and indicator keep their
-   identity across page navigations and morph rather than cut. Names are
-   inert wherever view transitions are off. */
-.wordmark { view-transition-name: wordmark; }
-.nav { view-transition-name: nav; }
-.ind { view-transition-name: indicator; }
-.hero-headline, .page-head h1 { view-transition-name: pagetitle; }
 
 /* -------------------------------------------------------------- motion ---
    Cross-fade between pages through the paper; sections rise gently as they

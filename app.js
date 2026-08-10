@@ -552,9 +552,9 @@
   }
 
   function previewRestHTML(rest) {
-    var h = '<p class="preview-rest">Also on the board: ' + rest.others.map(esc).join(', ') + '.</p>';
-    h += '<a class="hero-onward preview-more" href="menu.html#board">' +
-      'The whole board, ' + rest.total + ' things' +
+    var h = '<p class="preview-rest">Also on the menu: ' + rest.others.map(esc).join(', ') + '.</p>';
+    h += '<a class="hero-onward preview-more" href="menu.html#menu">' +
+      'The whole menu, ' + rest.total + ' things' +
       ' <span class="mark mark--onward" aria-hidden="true"></span></a>';
     return h;
   }
