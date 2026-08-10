@@ -53,7 +53,7 @@
       eyebrow: 'Say how you want it',
       mark: 'board',
       headline: 'Every matcha is built to order.',
-      body: 'Pick the grade, the milk and how sweet. The pastries are whatever we baked at six.'
+      body: 'Pick the grade, the milk and how sweet, then pick something warm from the cabinet to go with it.'
     },
     late: {
       /* Derived from the closing hour in config.js so the two cannot disagree.
@@ -61,7 +61,7 @@
       eyebrow: null,
       mark: 'hours',
       headline: 'When the cabinet is empty we stop.',
-      body: 'The last hour is the quiet one. Whatever is left goes cheap rather than in the bin.'
+      body: 'The last hour is the quiet one. The counter to yourself, the light going gold on the far wall.'
     },
     closed: {
       /* Six days in seven this is the site. Nearly every visitor will only ever
