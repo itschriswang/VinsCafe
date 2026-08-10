@@ -31,7 +31,9 @@ This is the menu. Each block is one section of the board.
   if there isn't one.
 - **`standfirst`** is the longer italic line under the items. Only Coffee and
   Kitchen have one. Keep it to about two lines; it is cut off past 34 characters
-  a line by design.
+  a line by design. **It also decides the front page:** the two sections with a
+  standfirst are the two shown under the hero on the home page, four items each.
+  Move it to another section and the front page follows.
 - **`spots`** are the paintings in the margin. Leave these alone unless you have
   had new ones painted.
 

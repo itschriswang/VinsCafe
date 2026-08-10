@@ -327,6 +327,17 @@ html:not(.js) .ind-close { display: none; }
 }
 .pigment.is-lit { opacity: 1; transition: opacity 300ms linear; }
 
+/* The paper strip is what makes the type legible over paint, but at full
+   opacity it walls the type off from the picture. Two changes let the two
+   meet: the paper is thin enough that the painting reads through it, and the
+   headline hangs out past it onto bare paint. Only the headline — 48px and up
+   holds its own over a wash, 13px does not, so the eyebrow, the rule and the
+   body stay inside the strip where the ground is even. */
+:root {
+  --strip-alpha: 0.86;
+  --bleed: clamp(48px, 9vw, 150px);
+}
+
 .strip {
   position: absolute;
   z-index: 2;
@@ -379,12 +390,34 @@ html:not(.js) .ind-close { display: none; }
   font-variant-numeric: tabular-nums;
 }
 
+/* The timestamp is the one piece of type the strip never reached, and at
+   midday it lands on the dark olive counter — measured at 2.99:1, under the
+   4.5 that 10px needs. Same fix as the strip, at the size of a caption: a
+   scrap of the paper scan behind it, fading out to the right. */
+.hero .stamp::before {
+  content: '';
+  position: absolute;
+  inset: -9px -34px -9px calc(-1 * var(--gutter));
+  z-index: -1;
+  opacity: var(--strip-alpha);
+  background-image: image-set(
+    url('art/tex-paper-900w.avif') type('image/avif'),
+    url('art/tex-paper-900w.webp') type('image/webp'));
+  background-size: cover;
+  background-position: 30% 70%;
+  /* feathered on every side, or the patch itself reads as a box */
+  -webkit-mask-image: radial-gradient(125% 150% at 10% 50%, #000 42%, rgba(0, 0, 0, 0) 86%);
+          mask-image: radial-gradient(125% 150% at 10% 50%, #000 42%, rgba(0, 0, 0, 0) 86%);
+}
+/* Closed puts the timestamp on real page; there is nothing to cover. */
+[data-state='closed'] .hero .stamp::before { display: none; }
+
 /* -- morning: type column right, strip masked in from the right ----------- */
 [data-state='morning'] { --plate-pos: 22% center; }
 [data-state='morning'] .strip {
   inset: 0 0 0 auto;
   width: 44%;
-  opacity: 0.97;
+  opacity: var(--strip-alpha);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 40%);
           mask-image: linear-gradient(to right, transparent, #000 40%);
 }
@@ -397,21 +430,25 @@ html:not(.js) .ind-close { display: none; }
   --h1: clamp(48px, 5.54vw, 76px);
 }
 [data-state='morning'] .hero-eyebrow { letter-spacing: 0.22em; margin-bottom: 18px; }
-[data-state='morning'] .hero-headline { margin-bottom: 22px; }
+[data-state='morning'] .hero-headline { margin-bottom: 22px; margin-left: calc(-1 * var(--bleed)); }
 [data-state='morning'] .hero-rule { margin-bottom: 18px; }
-[data-state='morning'] .hero-onward { margin-top: 24px; }
+[data-state='morning'] .hero .hero-onward { margin-top: 24px; }
 
 /* -- midday: type across the upper third, strip masked in from the top ---- */
 [data-state='midday'] { --plate-pos: center 88%; }
 [data-state='midday'] .strip {
   inset: 0 0 auto 0;
-  height: 39.7%;
-  opacity: 0.95;
+  height: 31%;
+  opacity: var(--strip-alpha);
   -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent);
           mask-image: linear-gradient(to bottom, #000 58%, transparent);
 }
 [data-state='midday'] .hero-type {
-  top: 16.5%;
+  /* 17.5% is as low as this one goes. Below 19% the left end of the headline
+     reaches the dark window frame and measures 2.72:1 — see
+     tools/check-contrast.mjs. Midday's integration comes from the strip being
+     thin enough to see the painting through, not from crossing onto it. */
+  top: 17.5%;
   left: var(--gutter);
   right: var(--gutter);
   display: grid;
@@ -430,7 +467,7 @@ html:not(.js) .ind-close { display: none; }
 [data-state='midday'] .hero-eyebrow { grid-column: 2; grid-row: 1; margin-bottom: 14px; }
 [data-state='midday'] .hero-rule    { grid-column: 2; grid-row: 2; margin-bottom: 14px; }
 [data-state='midday'] .hero-body    { grid-column: 2; grid-row: 3; padding-bottom: 8px; }
-[data-state='midday'] .hero-onward  { display: none; }
+[data-state='midday'] .hero .hero-onward  { display: none; }
 [data-state='midday'] .hero-eyebrow .mark { --mark-size: 14px; }
 
 /* -- late: type column left, strip masked in from the left ---------------- */
@@ -438,7 +475,7 @@ html:not(.js) .ind-close { display: none; }
 [data-state='late'] .strip {
   inset: 0 auto 0 0;
   width: 46%;
-  opacity: 0.97;
+  opacity: var(--strip-alpha);
   -webkit-mask-image: linear-gradient(to left, transparent, #000 42%);
           mask-image: linear-gradient(to left, transparent, #000 42%);
 }
@@ -451,9 +488,9 @@ html:not(.js) .ind-close { display: none; }
   --h1: clamp(48px, 5.36vw, 74px);
 }
 [data-state='late'] .hero-eyebrow { letter-spacing: 0.22em; margin-bottom: 18px; }
-[data-state='late'] .hero-headline { margin-bottom: 22px; }
+[data-state='late'] .hero-headline { margin-bottom: 22px; margin-right: calc(-1 * var(--bleed)); }
 [data-state='late'] .hero-rule { margin-bottom: 18px; }
-[data-state='late'] .hero-onward { display: none; }
+[data-state='late'] .hero .hero-onward { display: none; }
 
 /* -- closed: no strip, plate cropped to a band, the base is real page ----- */
 [data-state='closed'] { --plate-pos: center 42%; }
@@ -482,7 +519,7 @@ html:not(.js) .ind-close { display: none; }
 [data-state='closed'] .hero-eyebrow { grid-column: 2; grid-row: 1; margin-bottom: 14px; }
 [data-state='closed'] .hero-rule    { grid-column: 2; grid-row: 2; margin-bottom: 14px; }
 [data-state='closed'] .hero-hours   { display: grid; grid-column: 2; grid-row: 3; }
-[data-state='closed'] .hero-onward  { display: none; }
+[data-state='closed'] .hero .hero-onward  { display: none; }
 /* The subhead sits under the headline; the table beside it is for scanning. */
 [data-state='closed'] .hero-body {
   grid-column: 1;
@@ -679,6 +716,42 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
 .board-foot { padding: 150px 0 34px; }
 .board-foot .foot-inner { padding-top: 18px; }
 
+/* ------------------------------------------------- the board, in brief ---
+   On the home page under the hero, in every state. Same type as the board
+   itself so it reads as the same document, but no spots and no margins to
+   hold them: this is a taste, not the page. */
+
+.preview {
+  padding-top: clamp(54px, 9vh, 104px);
+  padding-bottom: clamp(44px, 7vh, 84px);
+}
+.preview-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+.preview-head h2 {
+  font: italic 400 clamp(34px, 3.9vw, 52px)/1 var(--serif);
+  letter-spacing: -0.015em;
+  color: var(--forest);
+}
+.preview-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+  row-gap: 40px;
+  margin-top: 34px;
+}
+.preview-more { margin-top: 40px; }
+
+@media (max-width: 719px) {
+  .preview-head { display: block; }
+  .preview-head h2 { font-size: 34px; margin-bottom: 12px; }
+  .preview-cols { grid-template-columns: none; row-gap: 34px; margin-top: 26px; }
+  .preview-more { margin-top: 30px; }
+}
+
 /* ------------------------------------------------------------- find us --- */
 
 .find {
@@ -734,7 +807,9 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
     width: auto;
     padding: 28px var(--gutter) 0;
   }
+  /* on the phone the timestamp is on the page, not on the plate */
   .hero .stamp { position: static; order: 4; padding: 26px var(--gutter) 24px; }
+  .hero .stamp::before { display: none; }
 
   [data-state='morning'] { --band: 290px; --plate-pos: 22% 50%; }
   [data-state='late']    { --band: 290px; --plate-pos: 78% 50%; }
@@ -745,6 +820,12 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   [data-state='late']    .hero-type { --h1: 48px; }
   [data-state='closed']  .hero-type { --h1: 48px; }
   [data-state='midday']  .hero-type { --h1: 52px; }
+
+  /* The headline bleeds past the strip only on the desktop composition. Here
+     the type is in flow at the page gutter, so a negative margin would just
+     push it off the screen. */
+  [data-state='morning'] .hero-headline { margin-left: 0; }
+  [data-state='late'] .hero-headline { margin-right: 0; }
 
   .hero-eyebrow { font-size: 9.5px; margin-bottom: 16px; }
   .hero-eyebrow .mark { --mark-size: 12px; }
@@ -768,13 +849,15 @@ html:not(.js) .hero-rule { margin-bottom: 18px; }
   [data-state='midday'] .hero-eyebrow { margin-bottom: 14px; }
   [data-state='midday'] .hero-body { padding-bottom: 0; }
 
-  /* closed on mobile follows the comp: headline, then eyebrow, rule, hours,
-     with the derived subhead last */
-  [data-state='closed'] .hero-headline { order: -1; margin-bottom: 22px; }
-  [data-state='closed'] .hero-eyebrow { order: 1; }
-  [data-state='closed'] .hero-rule    { order: 2; }
-  [data-state='closed'] .hero-hours   { order: 3; }
-  [data-state='closed'] .hero-body    { order: 4; margin-top: 20px; max-width: none; }
+  /* closed on mobile: headline, then the subhead, because the subhead is the
+     line that names the day we reopen and it is the reason anyone who lands
+     here is reading at all. The eyebrow, rule and hours follow. (The comp put
+     the subhead last, but in the comp the headline named the day.) */
+  [data-state='closed'] .hero-headline { order: -1; margin-bottom: 18px; }
+  [data-state='closed'] .hero-body    { order: 1; margin-bottom: 24px; max-width: none; }
+  [data-state='closed'] .hero-eyebrow { order: 2; }
+  [data-state='closed'] .hero-rule    { order: 3; }
+  [data-state='closed'] .hero-hours   { order: 4; }
 
   /* The two-column hero variants collapse to one column of type. align-items
      has to be reset with them: `end` and `start` mean the cross axis, and in a
