@@ -1,4 +1,4 @@
-# Deckle. There is nothing here to crawl but three pages of type.
+# Gam Sia. There is nothing here to crawl but three pages of type.
 User-agent: *
 Allow: /
 

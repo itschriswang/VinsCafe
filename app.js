@@ -274,7 +274,7 @@
   /* Written from an inline script at the point in the markup where the plate
      goes, so the parser starts the right fetch immediately and never the
      wrong one. <noscript> in the same place carries the no-JS plate. */
-  window.Deckle = {
+  window.GamSia = {
     state: state,
     plateHTML: plateHTML,
     stripHTML: stripHTML,
@@ -357,7 +357,7 @@
     paintIndicator(now);
     paintHours($('.page-hours'));
   }
-  window.Deckle.paint = paint;
+  window.GamSia.paint = paint;
 
   /* ----------------------------------------------------------- json-ld ---
      Regenerated from config.js on every load so the structured data and the
@@ -554,7 +554,7 @@
     var snapped = pigment && animate ? pigment.snapshot() : false;
 
     state = next;
-    window.Deckle.state = next;
+    window.GamSia.state = next;
     root.setAttribute('data-state', next);
 
     var strip = $('.strip');
