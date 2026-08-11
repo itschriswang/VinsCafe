@@ -2,7 +2,7 @@ name: Deploy
 
 # The site has no build step. This workflow only checks that the blocks derived
 # from config.js and menu.json are current, assembles the files that actually
-# ship — leaving the PNG masters and the developer tools behind — and publishes
+# ship (leaving the PNG masters and the developer tools behind) and publishes
 # them to GitHub Pages.
 
 on:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Developer tool — NOT part of the deployed site and NOT owner-editable.
+"""Developer tool. NOT part of the deployed site and NOT owner-editable.
 
 Reads the watercolour PNG masters in src-art/ and writes the AVIF + WebP
 derivatives the site actually ships, into art/.
@@ -80,8 +80,8 @@ def _flat_field(a):
     A single global white point is not enough: every one of these scans is
     brighter in the middle than at the edges, and the residue of that is a soft
     dark rectangle round each illustration once it is multiplied onto the page.
-    Estimating the paper brightness per region — a high percentile over coarse
-    blocks, smoothed — removes the gradient without touching the paint, which
+    Estimating the paper brightness per region (a high percentile over coarse
+    blocks, smoothed) removes the gradient without touching the paint, which
     is far below that percentile everywhere.
     """
     import numpy as np
@@ -138,7 +138,7 @@ def spot_matte(im, feather=0.07):
     sheet's border, then take alpha from how far each pixel departs from white.
 
     The colour channels are un-multiplied against white so that the image still
-    behaves as pigment — laid over the page with mix-blend-mode:multiply, the
+    behaves as pigment: laid over the page with mix-blend-mode:multiply, the
     painted parts darken the paper and the unpainted parts do nothing at all.
     No mask, so nothing gets clipped, and no box, so nothing needs hiding.
     """
@@ -192,7 +192,7 @@ def _drop_backdrop(alpha):
     whole job the brief gave the elliptical mask. A shape cannot do it: a
     fixed ellipse knows nothing about where the subject is, and even one
     measured from the subject's extent keeps whatever wash falls inside that
-    radius — which for the espresso and the teapot is all of it.
+    radius, which for the espresso and the teapot is all of it.
 
     Density can do it. Blur the alpha heavily and the subject stays high while
     a broad thin wash stays low, because the wash is thin everywhere and the
@@ -233,7 +233,7 @@ def _drop_backdrop(alpha):
     ) / 255.0
 
     # Gating the backdrop also thins the soft outer washes a painting is
-    # entitled to — a cast shadow, the bloom round a wet edge. A small gain
+    # entitled to: a cast shadow, the bloom round a wet edge. A small gain
     # gives that weight back. It cannot resurrect the backdrop, which the gate
     # has already multiplied to nothing.
     return np.clip(alpha * keep * 1.15, 0.0, 1.0)
@@ -255,9 +255,9 @@ def seamless_grey(im, size=512):
     """A tiling greyscale height map for the shader's paper relief.
 
     Two things have to be true of this tile. It must be grain and nothing
-    else — the scan carries a broad vignette and a cold wash, and a normal
+    else (the scan carries a broad vignette and a cold wash, and a normal
     derived from those would light the page like a dome instead of like
-    paper — and it must wrap exactly, because the shader tiles it.
+    paper), and it must wrap exactly, because the shader tiles it.
 
     So: crop the centre (the deckle edge would tile as a hard seam),
     high-pass to throw away everything but the tooth of the paper, then
@@ -339,7 +339,7 @@ def main():
 
     # The social cards (art/og-*.jpg) are NOT made here any more. They carry
     # the site's type and copy, so they are typeset in a real browser by
-    # tools/build-og.mjs — run that after this if a painting they use changed.
+    # tools/build-og.mjs. Run that after this if a painting they use changed.
     print("social      -> node tools/build-og.mjs")
 
     print("icons")
@@ -349,7 +349,7 @@ def main():
 
 
 def icons():
-    """The favicon is the note mark — the six-ray sun — drawn to the same
+    """The favicon is the note mark (the six-ray sun) drawn to the same
     geometry as the inline SVG sprite so the tab matches the page."""
     from PIL import ImageDraw
 

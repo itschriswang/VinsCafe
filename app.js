@@ -1,4 +1,4 @@
-/* app.js — developer territory. The owner edits menu.json and config.js, not this. */
+/* app.js: developer territory. The owner edits menu.json and config.js, not this. */
 
 /* Loaded synchronously in <head>, after config.js, so that <html data-state>
    is stamped before the browser's first paint. A deferred or module script
@@ -39,7 +39,7 @@
   var LABEL = { morning: 'Morning', midday: 'Midday', late: 'Late afternoon', closed: 'Closed' };
 
   /* Copy rule: name a real thing in the room. No adverbs doing the work of a
-     detail — "toasted properly" tells you nothing, "under the grill" is a
+     detail: "toasted properly" tells you nothing, "under the grill" is a
      kitchen you can picture. Every line here should be false of the cafe two
      doors down. */
   var COPY = {
@@ -61,12 +61,12 @@
       eyebrow: null,
       mark: 'hours',
       headline: 'Stay for the golden hour.',
-      body: 'The sun drops low over Kingsway and the room goes soft. The regulars call this the good hour — now you know too.'
+      body: 'The sun drops low over Kingsway and the room goes soft. The regulars call this the good hour. Now you know too.'
     },
     closed: {
       /* Six days in seven this is the site. Nearly every visitor will only ever
          see this one state, so it has to say what the place is, what it sells
-         and when it is next open — the headline, then the subhead carries both. */
+         and when it is next open: the headline, then the subhead carries both. */
       eyebrow: 'Chairs up, lights off',
       mark: 'close',
       headline: 'Worth setting a Sunday alarm for.',
@@ -82,8 +82,8 @@
 
   /* The hours table starts on the first day we are actually open, so the open
      days lead and the shut ones collapse behind them. Hardcoded Wed-first, a
-     Sunday-only week read "Wed–Sat Closed / Sun 08–14 / Mon–Tue Closed" — the
-     one day we are open buried in the middle of two runs of nothing. */
+     Sunday-only week read "Wed–Sat Closed / Sun 08–14 / Mon–Tue Closed", with
+     the one day we are open buried in the middle of two runs of nothing. */
   function weekOrder() {
     var start = 1;                                  /* look from Monday */
     for (var i = 0; i < 7; i++) {
@@ -190,18 +190,18 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'One room, one oven, one morning a week — everything made like it matters. ' + closedHeadline(now);
+    return 'One room, one oven, and a single morning a week to get it right. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
     /* Last orders half an hour before the chairs go up. Read off the day we
-       actually open — a fixed weekday went dark when the week shrank. */
+       actually open; a fixed weekday went dark when the week shrank. */
     var last = openHours()[1] - 1;
     return 'Last orders at half ' + hour12(last);
   }
 
   function morningEyebrow() {
-    /* "Eight till ten" — the span of the morning band, not a fixed hour. */
+    /* "Eight till ten": the span of the morning band, not a fixed hour. */
     var h = openHours();
     return capitalise(hour12(h[0])) + ' till ' + hour12(bands(h).middayFrom);
   }
@@ -372,7 +372,7 @@
 
   /* Everything the clock decides, written in one pass. Called from an inline
      script at the end of the section it fills, so the first paint already has
-     the right words in it — filling them at DOMContentLoaded instead would
+     the right words in it. Filling them at DOMContentLoaded instead would
      resize the indicator and the hero after layout, which is a layout shift,
      and the shift budget for this site is zero. */
   function paint() {
@@ -857,7 +857,7 @@
       .map(function (r) { return r.label + ' ' + r.value.replace(' – ', '–'); }).join(' · ');
     try {
       console.log(
-        '%cgam sia%c\nHokkien for thank you — for reading the source, too.\n' +
+        '%cgam sia%c\nHokkien for thank you. That covers reading the source, too.\n' +
         open + ' · ' + CAFE.address.street + ', ' + CAFE.address.locality,
         "font: italic 22px Georgia, 'Times New Roman', serif; color: #2E4A30;",
         'font: 12px ui-monospace, Menlo, monospace; color: #5A6530;'

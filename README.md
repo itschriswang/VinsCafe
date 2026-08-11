@@ -15,7 +15,7 @@ whoever maintains the code.
 ## What ships
 
 ```
-index.html      home — the stateful hero
+index.html      home: the stateful hero
 menu.html       the board
 find-us.html    address, hours, getting here
 404.html        locked to the closed state
@@ -41,7 +41,7 @@ hands that to GitHub Pages. Nothing is compiled; the deployed files are the
 files in this repository.
 
 Every asset path is relative, so the site also runs from any subdirectory, from
-`file://`, or from any other static host — copy the same list of files up.
+`file://`, or from any other static host; copy the same list of files up.
 
 The absolute site URL is written down once, as `url` in `config.js`. The
 canonical links, the Open Graph tags, the JSON-LD, `sitemap.xml` and
@@ -54,8 +54,8 @@ echo 'gamsia.cafe' > CNAME     # and add CNAME to the cp list in the workflow
 ```
 
 It used to be 22 copies of the string across three heads, `sitemap.xml` and
-`robots.txt`. Renaming the repository pointed every one of them at a 404 —
-canonicals, social cards and the search-engine data — with nothing failing
+`robots.txt`. Renaming the repository pointed every one of them at a 404
+(canonicals, social cards and the search-engine data) with nothing failing
 loudly. `--check` now catches it.
 
 ## How it works
@@ -70,7 +70,7 @@ The plate for the resolved state is written by an inline script at the point in
 the markup where it goes, so the browser fetches the painting for the hour you
 actually arrived at and never one of the other three. Copy that depends on the
 clock is written by `GamSia.paint()` from an inline call at the end of the
-section it fills — filling it later would resize things after layout, and the
+section it fills; filling it later would resize things after layout, and the
 layout-shift budget here is zero.
 
 `pigment.js` puts a WebGL2 canvas over the plate: a slow domain-warp so the
@@ -78,7 +78,7 @@ edges read as still drying, a pigment rim gated on the painting's own contours,
 paper grain lit from the same direction as the light in that painting, and a
 wet-in-wet bleed when the clock crosses an hour with the tab open. It never
 runs on first load, under `prefers-reduced-motion`, on `saveData`, while the
-tab is hidden or the hero is off screen, or when the machine cannot keep up —
+tab is hidden or the hero is off screen, or when the machine cannot keep up;
 in the last case it removes itself and leaves the static plate.
 
 ## Preview switches
@@ -104,8 +104,8 @@ node tools/check-contrast.mjs        # measure type contrast on every state grou
 ```
 
 `sync-static.mjs` regenerates the regions marked `<!--gen:…-->` in the
-HTML — the JSON-LD, the breadcrumb lists, the hours tables, the hours line in
-the footer, and the board — plus the 404's `<base>`, `sitemap.xml` and
+HTML (the JSON-LD, the breadcrumb lists, the hours tables, the hours line in
+the footer, and the board) plus the 404's `<base>`, `sitemap.xml` and
 `robots.txt`. `app.js` regenerates the clock-dependent ones at runtime from the same two
 source files, so a visitor with JavaScript always sees current data; the static
 copies exist so that a visitor without it, and a crawler that does not execute
@@ -113,7 +113,7 @@ scripts, sees the same thing rather than something stale. Run `--check` in CI
 or a pre-commit hook after editing `config.js` or `menu.json`.
 
 `check-contrast.mjs` renders each state, hides the glyphs, and measures the
-WCAG ratio of every pixel actually behind each piece of type — the grounds here
+WCAG ratio of every pixel actually behind each piece of type; the grounds here
 are paintings, so no static value can tell you whether a word is legible. It
 reports the worst pixel, not the average. Run it after touching the paper strip,
 the plate positions or the pigment layer. It needs the site served locally and
@@ -121,7 +121,7 @@ the plate positions or the pigment layer. It needs the site served locally and
 
 `build-og.mjs` typesets the three social share cards in a real browser with
 the site's own stylesheet: the palette, both faces, the squiggle and the paper
-are read from `style.css`, and the words — headline, prices, hours, address —
+are read from `style.css`, and the words (headline, prices, hours, address)
 are read live from the pages, `menu.json` and `config.js`. Nothing on a card
 is written down in the tool, so **any UI or copy change means re-running it**
 and committing the JPEGs; the cards cannot update themselves. It needs the
@@ -141,11 +141,11 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   the first open day; the three daylight states are thirds of whatever the open
   day is; the late eyebrow reads the closing hour. All of it from `config.js`.
   Fixed 7/11/15 bands and a hardcoded Wed-first week were fine for a nine-hour
-  Wednesday-to-Sunday cafe and wrong the moment it became a six-hour Sunday —
+  Wednesday-to-Sunday cafe and wrong the moment it became a six-hour Sunday:
   the late-afternoon painting could no longer occur at all, and the one open
   day sat buried between two runs of "Closed".
 - **Sections are not named in code.** Their order on the board, which column
-  they fall in, which side their paintings hang on and how high — all derive
+  they fall in, which side their paintings hang on and how high all derive
   from a section's index in `menu.json`, carried into the markup as `--i`.
   These used to be lists of slugs in the stylesheet, so renaming Kitchen to
   Desserts sent it to the top of the phone board and dropped a teapot on top
@@ -154,14 +154,14 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   the copy itself (`.hero-type::before`), not on the fixed `.strip`. The strip
   is a percentage of the hero while the copy is however many lines someone
   writes, so a longer headline or one extra line of body used to push type onto
-  bare painting — measured at 1.88:1. The wash is an ellipse inscribed in its
+  bare painting, measured at 1.88:1. The wash is an ellipse inscribed in its
   own box so the fade reaches zero before the element clips; sized any larger
   you get a faint seam down the painting where the mask is cut off.
 - **The phone gets the same composition, not a cut-down one.** Plate, then the
   paper sheet laid over its foot carrying all four states' type. It used to be
   an image band with the copy stacked underneath on flat cream, which read as a
   newsletter. The nav is a second row under the wordmark: it was `display:none`
-  below 720px, which left the menu reachable only by scrolling the whole hero —
+  below 720px, which left the menu reachable only by scrolling the whole hero,
   and unreachable from the closed hero, the one most visitors land on.
 
 - **Colour.** Four interface colours, written in Oklch so every interpolation
@@ -178,8 +178,8 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
 - **The spots carry their own alpha.** `build-art.py` cuts it from the scans:
   flat-field the paper, trim the sheet's torn border, take alpha from how far
   each pixel departs from white, then drop the square of wash some of them were
-  painted on. That last step is by density, not by shape — blur the alpha and a
-  broad thin backdrop stays low while a subject stays high — with a floor that
+  painted on. That last step is by density, not by shape: blur the alpha and a
+  broad thin backdrop stays low while a subject stays high, with a floor that
   keeps any pixel that is plainly pigment, so a rim or a handle is never cut.
   So there is no mask in the CSS to clip anything and no levels lift to hide a
   backdrop with, only `mix-blend-mode: multiply`, which is how pigment sits on
@@ -188,12 +188,12 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
 - **The masters.** `src-art/` holds the PNGs everything in `art/` is made from,
   including three surfaces the site does not currently use.
 - **The 404 carries a `<base>`.** Pages serves `404.html` for a missing URL at
-  any depth — `/VinsCafe/a/b/` — where relative paths resolve into the void
+  any depth, like `/VinsCafe/a/b/`, where relative paths resolve into the void
   and the page would arrive unstyled. The base pins every relative URL to the
   site root; `sync-static.mjs` keeps it pointing at `config.js`'s `url`.
   Previewing `404.html` locally therefore loads its assets from the live site.
 - **The map is drawn, not embedded.** Find us carries an inline SVG sketch of
-  the corner in the site's own palette — the no-third-party-requests rule
+  the corner in the site's own palette; the no-third-party-requests rule
   covers map tiles too. It is decorative to a screen reader beyond its short
   label; the prose above it gives the same directions, and the real map stays
   a link.

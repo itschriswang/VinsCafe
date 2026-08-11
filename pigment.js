@@ -1,10 +1,10 @@
-/* pigment.js — developer territory. Loaded async by app.js, never on its own.
+/* pigment.js: developer territory. Loaded async by app.js, never on its own.
  *
  * A single WebGL2 canvas over the hero plate. It does three things and no
  * others: it keeps the edges of the painting looking wet, it bleeds one plate
  * into the next when the clock crosses an hour, and it lights the paper grain
  * from the same direction as the light in the painting. No text is ever
- * rendered here — every word on the page is a DOM element over the top.
+ * rendered here; every word on the page is a DOM element over the top.
  */
 
 const VERT = `#version 300 es
@@ -101,21 +101,21 @@ void main() {
 
   /* a. Damp edge. Two octaves of simplex, walked around a circle in noise
      space so the loop is exactly periodic at 43 and 71 seconds and their
-     beat is 51 minutes long — never legible. */
+     beat is 51 minutes long, never legible. */
   vec2 c1 = vec2(cos(6.2831853 * u_time / 43.0), sin(6.2831853 * u_time / 43.0)) * 0.35;
   vec2 c2 = vec2(cos(6.2831853 * u_time / 71.0), sin(6.2831853 * u_time / 71.0)) * 0.22;
   vec2 w = vec2(snoise(p * 2.9 + c1), snoise(p * 2.9 + c1 + 19.7))
          + 0.5 * vec2(snoise(p * 6.1 + c2 - 7.3), snoise(p * 6.1 + c2 + 31.1));
   w /= 1.5;
 
-  /* 0.0018 of viewport height, kept isotropic in pixels — about 1.5px at 900. */
+  /* 0.0018 of viewport height, kept isotropic in pixels: about 1.5px at 900. */
   vec2 amp = vec2(0.0018 / aspect.x, 0.0018);
   vec2 duv = w * amp;
 
   vec3 col = texture(u_plate, fitUV(v_uv + duv, u_fit)).rgb;
 
   /* b. State bleed: a noise field thresholded by progress, wet into wet.
-     The whole term is skipped when nothing is bleeding — this is the fifth
+     The whole term is skipped when nothing is bleeding, because this is the fifth
      noise evaluation per pixel and it is only wanted for about a second an hour. */
   float fringe = 0.0;
   if (u_progress < 0.999) {
@@ -131,7 +131,7 @@ void main() {
   /* The pigment rim. Where the warp compresses the surface, paint piles up and
      darkens by up to 0.06 of L. Gated on the painting's own contours: the
      divergence of a smooth noise field is itself smooth, so ungated this would
-     bloom across every flat wash instead of catching on edges — and it is the
+     bloom across every flat wash instead of catching on edges, and it is the
      catching on edges that reads as watercolour rather than as a wobble. */
   float compress = -(dFdx(w.x) + dFdy(w.y));
   float lum = dot(col, vec3(0.299, 0.587, 0.114));
@@ -425,7 +425,7 @@ export function start(canvas, opts) {
 
   return {
     /* Called by app.js before the <img> src changes, while the element still
-       holds the outgoing painting — the same element is reused, so the copy
+       holds the outgoing painting. The same element is reused, so the copy
        has to be taken first. */
     snapshot() {
       if (dead || !img || !ready) return false;
