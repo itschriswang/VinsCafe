@@ -1,10 +1,10 @@
-/* style.css — developer territory. The owner edits menu.json and config.js, not this. */
+/* style.css: developer territory. The owner edits menu.json and config.js, not this. */
 
 /* ---------------------------------------------------------------- type ---
-   Three families. ZT Bros Oskon 90s carries every headline — it is the voice
+   Three families. ZT Bros Oskon 90s carries every headline; it is the voice
    of the site. Darker Grotesque is the body sans, a tall condensed grotesque
    that reads warm at text sizes. Fragment Mono stays for the small utility
-   type: prices, timestamps, hours — anywhere tabular numbers matter. */
+   type: prices, timestamps, hours, anywhere tabular numbers matter. */
 
 @font-face {
   font-family: 'Oskon';
@@ -366,13 +366,13 @@ html:not(.js) .ind-close { display: none; }
 
 /* ---------------------------------------------------------------- hero ---
    One component, four variants keyed off [data-state]. The geometry of each
-   state — which side the type sits, where the paper strip lies — is kept;
+   state (which side the type sits, where the paper strip lies) is kept;
    the type inside it is the new voice. */
 
 .hero {
   position: relative;
-  /* Short of the full viewport by the day dial's height, so the dial —
-     the way into the other three paintings — is on screen from the start. */
+  /* Short of the full viewport by the day dial's height, so the dial,
+     the way into the other three paintings, is on screen from the start. */
   height: calc(100svh - 114px);
   min-height: 640px;
   overflow: hidden;
@@ -449,7 +449,7 @@ html:not(.js) .ind-close { display: none; }
 [data-state='morning'] .hero-type::before { left: calc(-1 * var(--bleed) - 52px); }
 [data-state='late'] .hero-type::before { right: calc(-1 * var(--bleed) - 52px); }
 /* Midday's headline reaches into the bottom-left of its box, over the dark
-   of the city window, where the ellipse had already faded out — measured at
+   of the city window, where the ellipse had already faded out, measured at
    2.1:1. Reach further left and down so that corner sits on wash too. */
 [data-state='midday'] .hero-type::before {
   left: calc(-1 * var(--bleed) - 52px);
@@ -795,7 +795,7 @@ html:not(.js) .daystrip { display: none; }
    room pinned inside it: scroll drags the sun along the arc and the room
    through all four paintings, the incoming one arriving wet; the dial's
    buttons become bookmarks into the same scroll. app.js builds this only
-   when motion is welcome and data is not being saved — everyone else keeps
+   when motion is welcome and data is not being saved; everyone else keeps
    the compact dial exactly as it was, which is also the reduced-motion
    answer: an instant turn of the room. */
 
@@ -832,7 +832,7 @@ html:not(.js) .daystrip { display: none; }
 /* A scrubbed sun tracks the finger; the eased glide is for clicks only. */
 .dayscroll .dial-sun { transition: none; }
 
-/* Inside the stage the dial sits directly on the page — the compact strip's
+/* Inside the stage the dial sits directly on the page, where the compact strip's
    paper band would read as a floating box under the painting. */
 .dayscroll .daystrip {
   background: none;
@@ -1229,7 +1229,7 @@ html:not(.js) .daystrip { display: none; }
 
 /* ----------------------------------------------------------------- map ---
    The corner drawn like everything else here: ink lines, a few washes, and
-   the sun where the door is. A sketch, not a survey — the pannable map is
+   the sun where the door is. A sketch, not a survey; the pannable map is
    one link away in the address section. */
 
 .map-sec {
@@ -1423,7 +1423,7 @@ html:not(.js) .daystrip { display: none; }
 
   /* The map keeps its drawn size and pans inside its own box; the page
      itself must never scroll sideways. rtl only flips which end the pan
-     starts from — the door, not the station, is what the page opens on. */
+     starts from. The door, not the station, is what the page opens on. */
   .map-wrap {
     overflow-x: auto;
     direction: rtl;
@@ -1521,7 +1521,7 @@ html:not(.js) .daystrip { display: none; }
   ::view-transition-new(root) { animation: dv-in 150ms 50ms ease-out both; }
 
   /* The hero settles like a wash drying: each line a beat after the last.
-     Opacity, blur and a small lift only — the layout never moves. */
+     Opacity, blur and a small lift only; the layout never moves. */
   .hero-eyebrow, .hero-headline, .hero-rule, .hero-body,
   .hero .hero-onward, .hero-hours, .crumbs, .page-head h1, .page-meta {
     animation: wash-in 640ms var(--ease-out) both;

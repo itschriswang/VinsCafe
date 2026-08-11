@@ -2,13 +2,13 @@
 
 There are two files you ever need to open. Everything else on the site is
 built from them, so if you change a price in one place it changes everywhere
-it appears — including in what Google shows.
+it appears, including in what Google shows.
 
 Edit them, save, upload. There is nothing to build and nothing to rebuild.
 
 ---
 
-## `menu.json` — the board
+## `menu.json`: the board
 
 This is the menu. Each block is one section of the board.
 
@@ -16,7 +16,7 @@ This is the menu. Each block is one section of the board.
 {
   "section": "Coffee",
   "note": "Oat, no charge",
-  "standfirst": "This week it is a washed Kirinyaga — blackcurrant, quite bright.",
+  "standfirst": "This week it is a washed Kirinyaga: blackcurrant, quite bright.",
   "spots": ["spot-cup", "spot-espresso"],
   "items": [
     { "name": "Filter",   "price": "3.20" },
@@ -26,7 +26,7 @@ This is the menu. Each block is one section of the board.
 ```
 
 - **`name`** and **`price`** are the two things you will change most. Prices are
-  plain numbers in quotes, no pound sign — the page adds nothing to them.
+  plain numbers in quotes, no pound sign; the page adds nothing to them.
 - **`note`** is the small capitals line beside the section name. Leave it out
   if there isn't one.
 - **`standfirst`** is the longer italic line under the items. Only Coffee and
@@ -39,14 +39,14 @@ This is the menu. Each block is one section of the board.
   painting that appears beside it on the home page.
 
 Section order in this file is the order on the board. The sections alternate
-down the two columns and the paintings follow their section — which side they
+down the two columns and the paintings follow their section: which side they
 hang on and how high comes from where the section landed, not from the
 painting. So you can rename a section, reorder them or add one, and nothing
 lands on top of the prices.
 
 Everything the front page says about the size of the menu counts itself. "And 2
 more" under a column, "Also on the board: Tea, Sweet, Cold, Take home", and "The
-whole board, 23 things" are all read off `menu.json` when the page is built — so
+whole board, 23 things" are all read off `menu.json` when the page is built, so
 adding a drink or a whole section updates them on its own, and the front page
 can never imply that the eight items it shows are the entire menu.
 
@@ -59,7 +59,7 @@ comma.
 
 ---
 
-## `config.js` — hours, address, telephone
+## `config.js`: hours, address, telephone
 
 This is the only place the opening hours are written down. The clock on the
 site, the Open/Closed mark in the corner, the hours table, the sentence on the
@@ -67,13 +67,13 @@ closed screen and the hours Google reads all come from here.
 
 ```js
 hours: {
-  0: [8, 14],   // Sunday      — the one day
-  1: null,      // Monday      — shut
-  2: null,      // Tuesday     — shut
-  3: null,      // Wednesday   — shut
-  4: null,      // Thursday    — shut
-  5: null,      // Friday      — shut
-  6: null       // Saturday    — shut
+  0: [8, 14],   // Sunday      - the one day
+  1: null,      // Monday      - shut
+  2: null,      // Tuesday     - shut
+  3: null,      // Wednesday   - shut
+  4: null,      // Thursday    - shut
+  5: null,      // Friday      - shut
+  6: null       // Saturday    - shut
 }
 ```
 
@@ -83,7 +83,7 @@ shut all day. Change a number here and every one of those places follows.
 Two things follow the hours that are easy to miss. The hours table starts on
 the first day you are actually open, so the open days lead and the shut ones
 collapse into one line behind them. And the four paintings are thirds of
-whatever the open day is — open eight till two and the morning painting runs
+whatever the open day is: open eight till two and the morning painting runs
 to ten, midday to twelve, late afternoon to close. Shorten the day and they
 shorten with it; there is no fixed hour written down anywhere.
 
@@ -96,7 +96,7 @@ The address, telephone number and email underneath work the same way.
 
 ## What not to touch
 
-Everything else — `index.html`, `menu.html`, `find-us.html`, `style.css`,
+Everything else: `index.html`, `menu.html`, `find-us.html`, `style.css`,
 `app.js`, `pigment.js`, and the `art/` and `fonts/` folders. Each of those
 files says so at the top.
 

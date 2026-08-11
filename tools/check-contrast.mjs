@@ -1,10 +1,10 @@
-/* Developer tool — NOT part of the deployed site and NOT owner-editable.
+/* Developer tool. NOT part of the deployed site and NOT owner-editable.
  *
  *     npm i --no-save playwright && node tools/check-contrast.mjs
  *     (serve the site on http://127.0.0.1:8099 first, or pass a base URL)
  *
  * The brief asks for contrast to be checked against every state ground, and
- * the grounds here are paintings — no static value can tell you what is under
+ * the grounds here are paintings; no static value can tell you what is under
  * a word. So this measures it: for each state it renders the page, hides only
  * the glyphs, screenshots the box each piece of type occupies, and computes
  * the WCAG ratio of that type's own colour against every pixel behind it.
@@ -29,7 +29,7 @@ const TARGETS = [
 ];
 const STATES = ['morning', 'midday', 'late', 'closed'];
 /* 1024 is not decoration. The hero headlines are clamp()ed and their columns
-   are percentages, so the line count changes between the two extremes — a
+   are percentages, so the line count changes between the two extremes: a
    headline that sits on the paper strip at 1440 and in flow at 390 can wrap
    onto bare painting somewhere in the middle. Testing only the ends misses it. */
 const VIEWPORTS = [
@@ -110,8 +110,8 @@ for (const state of STATES) {
       const [sel, need, label] = TARGETS[i];
       const b = probes[i];
       if (!b) { rows.push({ state, vp: vp.width, element: label, note: 'not shown in this state' }); continue; }
-      /* fullPage, so a target that has slipped below the first fold — the
-         stamp does, once the day dial pushed it down — still lands inside
+      /* fullPage, so a target that has slipped below the first fold (the
+         stamp does, once the day dial pushed it down) still lands inside
          the image instead of crashing the clip. */
       const clip = {
         x: Math.max(0, b.x), y: Math.max(0, b.y),

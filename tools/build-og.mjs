@@ -1,10 +1,10 @@
-/* Developer tool — NOT part of the deployed site and NOT owner-editable.
+/* Developer tool. NOT part of the deployed site and NOT owner-editable.
  *
  *     npm i --no-save playwright        (once; the browser is not re-downloaded)
  *     node tools/build-og.mjs
  *
- * Writes the three social cards — art/og-home.jpg, art/og-menu.jpg,
- * art/og-find-us.jpg — by typesetting them in a real browser with the site's
+ * Writes the three social cards (art/og-home.jpg, art/og-menu.jpg,
+ * art/og-find-us.jpg) by typesetting them in a real browser with the site's
  * own stylesheet. The palette, both faces, the squiggle rule and the paper
  * come from style.css; the words come from the pages, menu.json and
  * config.js. Nothing on a card is written down here, so the cards cannot
@@ -34,7 +34,7 @@ const HEADLINE = strip(
   (/<h1 class="hero-headline"[^>]*>([\s\S]*?)<\/h1>/.exec(read('index.html')) || [, ''])[1]
 );
 
-/* The menu page's own meta line — "Baked that morning / Matcha to order". */
+/* The menu page's own meta line: "Baked that morning / Matcha to order". */
 const MENU_META = strip(
   (/<p class="page-meta">([\s\S]*?)<\/p>/.exec(read('menu.html')) || [, ''])[1]
     .replace(/<br\s*\/?>/g, ' · ')
@@ -200,7 +200,7 @@ try {
   for (const [file, body] of Object.entries(CARDS)) {
     writeFileSync(join(ROOT, TMP), page_html(body));
     await page.goto(pathToFileURL(join(ROOT, TMP)).href);
-    /* font-display: optional never blocks — ask for the faces outright so the
+    /* font-display: optional never blocks, so ask for the faces outright and the
        card is set in Oskon and Darker Grotesque, not the fallbacks. */
     await page.evaluate(() => Promise.all([
       document.fonts.load('italic 400 100px Oskon'),

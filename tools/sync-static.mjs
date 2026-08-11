@@ -1,4 +1,4 @@
-/* Developer tool — NOT part of the deployed site and NOT owner-editable.
+/* Developer tool. NOT part of the deployed site and NOT owner-editable.
  *
  *     node tools/sync-static.mjs [--check]
  *
@@ -118,7 +118,7 @@ function spotHTML(id) {
 /* --i is the section's place in menu.json. The phone board is one column and
    needs the file's reading order, but the desktop board splits the sections
    across two columns, so DOM order is not reading order. This used to be a
-   hardcoded list of slugs in the stylesheet — rename a section or add one and
+   hardcoded list of slugs in the stylesheet; rename a section or add one and
    it silently jumped to the top of the phone board with order:0. The flip
    class alternates the head alignment the same way, from the same number. */
 function sectionHTML(sec, i) {
@@ -138,8 +138,8 @@ function sectionHTML(sec, i) {
   return h + '</section>';
 }
 
-/* The home page shows the two sections that have a standfirst — the owner's
-   own signal for which part of the board matters — four items each. */
+/* The home page shows the two sections that have a standfirst (the owner's
+   own signal for which part of the board matters), four items each. */
 const PREVIEW_SECTIONS = 2;
 const PREVIEW_ITEMS = 4;
 
@@ -241,7 +241,7 @@ function boardHTML() {
 /* Every absolute URL on the site is built here from CAFE.url, so the domain is
    written down exactly once. It was written down 22 times across three heads,
    sitemap.xml and robots.txt, and renaming the repository silently pointed all
-   of them at a 404 — canonicals, social cards and the search-engine data. */
+   of them at a 404: canonicals, social cards and the search-engine data. */
 const SITE = CAFE.url.replace(/\/*$/, '/');
 const OG = { 'index.html': 'og-home', 'menu.html': 'og-menu', 'find-us.html': 'og-find-us' };
 const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
@@ -365,6 +365,6 @@ for (const [file, body] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
 }
 
 if (check && stale) {
-  console.error(`\n${stale} file(s) out of date — run: node tools/sync-static.mjs`);
+  console.error(`\n${stale} file(s) out of date. Run: node tools/sync-static.mjs`);
   process.exit(1);
 }
