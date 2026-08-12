@@ -2,7 +2,6 @@
   {
     "section": "Matcha",
     "note": "Built to order",
-    "standfirst": "Say the grade, the milk and how sweet. Ceremonial is stone-ground and thinner; the everyday grade takes milk better.",
     "spots": ["spot-matcha", "spot-teapot"],
     "items": [
       { "name": "Usucha, whisked plain", "price": "4.60" },
@@ -15,41 +14,13 @@
     ]
   },
   {
-    "section": "Coffee",
-    "note": "Oat, no charge",
-    "spots": ["spot-cup", "spot-espresso"],
-    "items": [
-      { "name": "Filter",     "price": "3.20" },
-      { "name": "Espresso",   "price": "2.60" },
-      { "name": "Cortado",    "price": "3.40" },
-      { "name": "Flat white", "price": "3.80" },
-      { "name": "Latte",      "price": "4.00" },
-      { "name": "Cold brew",  "price": "4.20" }
-    ]
-  },
-  {
     "section": "Kitchen",
     "note": "Under the grill",
-    "standfirst": "Brisket pho, pressed into a toastie, the broth cooked down to a gravy. The prawn roll wears a Singapore chilli crab sauce.",
     "spots": ["spot-toast"],
     "items": [
       { "name": "Pho toastie",                   "price": "13.50" },
       { "name": "Singaporean chilli prawn roll", "price": "15.00" },
       { "name": "Kaya toast, soft egg",          "price": "7.50" }
-    ]
-  },
-  {
-    "section": "Desserts",
-    "note": "Fresh from the oven",
-    "standfirst": "Made this morning for this morning. When the cabinet is empty, that is the end of it, so come early for the full spread.",
-    "spots": ["spot-cake", "spot-croissant"],
-    "items": [
-      { "name": "Matcha basque cheesecake", "price": "6.50" },
-      { "name": "Black sesame cookie",      "price": "3.60" },
-      { "name": "Cake of the day",          "price": "4.80" },
-      { "name": "Cardamom bun",             "price": "4.20" },
-      { "name": "Croissant",                "price": "3.60" },
-      { "name": "Hojicha custard tart",     "price": "5.20" }
     ]
   },
   {
@@ -64,6 +35,19 @@
     ]
   },
   {
+    "section": "Desserts",
+    "note": "Fresh from the oven",
+    "spots": ["spot-cake", "spot-croissant"],
+    "items": [
+      { "name": "Matcha basque cheesecake", "price": "6.50" },
+      { "name": "Black sesame cookie",      "price": "3.60" },
+      { "name": "Cake of the day",          "price": "4.80" },
+      { "name": "Cardamom bun",             "price": "4.20" },
+      { "name": "Croissant",                "price": "3.60" },
+      { "name": "Hojicha custard tart",     "price": "5.20" }
+    ]
+  },
+  {
     "section": "Take home",
     "note": "While it lasts",
     "spots": ["spot-beans"],
@@ -71,6 +55,19 @@
       { "name": "Beans, 250g",   "price": "12.00" },
       { "name": "Matcha, 30g",   "price": "18.00" },
       { "name": "Filter papers", "price": "4.00" }
+    ]
+  },
+  {
+    "section": "Coffee",
+    "note": "Oat, no charge",
+    "spots": ["spot-cup", "spot-espresso"],
+    "items": [
+      { "name": "Filter",     "price": "3.20" },
+      { "name": "Espresso",   "price": "2.60" },
+      { "name": "Cortado",    "price": "3.40" },
+      { "name": "Flat white", "price": "3.80" },
+      { "name": "Latte",      "price": "4.00" },
+      { "name": "Cold brew",  "price": "4.20" }
     ]
   }
 ]
