@@ -190,7 +190,7 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'One room, one oven, and a single morning a week to get it right. ' + closedHeadline(now);
+    return 'One room, one oven, and the flavours we grew up on: star anise, pandan, yuzu, black sesame. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
