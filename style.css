@@ -1257,54 +1257,6 @@ html:not(.js) .daystrip { display: none; }
 }
 .find-links a:hover { color: var(--sun-deep); }
 
-/* ----------------------------------------------------------------- map ---
-   The corner drawn like everything else here: ink lines, a few washes, and
-   the sun where the door is. A sketch, not a survey; the pannable map is
-   one link away in the address section. */
-
-.map-sec {
-  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
-  margin: 12px var(--board-margin-live) 0;
-}
-.map-wrap { margin-top: 6px; }
-.map-art { width: 100%; height: auto; }
-
-.map-art .mp-rail  { fill: none; stroke: var(--ink-60); stroke-width: 2; stroke-linecap: round; }
-.map-art .mp-ties  { fill: none; stroke: var(--ink-18); stroke-width: 13; stroke-dasharray: 2.5 12.5; }
-.map-art .mp-road  { fill: none; stroke: var(--ink-30); stroke-width: 2; stroke-linecap: round; }
-.map-art .mp-lane  { fill: none; stroke: var(--ink-18); stroke-width: 2; stroke-linecap: round; }
-.map-art .mp-route { fill: none; stroke: var(--sun); stroke-width: 2.8; stroke-linecap: round; stroke-dasharray: 0.5 9.5; }
-.map-art .mp-sun   { fill: none; stroke: var(--sun); stroke-width: 3; stroke-linecap: round; }
-.map-art .mp-compass { fill: none; stroke: var(--ink-60); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-.map-art .mp-wash-butter { fill: var(--butter); opacity: 0.32; }
-.map-art .mp-wash-sky    { fill: var(--sky);    opacity: 0.5; }
-.map-art .mp-wash-blush  { fill: var(--blush);  opacity: 0.6; }
-.map-art .mp-front       { fill: var(--pine); }
-
-/* The pen that draws the walk: a solid mask stroke pulled along the route by
-   the scroll (the animation lives with the other scroll-driven ones, in the
-   motion block). --walk is path-length still to draw; at its initial 0 the
-   route is complete, so every browser without the animation sees the whole
-   walk, and the sun by the door is fully lit. */
-@property --walk { syntax: '<number>'; inherits: true; initial-value: 0; }
-
-.map-art .mp-walk-pen {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 14;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: var(--walk);
-}
-.map-art .mp-sun { opacity: clamp(0, (26 - var(--walk)) / 26, 1); }
-
-.map-art .mp-label  { font: 700 13px var(--sans); letter-spacing: 0.14em; fill: var(--moss-text); }
-.map-art .mp-street { font: 400 11px var(--mono); letter-spacing: 0.14em; fill: var(--ink-60); }
-.map-art .mp-shop   { font: 400 11px var(--mono); letter-spacing: 0.04em; fill: var(--ink-60); }
-.map-art .mp-name   { font: italic 400 27px var(--serif); fill: var(--ink); }
-.map-art .mp-note   { font: italic 400 17px var(--serif); fill: var(--pine); }
-
 /* --------------------------------------------------------------- mobile --- */
 
 @media (max-width: 719px) {
@@ -1451,18 +1403,6 @@ html:not(.js) .daystrip { display: none; }
   .crumbs { padding-top: 26px; }
   .crumbs + .page-head { padding-top: 22px; }
 
-  /* The map keeps its drawn size and pans inside its own box; the page
-     itself must never scroll sideways. rtl only flips which end the pan
-     starts from. The door, not the station, is what the page opens on. */
-  .map-wrap {
-    overflow-x: auto;
-    direction: rtl;
-    margin: 6px calc(-1 * var(--gutter)) 0;
-    padding: 0 var(--gutter);
-  }
-  /* …but rtl must not reach the drawing itself, or every start-anchored
-     label in the SVG walks left onto its swatch. */
-  .map-art { min-width: 560px; direction: ltr; }
   .page-head { display: block; padding-top: 38px; }
   .page-head h1 { font-size: 72px; line-height: 0.9; margin-bottom: 14px; }
   .page-meta { text-align: left; padding: 0; font-size: 12.5px; }
@@ -1569,14 +1509,6 @@ html:not(.js) .daystrip { display: none; }
       animation-timeline: view();
       animation-range: entry 10% entry 60%;
     }
-
-    /* And on Find us, the walk walks: station to door as the map enters,
-       the sun arriving with the walker. */
-    .map-art {
-      animation: walk-draw linear both;
-      animation-timeline: view();
-      animation-range: entry 30% entry 95%;
-    }
   }
 }
 
@@ -1586,10 +1518,6 @@ html:not(.js) .daystrip { display: none; }
 @keyframes rule-draw {
   from { clip-path: inset(0 100% 0 0); }
   to   { clip-path: inset(0); }
-}
-@keyframes walk-draw {
-  from { --walk: 100; }
-  to   { --walk: 0; }
 }
 
 @keyframes dv-out { to { opacity: 0; } }
