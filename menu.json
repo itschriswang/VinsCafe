@@ -28,6 +28,17 @@
     ]
   },
   {
+    "section": "Kitchen",
+    "note": "Under the grill",
+    "standfirst": "Brisket pho, pressed into a toastie, the broth alongside for dipping. The prawn roll wears a Singapore chilli crab sauce.",
+    "spots": ["spot-toast"],
+    "items": [
+      { "name": "Pho toastie",                   "price": "13.50" },
+      { "name": "Singaporean chilli prawn roll", "price": "15.00" },
+      { "name": "Kaya toast, soft egg",          "price": "7.50" }
+    ]
+  },
+  {
     "section": "Desserts",
     "note": "Fresh from the oven",
     "standfirst": "Made this morning for this morning. When the cabinet is empty, that is the end of it, so come early for the full spread.",
@@ -47,6 +58,7 @@
     "spots": ["spot-coldbrew"],
     "items": [
       { "name": "Iced filter",    "price": "4.00" },
+      { "name": "Vietnamese iced coffee", "price": "5.80" },
       { "name": "House lemonade", "price": "3.80" },
       { "name": "Yuzu soda",      "price": "4.20" }
     ]

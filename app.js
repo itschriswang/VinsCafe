@@ -47,7 +47,7 @@
       eyebrow: null,       /* derived: the hours are the whole story now */
       mark: 'note',
       headline: 'The morning we wait all week for.',
-      body: 'First light through the window, warm trays coming out, the first pour of the day. Six days of getting ready, for this.'
+      body: 'First light through the window, warm trays coming out, the pho broth back on the heat. Six days of getting ready, for this.'
     },
     midday: {
       eyebrow: 'Say how you want it',
