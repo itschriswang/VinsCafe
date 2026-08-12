@@ -30,7 +30,7 @@
   {
     "section": "Kitchen",
     "note": "Under the grill",
-    "standfirst": "Brisket pho, pressed into a toastie, the broth alongside for dipping. The prawn roll wears a Singapore chilli crab sauce.",
+    "standfirst": "Brisket pho, pressed into a toastie, the broth cooked down to a gravy. The prawn roll wears a Singapore chilli crab sauce.",
     "spots": ["spot-toast"],
     "items": [
       { "name": "Pho toastie",                   "price": "13.50" },
