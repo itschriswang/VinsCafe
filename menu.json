@@ -2,7 +2,7 @@
   {
     "section": "Matcha",
     "note": "Built to order",
-    "spots": ["spot-matcha", "spot-teapot"],
+    "spots": ["spot-matcha"],
     "items": [
       { "name": "Usucha, whisked plain", "price": "4.60" },
       { "name": "Matcha latte",          "price": "5.00" },
@@ -37,7 +37,7 @@
   {
     "section": "Desserts",
     "note": "Fresh from the oven",
-    "spots": ["spot-cake", "spot-croissant"],
+    "spots": ["spot-cake"],
     "items": [
       { "name": "Matcha basque cheesecake", "price": "6.50" },
       { "name": "Black sesame cookie",      "price": "3.60" },
@@ -60,7 +60,7 @@
   {
     "section": "Coffee",
     "note": "Oat, no charge",
-    "spots": ["spot-cup", "spot-espresso"],
+    "spots": ["spot-cup"],
     "items": [
       { "name": "Filter",     "price": "3.20" },
       { "name": "Espresso",   "price": "2.60" },

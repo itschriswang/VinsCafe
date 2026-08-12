@@ -1025,14 +1025,11 @@ html:not(.js) .daystrip { display: none; }
   text-wrap: pretty;
 }
 
-/* Short sections carry a floor that clears their own spot. The floor for a
-   two-painting section is set by which painting hangs second: a flat 560px
-   floor left the coffee list floating in 290px of nothing, because the
-   espresso cup is half the teapot's height. */
+/* Short sections carry a floor that clears their own spot. Every section
+   hangs one painting now, beside its list; a second painting below the
+   items needs the 560px floor back, and drags that much paper with it. */
 .sec:has(.spot)          { min-height: 260px; }
 .sec:has(.spot ~ .spot)  { min-height: 560px; }
-.sec:has(.spot ~ .spot--espresso)  { min-height: 420px; }
-.sec:has(.spot ~ .spot--croissant) { min-height: 520px; }
 
 .spot {
   position: absolute;
