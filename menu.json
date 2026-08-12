@@ -37,7 +37,7 @@
   {
     "section": "Desserts",
     "note": "Fresh from the oven",
-    "spots": ["spot-cake"],
+    "spots": ["spot-cake", "spot-croissant"],
     "items": [
       { "name": "Matcha basque cheesecake", "price": "6.50" },
       { "name": "Black sesame cookie",      "price": "3.60" },

@@ -493,7 +493,7 @@
     if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
     h += '</div><ul class="items">';
     (sec.items || []).forEach(function (it) {
-      h += '<li class="item"><span class="item-name">' + esc(it.name) +
+      h += '<li class="item" data-item="' + slug(it.name) + '"><span class="item-name">' + esc(it.name) +
         '</span><span class="item-lead" aria-hidden="true"></span>' +
         '<span class="item-price">' + esc(it.price) + '</span></li>';
     });
@@ -552,7 +552,7 @@
     if (sec.note) h += '<p class="sec-note">' + esc(sec.note) + '</p>';
     h += '</div><ul class="items">';
     (sec.items || []).forEach(function (it) {
-      h += '<li class="item"><span class="item-name">' + esc(it.name) +
+      h += '<li class="item" data-item="' + slug(it.name) + '"><span class="item-name">' + esc(it.name) +
         '</span><span class="item-lead" aria-hidden="true"></span>' +
         '<span class="item-price">' + esc(it.price) + '</span></li>';
     });
