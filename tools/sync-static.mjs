@@ -129,7 +129,7 @@ function sectionHTML(sec, i) {
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
   h += '</div><ul class="items">';
   for (const it of sec.items || []) {
-    h += `<li class="item"><span class="item-name">${esc(it.name)}</span>` +
+    h += `<li class="item" data-item="${slug(it.name)}"><span class="item-name">${esc(it.name)}</span>` +
       '<span class="item-lead" aria-hidden="true"></span>' +
       `<span class="item-price">${esc(it.price)}</span></li>`;
   }
@@ -181,7 +181,7 @@ function previewSectionHTML(sec, i) {
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
   h += '</div><ul class="items">';
   for (const it of sec.items || []) {
-    h += `<li class="item"><span class="item-name">${esc(it.name)}</span>` +
+    h += `<li class="item" data-item="${slug(it.name)}"><span class="item-name">${esc(it.name)}</span>` +
       '<span class="item-lead" aria-hidden="true"></span>' +
       `<span class="item-price">${esc(it.price)}</span></li>`;
   }

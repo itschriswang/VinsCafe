@@ -1038,8 +1038,9 @@ html:not(.js) .daystrip { display: none; }
   mix-blend-mode: multiply;
   width: var(--w);
   transform: rotate(var(--tilt, 0deg));
-  transition: transform 400ms var(--ease-spring);
+  transition: transform 400ms var(--ease-spring), opacity 360ms var(--ease-out);
 }
+
 @media (hover: hover) and (pointer: fine) {
   .sec:hover .spot { transform: rotate(calc(var(--tilt, 0deg) * 2.4)) scale(1.05); }
 }
@@ -1060,41 +1061,20 @@ html:not(.js) .daystrip { display: none; }
 .spot--matcha    { --w: 280px; --into: 226px; --tilt: 2.6deg; --t1: -44px; }
 .spot--flatwhite { --w: 380px; --into: 240px; --tilt: -1.8deg; --t1: -48px; }
 
-/* Board furniture: the paintings that no longer rent space in a section.
-   They hang off the masthead and the foot strip, the two fixtures that stay
-   put however menu.json changes, so they can never open a hole in the board.
-   Hidden on a phone, where the head and strip have no margins to hang in. */
-.page-head { position: relative; }
-.deco {
-  position: absolute;
-  height: auto;
-  pointer-events: none;
-  mix-blend-mode: multiply;
+/* One small trick on the board: the croissant rides on the cake's exact
+   position and only shows itself while the croissant line is under the
+   pointer. Both paintings hang in Desserts, so the swap needs no tall floor
+   and opens no gap; on a phone the second spot is hidden and the cake stays. */
+.sec > .spot--cake ~ .spot--croissant {
+  --w: 300px;
+  top: -48px;
+  opacity: 0;
 }
-.deco--teapot {
-  width: clamp(130px, 13vw, 190px);
-  left: 48%;
-  bottom: -64px;
-  transform: rotate(-2.4deg);
-}
-.board-foot .foot-inner { position: relative; }
-/* Standing on the strip's hairline like things left on a shelf, in the two
-   empty runs between the address, the hours and the timestamp. */
-.deco--croissant {
-  width: clamp(120px, 11vw, 150px);
-  left: 21%;
-  bottom: calc(100% - 10px);
-  transform: rotate(1.8deg);
-}
-.deco--espresso {
-  width: clamp(90px, 8vw, 112px);
-  right: 23%;
-  bottom: calc(100% - 8px);
-  transform: rotate(2.2deg);
-}
-@media (max-width: 899px) { .deco { display: none; } }
+.sec:has(.spot--cake ~ .spot--croissant) { min-height: 260px; }
+.sec:has(.item[data-item='croissant']:hover) .spot--cake { opacity: 0; }
+.sec:has(.item[data-item='croissant']:hover) .spot--croissant { opacity: 1; }
 
-.board-foot { position: relative; padding: 72px 0 32px; }
+.board-foot { padding: 72px 0 32px; }
 .board-foot .foot-inner {
   padding-top: 18px;
   border-top: 1px solid var(--ink-30);
