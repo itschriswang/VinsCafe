@@ -669,6 +669,20 @@ html:not(.js) .ind-close { display: none; }
   color: var(--ink-75);
 }
 
+/* The hero is a fixed, clipped box, and on a short desktop viewport (a
+   laptop with its browser chrome) the closed state's fourth row, the body,
+   fell past the clip line and lost half its sentence. Give the type room by
+   shallowing the plate band and capping the headline; closed only, because
+   the other three states keep their copy beside the painting, not below it. */
+@media (min-width: 720px) and (max-height: 940px) {
+  [data-state='closed'] .plate-wrap { height: 44%; }
+  [data-state='closed'] .hero-type {
+    top: calc(var(--bar-h) + 44% + var(--gutter));
+    --h1: clamp(44px, 4.6vw, 62px);
+  }
+  [data-state='closed'] .hero-body { margin-top: 16px; }
+}
+
 /* --------------------------------------------------------------- no JS --- */
 
 html:not(.js) .hero {
