@@ -187,10 +187,22 @@
     return 'Closed until ' + hour12(n.hour) + ' ' + when + '.';
   }
 
-  /* Closed says what the room is first, then when it opens again. One line,
-     because on a phone it sits directly under the headline. */
+  /* Closed says what the room loves first, then when the door is open. The
+     day names come from config.js, so a second open day lands here on its
+     own. Short, because on a phone it sits directly under the headline. */
+  function openDaysLine() {
+    var parts = hourRuns().filter(function (r) { return r.hours; })
+      .map(function (r) {
+        return r.days.length > 1
+          ? DAY_LONG[r.days[0]] + ' to ' + DAY_LONG[r.days[r.days.length - 1]]
+          : DAY_LONG[r.days[0]] + 's';
+      });
+    return 'Open on ' + parts.join(' and ') + '.';
+  }
+
   function closedBody(now) {
-    return 'Star anise, pandan and black sesame, the flavours we grew up on. ' + closedHeadline(now);
+    return 'Star anise, pandan and black sesame, the flavours we grew up on. ' +
+      openDaysLine() + " We can't wait to have you.";
   }
 
   function lateEyebrow() {
