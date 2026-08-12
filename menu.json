@@ -1,18 +1,5 @@
 [
   {
-    "section": "Coffee",
-    "note": "Oat, no charge",
-    "spots": ["spot-cup", "spot-espresso"],
-    "items": [
-      { "name": "Filter",     "price": "3.20" },
-      { "name": "Espresso",   "price": "2.60" },
-      { "name": "Cortado",    "price": "3.40" },
-      { "name": "Flat white", "price": "3.80" },
-      { "name": "Latte",      "price": "4.00" },
-      { "name": "Cold brew",  "price": "4.20" }
-    ]
-  },
-  {
     "section": "Matcha",
     "note": "Built to order",
     "standfirst": "Say the grade, the milk and how sweet. Ceremonial is stone-ground and thinner; the everyday grade takes milk better.",
@@ -25,6 +12,19 @@
       { "name": "Iced matcha latte",     "price": "5.40" },
       { "name": "Matcha tonic",          "price": "5.20" },
       { "name": "Hojicha latte",         "price": "4.80" }
+    ]
+  },
+  {
+    "section": "Coffee",
+    "note": "Oat, no charge",
+    "spots": ["spot-cup", "spot-espresso"],
+    "items": [
+      { "name": "Filter",     "price": "3.20" },
+      { "name": "Espresso",   "price": "2.60" },
+      { "name": "Cortado",    "price": "3.40" },
+      { "name": "Flat white", "price": "3.80" },
+      { "name": "Latte",      "price": "4.00" },
+      { "name": "Cold brew",  "price": "4.20" }
     ]
   },
   {

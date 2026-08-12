@@ -1025,9 +1025,14 @@ html:not(.js) .daystrip { display: none; }
   text-wrap: pretty;
 }
 
-/* Short sections carry a floor that clears their own spot. */
-.sec:has(.spot)          { min-height: 300px; }
+/* Short sections carry a floor that clears their own spot. The floor for a
+   two-painting section is set by which painting hangs second: a flat 560px
+   floor left the coffee list floating in 290px of nothing, because the
+   espresso cup is half the teapot's height. */
+.sec:has(.spot)          { min-height: 260px; }
 .sec:has(.spot ~ .spot)  { min-height: 560px; }
+.sec:has(.spot ~ .spot--espresso)  { min-height: 420px; }
+.sec:has(.spot ~ .spot--croissant) { min-height: 520px; }
 
 .spot {
   position: absolute;
@@ -1045,20 +1050,20 @@ html:not(.js) .daystrip { display: none; }
 .sec:not(.sec--flip) > .spot { left: calc(-1 * var(--into)); right: auto; }
 .sec--flip > .spot           { right: calc(-1 * var(--into)); left: auto; }
 .sec > .spot:nth-of-type(1)  { top: var(--t1, -24px); }
-.sec > .spot:nth-of-type(2)  { top: 300px; }
+.sec > .spot:nth-of-type(2)  { top: var(--t2, 300px); }
 
 .spot--cup       { --w: 330px; --into: 230px; --tilt: -1.6deg; --t1: -52px; }
-.spot--espresso  { --w: 200px; --into: 210px; --tilt: 2.2deg; }
+.spot--espresso  { --w: 200px; --into: 210px; --tilt: 2.2deg; --t2: 200px; }
 .spot--teapot    { --w: 270px; --into: 230px; --tilt: -2.4deg; --t1: -36px; }
 .spot--beans     { --w: 200px; --into: 216px; --tilt: 1.4deg; --t1: -30px; }
-.spot--croissant { --w: 320px; --into: 230px; --tilt: 1.8deg; --t1: -44px; }
+.spot--croissant { --w: 320px; --into: 230px; --tilt: 1.8deg; --t1: -44px; --t2: 260px; }
 .spot--toast     { --w: 220px; --into: 216px; --tilt: -2deg; }
 .spot--cake      { --w: 300px; --into: 230px; --tilt: 1.2deg; --t1: -48px; }
 .spot--coldbrew  { --w: 220px; --into: 214px; --tilt: -1.6deg; --t1: -36px; }
 .spot--matcha    { --w: 280px; --into: 226px; --tilt: 2.6deg; --t1: -44px; }
 .spot--flatwhite { --w: 380px; --into: 240px; --tilt: -1.8deg; --t1: -48px; }
 
-.board-foot { padding: 128px 0 32px; }
+.board-foot { padding: 72px 0 32px; }
 .board-foot .foot-inner {
   padding-top: 18px;
   border-top: 1px solid var(--ink-30);
@@ -1473,6 +1478,7 @@ html:not(.js) .daystrip { display: none; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
   .spot--teapot    { --w: 190px; --into-m: 58px; --t1-m: -54px; }
   .spot--croissant { --w: 250px; --into-m: 78px; --t1-m: -36px; }
+  .spot--toast     { --w: 150px; --into-m: 58px; --t1-m: -60px; }
   .spot--cake      { --w: 210px; --into-m: 62px; --t1-m: -88px; }
   .spot--coldbrew  { --w: 180px; --into-m: 54px; --t1-m: -66px; }
   .spot--beans     { --w: 150px; --into-m: 50px; --t1-m: -80px; }
