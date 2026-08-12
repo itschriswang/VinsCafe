@@ -765,7 +765,7 @@
      paper everywhere else. */
   function setThemeColor(s) {
     var m = $('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#364A2E' : '#F7EFDF');
+    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#404A2E' : '#F7EFDF');
   }
 
   function wireDaydial() {
@@ -859,7 +859,7 @@
       console.log(
         '%cgam sia%c\nHokkien for thank you. That covers reading the source, too.\n' +
         open + ' · ' + CAFE.address.street + ', ' + CAFE.address.locality,
-        "font: italic 22px Georgia, 'Times New Roman', serif; color: #364A2E;",
+        "font: italic 22px Georgia, 'Times New Roman', serif; color: #404A2E;",
         'font: 12px ui-monospace, Menlo, monospace; color: #5A6530;'
       );
     } catch (e) { /* a console is never load-bearing */ }

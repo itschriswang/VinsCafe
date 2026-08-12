@@ -56,8 +56,8 @@
 :root {
   --paper:  #F7EFDF;   /* the sheet everything sits on */
   --paper-2:#F1E4CC;   /* a warmer second sheet */
-  --ink:    #2A331D;   /* deep forest, the text colour; warmed toward the paintings' olive */
-  --pine:   #364A2E;   /* dark green blocks, warmed the same way */
+  --ink:    #2E331D;   /* deep forest, the text colour; warmed toward the paintings' olive */
+  --pine:   #404A2E;   /* dark green blocks, warmed the same way */
   --moss:   #75823A;   /* olive mid-green */
   --butter: #F3CE5C;   /* butter yellow */
   --blush:  #F4CDBA;   /* blush pink wash */
@@ -68,12 +68,12 @@
   --sun-press: #9C3826;
   --moss-text: #5A6530; /* moss dark enough to carry small type */
 
-  --ink-12: rgba(42, 51, 29, 0.12);
-  --ink-18: rgba(42, 51, 29, 0.18);
-  --ink-30: rgba(42, 51, 29, 0.30);
-  --ink-45: rgba(42, 51, 29, 0.45);
-  --ink-60: rgba(42, 51, 29, 0.60);
-  --ink-75: rgba(42, 51, 29, 0.75);
+  --ink-12: rgba(46, 51, 29, 0.12);
+  --ink-18: rgba(46, 51, 29, 0.18);
+  --ink-30: rgba(46, 51, 29, 0.30);
+  --ink-45: rgba(46, 51, 29, 0.45);
+  --ink-60: rgba(46, 51, 29, 0.60);
+  --ink-75: rgba(46, 51, 29, 0.75);
   --cream-85: rgba(247, 239, 223, 0.85);
   --cream-35: rgba(247, 239, 223, 0.35);
 
@@ -319,7 +319,7 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   background: var(--paper);
   border: 1px solid var(--ink-18);
   border-radius: 14px;
-  box-shadow: 0 22px 44px -20px rgba(42, 51, 29, 0.4);
+  box-shadow: 0 22px 44px -20px rgba(46, 51, 29, 0.4);
 }
 html.js .ind-panel {
   position: absolute;
@@ -497,7 +497,7 @@ html:not(.js) .ind-close { display: none; }
   text-transform: uppercase;
   color: var(--paper);
   text-decoration: none;
-  box-shadow: 0 1px 2px rgba(42, 51, 29, 0.18);
+  box-shadow: 0 1px 2px rgba(46, 51, 29, 0.18);
   transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out),
               background 160ms var(--ease-out);
 }
@@ -523,7 +523,7 @@ html:not(.js) .ind-close { display: none; }
   height: auto;
   pointer-events: none;
   animation: spin 26s linear infinite;
-  filter: drop-shadow(0 2px 0 rgba(42,51,29,0.25));
+  filter: drop-shadow(0 2px 0 rgba(46,51,29,0.25));
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 [data-state='closed'] .roundel { display: none; }
@@ -1098,7 +1098,7 @@ html:not(.js) .daystrip { display: none; }
   border: 1px solid var(--ink-12);
   border-radius: 10px;
   padding: 30px 32px 30px;
-  box-shadow: 0 2px 6px rgba(42, 51, 29, 0.15);
+  box-shadow: 0 2px 6px rgba(46, 51, 29, 0.15);
   transform: rotate(-0.7deg);
   transition: transform 300ms var(--ease-spring), box-shadow 300ms var(--ease-out);
 }
@@ -1106,7 +1106,7 @@ html:not(.js) .daystrip { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .preview .sec:hover {
     transform: rotate(0deg) translateY(-3px);
-    box-shadow: 0 4px 10px rgba(42, 51, 29, 0.18);
+    box-shadow: 0 4px 10px rgba(46, 51, 29, 0.18);
   }
 }
 .preview .sec:has(.spot) { min-height: 0; }
