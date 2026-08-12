@@ -29,11 +29,12 @@ This is the menu. Each block is one section of the board.
   plain numbers in quotes, no pound sign; the page adds nothing to them.
 - **`note`** is the small capitals line beside the section name. Leave it out
   if there isn't one.
-- **`standfirst`** is the longer italic line under the items. Only Coffee and
-  Kitchen have one. Keep it to about two lines; it is cut off past 34 characters
-  a line by design. **It also decides the front page:** the two sections with a
-  standfirst are the two shown under the hero on the home page, four items each.
-  Move it to another section and the front page follows.
+- **`standfirst`** is the longer italic line under the items. Matcha, Kitchen
+  and Desserts have one. Keep it to about two lines; it is cut off past 34
+  characters a line by design. **It also decides the front page:** the first
+  two sections with a standfirst are the two shown under the hero on the home
+  page, four items each. Move one to another section and the front page
+  follows.
 - **`spots`** are the paintings in the margin. Leave these alone unless you have
   had new ones painted. The first spot of each front-page section is also the
   painting that appears beside it on the home page.

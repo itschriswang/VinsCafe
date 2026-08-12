@@ -47,7 +47,7 @@
       eyebrow: null,       /* derived: the hours are the whole story now */
       mark: 'note',
       headline: 'The morning we wait all week for.',
-      body: 'First light through the window, warm trays coming out, the first pour of the day. Six days of getting ready, for this.'
+      body: 'First light through the window, warm trays coming out, the pho broth back on the heat. Six days of getting ready, for this.'
     },
     midday: {
       eyebrow: 'Say how you want it',
@@ -190,7 +190,7 @@
   /* Closed says what the room is first, then when it opens again. One line,
      because on a phone it sits directly under the headline. */
   function closedBody(now) {
-    return 'One room, one oven, and a single morning a week to get it right. ' + closedHeadline(now);
+    return 'One room, one oven, and the flavours we grew up on: star anise, pandan, yuzu, black sesame. ' + closedHeadline(now);
   }
 
   function lateEyebrow() {
@@ -765,7 +765,7 @@
      paper everywhere else. */
   function setThemeColor(s) {
     var m = $('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#2E4A30' : '#F7EFDF');
+    if (m) m.setAttribute('content', s === 'closed' && $('.hero') ? '#404A2E' : '#F7EFDF');
   }
 
   function wireDaydial() {
@@ -859,7 +859,7 @@
       console.log(
         '%cgam sia%c\nHokkien for thank you. That covers reading the source, too.\n' +
         open + ' · ' + CAFE.address.street + ', ' + CAFE.address.locality,
-        "font: italic 22px Georgia, 'Times New Roman', serif; color: #2E4A30;",
+        "font: italic 22px Georgia, 'Times New Roman', serif; color: #404A2E;",
         'font: 12px ui-monospace, Menlo, monospace; color: #5A6530;'
       );
     } catch (e) { /* a console is never load-bearing */ }
