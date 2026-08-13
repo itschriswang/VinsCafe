@@ -27,8 +27,10 @@ This is the menu. Each block is one section of the board.
 
 - **`name`** and **`price`** are the two things you will change most. Prices are
   plain numbers in quotes, no pound sign; the page adds nothing to them.
-- **`note`** is the small capitals line beside the section name. Leave it out
-  if there isn't one.
+- **`note`** is the small line beside the section name. It is for something a
+  customer would act on, like Coffee's *Oat, no charge* — not a description of
+  the section, which the name already gives. Leave it out if there isn't one.
+  Most sections don't have one.
 - **`standfirst`** is the longer italic line under the items. No section
   carries one at the moment; add the field back to a section and the line
   returns. Keep it to about two lines; it is cut off past 34 characters a

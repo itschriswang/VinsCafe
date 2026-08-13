@@ -191,7 +191,7 @@ const CARDS = {
         <p class="card-title">Find us</p>
         <div class="card-rule"></div>
         <p class="card-addr">${esc(`${CAFE.address.street}, ${CAFE.address.locality}`)}</p>
-        <p class="card-caps">${caps([HOURS, 'No booking'])}</p>
+        <p class="card-caps">${caps([HOURS])}</p>
       </div>
     </div>`
 };

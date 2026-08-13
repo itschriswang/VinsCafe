@@ -34,7 +34,6 @@
   },
   {
     "section": "Kitchen",
-    "note": "Under the grill",
     "spots": [
       "spot-toast"
     ],
@@ -55,7 +54,6 @@
   },
   {
     "section": "Matcha",
-    "note": "Built to order",
     "spots": [
       "spot-matcha"
     ],
@@ -92,7 +90,6 @@
   },
   {
     "section": "Cold",
-    "note": "From the fridge",
     "spots": [
       "spot-coldbrew"
     ],
@@ -117,7 +114,6 @@
   },
   {
     "section": "Desserts",
-    "note": "Fresh from the oven",
     "spots": [
       "spot-cake",
       "spot-croissant"

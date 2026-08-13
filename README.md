@@ -196,6 +196,15 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   These used to be lists of slugs in the stylesheet, so renaming Kitchen to
   Desserts sent it to the top of the phone board and dropped a teapot on top
   of Coffee's prices.
+- **A heading only gets a note when the note says something.** The italic
+  tucked under a section name is optional everywhere it appears, and most
+  sections do without. It used to be on all of them, and reading down the page
+  they were mostly filler: Cold was "From the fridge", Desserts "Fresh from the
+  oven", The address "No booking". A two-word tag under every heading reads as
+  padding and makes the ones that matter — Coffee's "Oat, no charge", Take
+  home's "While it lasts" — look like more of the same. The board's `note` is
+  for something a customer would act on; the room, the hours and the address
+  say what they are and stop.
 - **The type carries its own paper.** Each hero's copy sits on a wash sized by
   the copy itself (`.hero-type::before`), not on the fixed `.strip`. The strip
   is a percentage of the hero while the copy is however many lines someone
