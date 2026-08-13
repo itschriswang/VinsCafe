@@ -18,7 +18,7 @@ whoever maintains the code.
 index.html      home: the stateful hero
 menu.html       the board
 find-us.html    address, hours, getting here
-404.html        locked to the closed state
+404.html        pinned to first light; carries a &lt;base&gt;
 style.css       one stylesheet
 app.js          clock, state resolution, indicator, menu hydration
 pigment.js      the WebGL2 layer, imported asynchronously by app.js
