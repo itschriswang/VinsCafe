@@ -973,6 +973,34 @@ html:not(.js) .daystrip { display: none; }
   color: var(--paper);
   padding: 0 var(--gutter);
 }
+
+/* The room after close. It used to lead the hero, and because the cafe is shut
+   six days a week it was the first thing very nearly everyone saw. A dark empty
+   room is the wrong first image of a place and the right last one, so it closes
+   the page instead. Full bleed out of the footer's own gutter, and masked at
+   the foot so the night in the painting runs into the pine rather than sitting
+   on it as a band with an edge. */
+.foot-plate {
+  display: block;
+  width: calc(100% + 2 * var(--gutter));
+  max-width: none;
+  margin: 0 calc(-1 * var(--gutter));
+  height: clamp(170px, 24vw, 300px);
+  object-fit: cover;
+  object-position: center 44%;
+  /* Two masks, intersected: one fades the foot into the pine, the other takes
+     the sides. The band is much wider than it is tall, so cover fits the width
+     and the scan's own torn paper border sits at both ends of it — the hero
+     never shows that because it crops far harder. */
+  -webkit-mask-image: linear-gradient(#000 58%, rgba(0, 0, 0, 0)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 0, #000 5%, #000 95%, rgba(0, 0, 0, 0) 100%);
+          mask-image: linear-gradient(#000 58%, rgba(0, 0, 0, 0)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 0, #000 5%, #000 95%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+/* The sign sits under the painting rather than 44px clear of the section above. */
+.foot-plate + .foot-sign { padding-top: 8px; }
 .foot-inner {
   max-width: var(--board-w);
   margin: 0 auto;

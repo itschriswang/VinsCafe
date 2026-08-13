@@ -69,7 +69,18 @@ Every layout difference between the four is CSS keyed off that one attribute.
 
 The plate for the resolved state is written by an inline script at the point in
 the markup where it goes, so the browser fetches the painting for the hour you
-actually arrived at and never one of the other three. Copy that depends on the
+actually arrived at and never one of the other three.
+
+One exception, and `heroPlate()` in `app.js` is the whole of it: the hero holds
+midday when the state is `closed`. The cafe is shut six days a week, so the
+after-close painting — a dark room with the chairs up — was the first thing
+very nearly every visitor saw. It is the wrong first image of the place and the
+right last one, so it closes every page instead, as `.foot-plate`. The hour
+still decides the copy, the colour, the indicator and the stamp; only the
+painting is held. The real after-close room is still the fourth stop in the
+dial under the hero, which reads `PLATES` directly.
+
+Copy that depends on the
 clock is written by `GamSia.paint()` from an inline call at the end of the
 section it fills; filling it later would resize things after layout, and the
 layout-shift budget here is zero.

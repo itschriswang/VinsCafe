@@ -276,7 +276,7 @@
 
   /* Preload only the plate we are about to show. Never the other three. */
   (function () {
-    var f = PLATES[state].file;
+    var f = heroPlate(state).file;
     var link = document.createElement('link');
     link.rel = 'preload';
     link.as = 'image';
@@ -287,8 +287,17 @@
     document.head.appendChild(link);
   }());
 
+  /* The hero never opens on the room after close. The cafe is shut six days a
+     week, so that painting was the first thing very nearly every visitor saw,
+     and a dark empty room is the wrong first image of the place — it is the
+     right last one, which is where it went: the foot of every page. The hour
+     still decides the copy, the colour, the indicator and the stamp. Only the
+     painting is held at midday, and the real after-close room is still the
+     fourth stop in the dial below the hero. */
+  function heroPlate(s) { return PLATES[s === 'closed' ? 'midday' : s]; }
+
   function plateHTML(s) {
-    var p = PLATES[s];
+    var p = heroPlate(s);
     return '<picture class="plate">' +
       '<source type="image/avif" sizes="100vw" srcset="art/' + p.file + '-960w.avif 960w, art/' + p.file + '-1376w.avif 1376w">' +
       '<source type="image/webp" sizes="100vw" srcset="art/' + p.file + '-960w.webp 960w, art/' + p.file + '-1376w.webp 1376w">' +
@@ -407,7 +416,7 @@
   function paintPlate(state) {
     var pic = $('.plate');
     if (!pic) return null;
-    var p = PLATES[state];
+    var p = heroPlate(state);
     var srcs = $$('source', pic);
     if (srcs[0]) srcs[0].srcset = 'art/' + p.file + '-960w.avif 960w, art/' + p.file + '-1376w.avif 1376w';
     if (srcs[1]) srcs[1].srcset = 'art/' + p.file + '-960w.webp 960w, art/' + p.file + '-1376w.webp 1376w';
