@@ -60,6 +60,26 @@ function hoursRows(indent) {
   return hourRuns().map((r) => `${indent}<dt>${r.label}</dt><dd>${r.value}</dd>`).join('\n');
 }
 
+/* The week as seven marks. Monday first, which is not WEEK_ORDER: that one
+   starts on the first open day so the hours table can collapse the shut ones
+   behind it, and this one wants the plain reading order of a week so the
+   shape — a run of nothing, then the one morning — is the thing you see.
+   Mirrors weekMarks() in app.js. */
+const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const WEEK_READING = [1, 2, 3, 4, 5, 6, 0];
+
+function weekMarks(indent) {
+  return WEEK_READING.map((d) => {
+    const open = CAFE.hours[d];
+    const label = open
+      ? `${DAY_SCHEMA[d]}, open ${pad(open[0])} to ${pad(open[1])}`
+      : `${DAY_SCHEMA[d]}, closed`;
+    return `${indent}<span class="week-day${open ? ' is-open' : ''}" title="${label}">` +
+      `<span class="week-letter">${DAY_LETTER[d]}</span>` +
+      `<span class="week-mark"><span class="week-bar"></span></span></span>`;
+  }).join('\n');
+}
+
 function hoursSummary() {
   return hourRuns()
     .filter((r) => r.hours)
@@ -327,6 +347,11 @@ for (const page of PAGES) {
   if (CRUMB[page]) {
     after = region(after, 'breadcrumb', () => '\n' + breadcrumbLd(page) + '\n');
   }
+
+  after = region(after, 'week', (body) => {
+    const indent = (/\n([ \t]*)</.exec(body) || [, '          '])[1];
+    return '\n' + weekMarks(indent) + '\n';
+  });
 
   after = region(after, 'hours-summary', () => hoursSummary());
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');

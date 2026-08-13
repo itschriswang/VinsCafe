@@ -79,6 +79,12 @@
   --clay:     #E0CCC0;
   --peony:    #E4536B;
   --amber:    #E8A33D;
+  /* Clay is the lit face of the chalk peak and is invisible as a mark on
+     cream: 1.36:1. This is the shaded face of the same rock, and the only
+     thing it is for is being seen — the same job --sun-deep and --moss-text
+     already do for their own colours. 2.7:1 on paper, brighter than the
+     lavender rule that reads perfectly well at 1.9:1. */
+  --clay-deep: #A79280;
 
   --ink-12: rgba(46, 51, 29, 0.12);
   --ink-18: rgba(46, 51, 29, 0.18);
@@ -409,12 +415,17 @@ html:not(.js) .ind-close { display: none; }
 .hero {
   position: relative;
   /* Above the wash layer, which is z-index 2. The wash paints on the board and
-     the preview and never inside the hero, but a mix-blend-mode element over
-     the top is not free even where it is empty: it forces the hero, alone on
-     this site in having a live WebGL canvas and a multiply wash under its
-     type, through a compositing round trip that moved the darkest ground pixel
-     under the late body copy from 4.76:1 to 4.49:1 and put it under AA.
-     Measured with tools/check-contrast.mjs; keep the hero out of that group. */
+     the preview and never inside the hero, so it has no business compositing
+     there either: this keeps one more blended layer off the one part of the
+     site that already carries a live WebGL canvas and a multiply wash under
+     its type.
+
+     This rule was first written with a contrast justification, and that
+     justification was wrong: the 4.76:1 to 4.49:1 drop it cited was noise in
+     tools/check-contrast.mjs, which was sampling one frame of a moving picture
+     and measuring a headline's whole bounding box rather than its letters. It
+     read the same on main with no wash on the page at all. Both faults are
+     fixed in that file; the hero clears AA everywhere with room to spare. */
   z-index: 3;
   /* Short of the full viewport by the day dial's height, so the dial,
      the way into the other three paintings, is on screen from the start. */
@@ -1036,14 +1047,17 @@ html:not(.js) .daystrip { display: none; }
 .sec:has(.spot--toast)     { --pigment: var(--amber); }
 .sec:has(.spot--coldbrew)  { --pigment: var(--lavender); }
 .sec:has(.spot--cake)      { --pigment: var(--peony); }
-/* The bag is pale, and clay on cream is a rule you cannot see. Its painting is
-   "the dark green showing through the sides", so the board gets its greens as
-   a ladder of value instead: lichen on Matcha, moss on Coffee, pine here. */
-.sec:has(.spot--beans)     { --pigment: var(--pine); }
+/* Take home is a kraft paper bag, so it is the one section whose colour is the
+   packet rather than what is in it. It was pine for a while, which was true to
+   "the dark green showing through the sides" but made three of six sections
+   green and left the board reading greener than either painting does. Two
+   greens is the honest number: the acid one on Matcha and the olive one on
+   Coffee, which are the two sections that really are green. */
+.sec:has(.spot--beans)     { --pigment: var(--clay-deep); }
 .sec:has(.spot--cup)       { --pigment: var(--moss); }
 .sec:has(.spot--flatwhite) { --pigment: var(--sky); }
 .sec:has(.spot--teapot)    { --pigment: var(--lavender); }
-.sec:has(.spot--espresso)  { --pigment: var(--clay); }
+.sec:has(.spot--espresso)  { --pigment: var(--clay-deep); }
 
 .sec-head {
   /* The rule below is a flex row of its own and therefore makes this box
@@ -1579,6 +1593,48 @@ html:not(.js) .daystrip { display: none; }
 
   .preview .sec > .spot { --w: 170px; }
 }
+
+/* ------------------------------------------------------------- the week ---
+   Seven marks, one a day, Monday first. Six of them are a hairline and one is
+   the morning the door is open, so the shape of the place is legible before
+   you have read a word of the table beside it. All seven marks occupy the same
+   eight pixels and are centred in them, so the open day gains weight without
+   knocking the row out of line.
+
+   aria-hidden, and every day carries a title: the hours table next to this is
+   the accessible answer, and a screen reader reading both would say the same
+   thing twice in two different shapes. */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+  max-width: 268px;
+  margin: 0 0 18px;
+}
+.week-day { display: flex; flex-direction: column; gap: 7px; }
+.week-letter {
+  font: 700 11px/1 var(--sans);
+  letter-spacing: 0.08em;
+  text-align: center;
+  /* The shut days want to recede, but ink at 45% is 2.5:1 at eleven pixels and
+     that is a contrast failure whatever it is doing. moss-text is in the
+     palette for exactly this: quiet, and still 5.4:1. The step down from the
+     open day is carried by the mark below, which is free to be as faint as it
+     likes because it is not type. */
+  color: var(--moss-text);
+}
+.week-mark { display: flex; align-items: center; height: 8px; }
+.week-bar {
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink-18);
+}
+.week-day.is-open .week-letter { color: var(--ink); }
+.week-day.is-open .week-bar { height: 8px; border-radius: 3px; background: var(--sun); }
+/* Today is where you are standing in that week, not another opening. */
+.week-day.is-today .week-letter { color: var(--sun-deep); }
 
 /* ------------------------------------------------------------- the wash ---
    One canvas over the whole page for the four wet things: the damp trail the

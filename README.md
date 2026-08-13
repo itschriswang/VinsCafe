@@ -193,14 +193,32 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   come out of `menu.json`, which the owner edits, and renaming Matcha would
   have quietly taken the pour with it. Sources are re-queried every half second
   so a board rebuilt from `menu.json` picks straight back up.
-- **The hero sits above the wash on purpose.** A `mix-blend-mode` layer over
-  the top is not free even where it draws nothing: it forces the hero, the one
-  place on the site with a live WebGL canvas and a multiply wash under its type,
-  through a compositing round trip. Measured, that moved the darkest ground
-  pixel under the late body copy from 4.76:1 to 4.49:1 and put it under AA, with
-  the wash canvas provably empty there. `.hero { z-index: 3 }` keeps it out of
-  that group. On the board, where there is no WebGL underneath, a fully soaked
-  damp trail costs 8.93:1 to 8.90:1 and nothing else.
+- **The hero sits above the wash** (`.hero { z-index: 3 }`) because the wash
+  paints on the board and the preview and never inside the hero, so it should
+  not composite there either. On the board, where there is no WebGL underneath,
+  a fully soaked damp trail costs the type 8.93:1 to 8.90:1 and nothing else.
+- **`check-contrast.mjs` was wrong in two ways, and both produced ghosts.**
+
+  It sampled *one frame of a moving picture*. `pigment.js` warps the damp edge
+  continuously, so the darkest pixel inside a target is not a fixed quantity,
+  and a single screenshot reported PASS or FAIL for identical code depending on
+  when it landed. Three runs either side of a change looked like a clean signal
+  and were not — that is how the wash layer briefly got blamed for a hero
+  contrast drop it had nothing to do with. It now samples several frames per
+  target and keeps the worst, which is what this file already claimed to do.
+
+  It also measured *the bounding box rather than the letters*. A two-line
+  italic headline at 130px is mostly empty paper, and one dark corner of the
+  painting inside that rectangle failed the check with no glyph near it: the
+  midday headline at 1440 read 2.42:1 against a 3.0 bar that way, on `main`,
+  for years. The tool now takes a glyph mask first — still the pigment layer,
+  screenshot the type, screenshot it transparent, and the pixels that changed
+  are the type — then measures the ground only there.
+
+  With both fixed, every hero target clears AA on every state ground with
+  headroom; the tightest is the morning headline at 1440, 3.43:1 against 3.0.
+  Neither ghost was ever a real defect on the page. Both were the safety net
+  lying, which is worse.
 - **A canvas is a replaced element.** Pinned on all four sides with an auto
   width it takes the size of its backing store and ignores the far edges, which
   draws the whole layer at the render scale in the top left corner. Both

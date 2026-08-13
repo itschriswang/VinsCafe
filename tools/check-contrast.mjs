@@ -32,6 +32,13 @@ const STATES = ['morning', 'midday', 'late', 'closed'];
    are percentages, so the line count changes between the two extremes: a
    headline that sits on the paper strip at 1440 and in flow at 390 can wrap
    onto bare painting somewhere in the middle. Testing only the ends misses it. */
+/* How many frames of the moving ground each target is measured across, and how
+   far apart. The warp's two octaves loop at 43 and 71 seconds, so this does not
+   sample the whole cycle; it samples enough of it to stop the answer flipping
+   between runs. */
+const FRAMES = 6;
+const FRAME_GAP_MS = 320;
+
 const VIEWPORTS = [
   { width: 1440, height: 900 },
   { width: 1024, height: 800 },
@@ -102,9 +109,57 @@ for (const state of STATES) {
       return { sel: s, x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height), fg: [m[0], m[1], m[2]] };
     }), TARGETS.map((t) => t[0]));
 
+    /* Where the glyphs actually are. Measuring the whole box treats a headline
+       as the rectangle it occupies, and a two-line italic at 130px is mostly
+       empty paper: one dark corner of the painting inside that rectangle fails
+       the check with no letter anywhere near it. So take a mask first — the
+       pixels that change when the type is made transparent are the type — and
+       measure the ground only there.
+
+       The painting has to hold still for that one comparison or the warp shows
+       up in the difference as if it were a letter, so the pigment layer is
+       stilled while the mask is taken and let go again straight after. */
+    await page.addStyleTag({ content: '.cc-still .pigment { visibility: hidden !important }' });
+    await page.evaluate(() => document.documentElement.classList.add('cc-still'));
+    await page.waitForTimeout(220);
+
+    const clips = TARGETS.map((_, i) => {
+      const b = probes[i];
+      if (!b) return null;
+      return {
+        x: Math.max(0, b.x), y: Math.max(0, b.y),
+        width: Math.max(1, Math.min(b.w, vp.width - Math.max(0, b.x))),
+        height: Math.max(1, b.h),
+      };
+    });
+
+    const inked = [];
+    for (let i = 0; i < TARGETS.length; i++) {
+      inked[i] = clips[i] ? PNG.decodeRGBA(await page.screenshot({ clip: clips[i], fullPage: true })) : null;
+    }
+
     // hide only the glyphs, keeping every layer beneath exactly as it was
     await page.addStyleTag({ content: TARGETS.map((t) => t[0] + '{color:transparent !important}').join('') });
     await page.waitForTimeout(250);
+
+    const masks = [];
+    for (let i = 0; i < TARGETS.length; i++) {
+      if (!clips[i]) { masks[i] = null; continue; }
+      const bare = PNG.decodeRGBA(await page.screenshot({ clip: clips[i], fullPage: true }));
+      const a = inked[i].data, b2 = bare.data;
+      const m = new Uint8Array(b2.length / 4);
+      let on = 0;
+      for (let k = 0, p = 0; k < b2.length; k += 4, p++) {
+        const d = Math.abs(a[k] - b2[k]) + Math.abs(a[k + 1] - b2[k + 1]) + Math.abs(a[k + 2] - b2[k + 2]);
+        if (d > 12) { m[p] = 1; on++; }
+      }
+      /* No difference at all means the target was already invisible; fall back
+         to the whole box rather than silently measuring nothing. */
+      masks[i] = on ? m : null;
+    }
+
+    await page.evaluate(() => document.documentElement.classList.remove('cc-still'));
+    await page.waitForTimeout(220);
 
     for (let i = 0; i < TARGETS.length; i++) {
       const [sel, need, label] = TARGETS[i];
@@ -113,17 +168,26 @@ for (const state of STATES) {
       /* fullPage, so a target that has slipped below the first fold (the
          stamp does, once the day dial pushed it down) still lands inside
          the image instead of crashing the clip. */
-      const clip = {
-        x: Math.max(0, b.x), y: Math.max(0, b.y),
-        width: Math.max(1, Math.min(b.w, vp.width - Math.max(0, b.x))),
-        height: Math.max(1, b.h),
-      };
-      const px = PNG.decodeRGBA(await page.screenshot({ clip, fullPage: true }));
+      const clip = clips[i];
+      const mask = masks[i];
+      /* Several frames, not one. The ground here is a moving picture: pigment.js
+         warps the damp edge continuously, so the darkest pixel behind a line of
+         type is not a fixed quantity. One screenshot reported PASS or FAIL for
+         identical code depending on when it landed — the late body copy at 1024
+         measures 4.76 on most frames and 4.45 on some, and three runs either
+         side of a change can look like a clean signal while being nothing of
+         the kind. The worst pixel is what this file says it measures, and the
+         worst pixel is over time as well as over area. */
       let worst = Infinity, sum = 0, n = 0;
-      for (let k = 0; k < px.data.length; k += 4) {
-        const c = ratio(b.fg, [px.data[k], px.data[k + 1], px.data[k + 2]]);
-        if (c < worst) worst = c;
-        sum += c; n++;
+      for (let f = 0; f < FRAMES; f++) {
+        if (f) await page.waitForTimeout(FRAME_GAP_MS);
+        const px = PNG.decodeRGBA(await page.screenshot({ clip, fullPage: true }));
+        for (let k = 0, p = 0; k < px.data.length; k += 4, p++) {
+          if (mask && !mask[p]) continue;
+          const c = ratio(b.fg, [px.data[k], px.data[k + 1], px.data[k + 2]]);
+          if (c < worst) worst = c;
+          sum += c; n++;
+        }
       }
       rows.push({
         state, vp: vp.width, element: label,

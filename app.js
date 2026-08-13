@@ -337,6 +337,40 @@
     el.innerHTML = html;
   }
 
+  /* ------------------------------------------------------------- the week ---
+     One morning in seven is the whole shape of this place, and the hours table
+     says so in words while collapsing the shut days into a run. This says it at
+     a glance: seven marks, and the only one with any weight in it is the
+     morning the door is open. Read off the same CAFE.hours, so the two cannot
+     disagree, and written into the markup by sync-static.mjs as well so it is
+     there before any script runs and never arrives late enough to shift.
+
+     Monday first rather than WEEK_ORDER, because the shape is the point and a
+     week reads from Monday. */
+
+  var DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  var WEEK_READING = [1, 2, 3, 4, 5, 6, 0];
+
+  function weekMarks(today) {
+    var h = '';
+    for (var i = 0; i < WEEK_READING.length; i++) {
+      var d = WEEK_READING[i];
+      var open = CAFE.hours[d];
+      var label = open
+        ? DAY_LONG[d] + ', open ' + pad(open[0]) + ' to ' + pad(open[1])
+        : DAY_LONG[d] + ', closed';
+      h += '<span class="week-day' + (open ? ' is-open' : '') +
+        (d === today ? ' is-today' : '') + '" title="' + label + '">' +
+        '<span class="week-letter">' + DAY_LETTER[d] + '</span>' +
+        '<span class="week-mark"><span class="week-bar"></span></span></span>';
+    }
+    return h;
+  }
+
+  function paintWeek(now) {
+    $$('.week').forEach(function (el) { el.innerHTML = weekMarks(now.weekday); });
+  }
+
   function paintIndicator(now) {
     var label = indicatorLabel(now);
     $$('.ind').forEach(function (ind) {
@@ -392,6 +426,7 @@
     paintStamp(now, state);
     paintIndicator(now);
     paintHours($('.page-hours'));
+    paintWeek(now);
     setThemeColor(state);
   }
   window.GamSia.paint = paint;
@@ -871,7 +906,7 @@
     var m = moment();
     var next = locked ? state : (forcedState || stateAt(m));
     if (next !== state) apply(next, m, true);
-    else { paintHero(m, state); paintStamp(m, state); paintIndicator(m); }
+    else { paintHero(m, state); paintStamp(m, state); paintIndicator(m); paintWeek(m); }
   }
 
   /* ---------------------------------------------------------------- init --- */
