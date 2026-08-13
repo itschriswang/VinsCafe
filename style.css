@@ -1686,10 +1686,31 @@ html:not(.js) .daystrip { display: none; }
      busy for it, so the stamp is a desktop pleasure. */
   .roundel { display: none; }
 
-  [data-state='morning'] { --band: 420px; --plate-pos: 22% 46%; }
-  [data-state='late']    { --band: 420px; --plate-pos: 78% 46%; }
-  [data-state='midday']  { --band: 500px; --plate-pos: 55% 92%; }
-  [data-state='closed']  { --band: 410px; --plate-pos: 50% 42%; }
+  /* The band was four fixed heights, which is a bet on one phone. It lost:
+     500px of midday painting under a 139px bar left 83px of a small iPhone's
+     first screen for type, so you landed on two thirds of a headline — and on
+     a 667px phone you landed on none of it at all, in any state.
+
+     It is measured off the viewport now, and off the small one: svh is the
+     height with the browser's chrome up, which is what a phone shows on first
+     paint. dvh would be wrong — it grows as the chrome collapses, and would
+     resize the painting under the reader mid-scroll.
+
+     320px is what the type above the fold needs: the bar, the sheet's overlap
+     back onto the painting, the eyebrow, and the tallest headline any state
+     carries at this width. One figure for all four, because the fold is the
+     same for all four; what still differs per state is the crop, which is
+     --plate-pos's job and always was. The floor keeps a painting on the
+     shortest phone, the ceiling keeps the old height as the most it can be. */
+  [data-state='morning'],
+  [data-state='midday'],
+  [data-state='late'],
+  [data-state='closed']  { --band: clamp(240px, calc(100svh - 320px), 460px); }
+
+  [data-state='morning'] { --plate-pos: 22% 46%; }
+  [data-state='late']    { --plate-pos: 78% 46%; }
+  [data-state='midday']  { --plate-pos: 55% 92%; }
+  [data-state='closed']  { --plate-pos: 50% 42%; }
 
   [data-state='morning'] .hero-type,
   [data-state='midday']  .hero-type,
