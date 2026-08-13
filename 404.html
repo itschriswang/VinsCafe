@@ -1,6 +1,10 @@
 <!doctype html>
-<!-- 404.html: developer territory. Locked to the closed state on purpose. -->
-<html lang="en-AU" data-state="closed" data-state-lock>
+<!-- 404.html: developer territory. It used to be pinned to the room after
+     close, because a dead end is a dark room. The night painting closes every
+     page now, so pinning it here showed the same picture twice and froze the
+     one page a visitor arrives at by accident. It runs on the clock like the
+     rest of the site; only its copy is fixed, via data-fixed. -->
+<html lang="en-AU" data-state="midday">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -81,17 +85,18 @@
     <script>if (window.GamSia) GamSia.writePlate(document.currentScript);</script>
     <noscript>
       <picture class="plate">
-        <source type="image/avif" sizes="100vw" srcset="art/hero-closed-960w.avif 960w, art/hero-closed-1376w.avif 1376w">
-        <source type="image/webp" sizes="100vw" srcset="art/hero-closed-960w.webp 960w, art/hero-closed-1376w.webp 1376w">
-        <img src="art/hero-closed-1376w.webp" width="1376" height="768" alt="Watercolour of the room after closing: deep blue-green dark, chairs stacked in the one lit window, and a single red light by the door.">
+        <source type="image/avif" sizes="100vw" srcset="art/hero-midday-960w.avif 960w, art/hero-midday-1376w.avif 1376w">
+        <source type="image/webp" sizes="100vw" srcset="art/hero-midday-960w.webp 960w, art/hero-midday-1376w.webp 1376w">
+        <img src="art/hero-midday-1376w.webp" width="1376" height="768" alt="Watercolour of the counter at midday under a yellow wash, a row of mismatched cups and saucers set out along it, and a grey city window to the left.">
       </picture>
+      <img class="strip" alt="" aria-hidden="true" width="1376" height="768" sizes="100vw" srcset="art/tex-paper-900w.avif 900w, art/tex-paper-1376w.avif 1376w" src="art/tex-paper-900w.webp">
     </noscript>
   </div>
 
   <div class="hero-type">
-    <p class="hero-eyebrow">
+    <p class="hero-eyebrow" data-fixed>
       <span class="mark mark--close" aria-hidden="true"></span>
-      <span class="hero-eyebrow-text">Chairs up, lights off</span>
+      <span class="hero-eyebrow-text">Wrong door</span>
     </p>
     <h1 class="hero-headline" data-fixed>Nothing here. The kettle is on next door.</h1>
     <div class="hero-rule" aria-hidden="true"></div>

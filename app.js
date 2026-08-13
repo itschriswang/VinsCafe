@@ -267,7 +267,6 @@
   function moment() { return forcedMoment(params.get('t')) || zoneNow(); }
 
   var root = document.documentElement;
-  var locked = root.hasAttribute('data-state-lock');   /* the 404 stays shut */
   var now = moment();
 
   /* The hero never opens on the room after close. The cafe is shut six days a
@@ -284,8 +283,7 @@
      shut while the counter behind it is lit. */
   function heroState(s) { return s === 'closed' ? 'midday' : s; }
 
-  var state = locked ? heroState(root.getAttribute('data-state'))
-                     : (forcedState || heroState(stateAt(now)));
+  var state = forcedState || heroState(stateAt(now));
 
   root.classList.add('js');
   root.setAttribute('data-state', state);
@@ -401,11 +399,19 @@
     var hero = $('.hero');
     if (!hero) return;
     var c = COPY[state];
-    setText($('.hero-eyebrow-text', hero), eyebrowFor(state));
-    var markEl = $('.hero-eyebrow .mark', hero);
-    if (markEl) markEl.className = 'mark mark--' + c.mark;
 
-    /* data-fixed is the 404's own copy: it is closed by design, not by clock. */
+    /* data-fixed is the 404's own copy. That page runs on the clock like every
+       other, so its room changes through the day; what does not change is that
+       you took a wrong turn. Every element the clock would otherwise rewrite
+       carries the attribute — the eyebrow as much as the other two, or a page
+       that says "nothing here" invites you to say how you want it. */
+    var eyebrow = $('.hero-eyebrow', hero);
+    if (eyebrow && !eyebrow.hasAttribute('data-fixed')) {
+      setText($('.hero-eyebrow-text', eyebrow), eyebrowFor(state));
+      var markEl = $('.mark', eyebrow);
+      if (markEl) markEl.className = 'mark mark--' + c.mark;
+    }
+
     var head = $('.hero-headline', hero);
     if (head && !head.hasAttribute('data-fixed')) setText(head, c.headline || closedHeadline(now));
     var body = $('.hero-body', hero);
@@ -419,7 +425,7 @@
      when one has been asked for explicitly — otherwise a Monday evening would
      be stamped MIDDAY, because that is the hero the closed hour is now given. */
   function paintStamp(now, state) {
-    var label = LABEL[forcedState || (locked ? state : stateAt(now))];
+    var label = LABEL[forcedState || stateAt(now)];
     var text = pad(now.hour) + ':' + pad(now.minute) + ' · ' + label;
     $$('.stamp').forEach(function (el) { el.textContent = text; });
   }
@@ -924,7 +930,7 @@
 
   function tick() {
     var m = moment();
-    var next = locked ? state : (forcedState || heroState(stateAt(m)));
+    var next = forcedState || heroState(stateAt(m));
     if (next !== state) apply(next, m, true);
     else { paintHero(m, state); paintStamp(m, state); paintIndicator(m); paintWeek(m); }
   }
