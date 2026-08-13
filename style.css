@@ -565,13 +565,15 @@ html:not(.js) .ind-close { display: none; }
   -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
           mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
 }
-/* Morning's box has the same bottom-left corner as midday's, and the 404 is
-   the page that reaches it: its headline is the longest on the site, wraps to
-   three lines at 1440 and puts the last line's first glyph on the counter's
-   dark green, 8px inside the sheet's feathered edge. Two pixels at 2.96:1
-   against a 3.0 bar — the same 2.1:1 ghost the note below describes, caught by
-   the same tool. Reach down as well as left: 3.50 on the 404, and the home
-   morning it also widens goes 3.63 to 3.99. */
+/* Morning's box has the same exposed bottom-left corner as midday's, and the
+   404 is the page that found it — the checker only ever renders index, so the
+   one page with its own headline had never been measured. That headline then
+   ran three lines at 1440 and put the last line's first glyph on the counter's
+   dark green, 8px inside the sheet's feathered edge: two pixels at 2.96:1
+   against a 3.0 bar, the same ghost the note below describes. Reach down as
+   well as left. The home morning this also widens went 3.63 to 3.99, and the
+   corner stays covered for whatever the 404 says next — it is two lines now
+   and measures 4.22, but it was three lines yesterday. */
 [data-state='morning'] .hero-type::before {
   left: calc(-1 * var(--bleed) - 72px);
   bottom: -110px;
