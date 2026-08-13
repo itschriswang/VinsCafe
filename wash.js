@@ -2,7 +2,7 @@
  * own.
  *
  * One 2D canvas over the page, multiplied into it the way pigment sits on
- * paper. Four things happen on it and no others:
+ * paper. Three things happen on it and no others:
  *
  *   the wet edge   a damp trail under the pointer on the paper surfaces,
  *                  carrying the darker rim wet paper pulls, drying back to
@@ -10,18 +10,17 @@
  *   the pour       the matcha bowl fills as its section rises into view
  *   the whisk      circling the pointer over the bowl raises a foam on it,
  *                  which settles again when you stop
- *   the steam      plumes off the paintings of hot things, thick in the
- *                  morning and thin while the room is shut, shouldered aside
- *                  by the pointer
  *
- * Steam is painted, not lit: a pale cool wash multiplied into the paper, the
- * way it is put down in watercolour, rather than white laid over the top.
- * That is also what makes it safe over type, because multiplying by a colour
- * this pale cannot lift dark ink off the page.
+ * There was a fourth: steam off the paintings of hot things, keyed to the
+ * hour. It is gone. A plume is scaled off its own painting and the paintings
+ * are large, so what came out was a soft grey column standing over the board
+ * with nothing to hide behind — a smudge on the paper rather than heat coming
+ * off a cup. Everything it needed went with it: the sky wash, the per-hour
+ * heat table, and the pocket of moving air the pointer used to drag around.
  *
- * Every box is measured off the live painting, never off the CSS that places
- * it, so the responsive rules and the hover tilt are followed instead of
- * duplicated here. No text is ever drawn on this canvas.
+ * The bowl's box is measured off the live painting, never off the CSS that
+ * places it, so the responsive rules and the hover tilt are followed instead
+ * of duplicated here. No text is ever drawn on this canvas.
  */
 
 const DPR_CAP = 1.75;
@@ -43,36 +42,20 @@ const PERIOD_MS = 28;
 const SLOW_FRAMES = 30;
 const SCROLL_GRACE = 260;
 const WARMUP_FRAMES = 12;
-const IDLE_FRAMES = 45;      /* nothing wet, nothing hot on screen: stop */
+const IDLE_FRAMES = 45;      /* nothing wet, no bowl on screen: stop */
 
 /* Paper. The wet edge only happens on these; never on a painting, never on
    the dark hero, never on the footer. */
 const PAPER = '.page, .preview';
 
-/* The paintings that are hot, and where on each one the heat leaves. The
-   mouths are fractions of the painting's own box, read off the art:
-   [cx, cy, rx, ry]. The flat white is not here on purpose; it is seen from
-   directly above, and steam rising towards the reader reads as nothing. */
-const SOURCES = [
-  /* No plume off the bowl. A plume is scaled off its own painting's height and
-     the matcha bowl is the tallest thing on the board, so this one came out
-     around 335px against the cup's 170 — a column of grey wide enough to read
-     as a smudge rather than as steam, rising out of the first section on the
-     page, across the rule and into the headline. The bowl keeps the pour and
-     the whisk; it simply does not steam. */
-  { sel: '.spot--matcha', mouth: [0.604, 0.432, 0.214, 0.081], bowl: true,  heat: 0.90, plumes: 0 },
-  { sel: '.spot--cup',    mouth: [0.500, 0.300, 0.145, 0.098], bowl: false, heat: 1.00, plumes: 3 },
-  { sel: '.spot--toast',  mouth: [0.495, 0.350, 0.230, 0.045], bowl: false, heat: 0.72, plumes: 2 }
-];
-
-/* How much is steaming, by the hour the site is already resolving. Nothing is
-   ever quite off: the broth goes on days before the door opens, which is the
-   whole point of the place. */
-const HEAT = { morning: 1.0, midday: 0.78, late: 0.52, closed: 0.30 };
+/* The one painting this layer reaches into, and where the tea sits in it: the
+   mouth of the bowl as fractions of the painting's own box, [cx, cy, rx, ry],
+   read off the art. Found by the painting and never by its section, because a
+   section's slug comes out of menu.json and is the owner's to rename. */
+const BOWL = { sel: '.spot--matcha', mouth: [0.604, 0.432, 0.214, 0.081] };
 
 const PINE = '64, 74, 46';
 const MOSS = '117, 130, 58';
-const SKY = '169, 189, 206';
 const FROTH = '243, 246, 226';   /* whisked usucha: pale, and still green */
 
 const STAMP_GAP = 9;         /* px of pointer travel between damp stamps */
@@ -152,8 +135,6 @@ export function start() {
       [[0, 0.62], [0.44, 0.5], [0.78, 0.19], [1, 0]])),
     edge: sprite(128, (c, s) => radial(c, s, PINE,
       [[0, 0], [0.58, 0.1], [0.83, 1], [0.94, 0.4], [1, 0]])),
-    steam: sprite(128, (c, s) => radial(c, s, SKY,
-      [[0, 1], [0.42, 0.55], [0.72, 0.16], [1, 0]])),
     /* Held tight to its edge: any halo past the painted rim is green sitting
        on bare paper, which is a stain and not a bowl of tea. */
     tea: sprite(128, (c, s) => radial(c, s, MOSS,
@@ -212,14 +193,12 @@ export function start() {
   let slowCost = 0;
   let slowPeriod = 0;
 
-  /* The pointer, in page coordinates, plus the air it drags with it. */
+  /* The pointer, in page coordinates. */
   const ptr = { x: -1e5, y: -1e5, px: -1e5, py: -1e5, has: false, at: 0 };
-  const air = { x: 0, y: 0 };
 
   const stamps = [];
   let stampFrom = null;
 
-  let heatState = 'midday';
   let surfaces = [];
   let sources = [];
   let scanned = 0;
@@ -290,16 +269,14 @@ export function start() {
     x.translate(-b.w / 2, -b.h / 2);
   }
 
+  /* Re-read every half second, so a board rebuilt from menu.json is picked
+     straight back up. There can be more than one bowl on a page: the home
+     page's preview hangs the same painting as the menu's board. */
   function scan() {
     surfaces = Array.prototype.slice.call(document.querySelectorAll(PAPER));
-    sources = [];
-    for (const s of SOURCES) {
-      const els = document.querySelectorAll(s.sel);
-      for (let i = 0; i < els.length; i++) sources.push({ el: els[i], def: s, seed: i });
-      if (s.bowl && els.length) ensureFoam();
-    }
-    const st = document.documentElement.getAttribute('data-state');
-    heatState = HEAT[st] === undefined ? 'midday' : st;
+    const els = document.querySelectorAll(BOWL.sel);
+    sources = Array.prototype.map.call(els, (el) => ({ el: el, box: null }));
+    if (els.length) ensureFoam();
   }
 
   function bowlOf(el) {
@@ -337,15 +314,11 @@ export function start() {
     if (ptr.has) {
       const dx = x - ptr.x, dy = y - ptr.y;
       const speed = Math.sqrt(dx * dx + dy * dy) / dt * 1000;
-      /* The air the pointer pushes, smoothed so a flick wafts and a sweep
-         leans; it is what the steam is actually reacting to. */
-      air.x += (clamp(dx / dt * 26, -70, 70) - air.x) * 0.3;
-      air.y += (clamp(dy / dt * 18, -50, 50) - air.y) * 0.3;
 
       /* A finger is not a brush. On a touch screen the only pointer moves are
          the start of a scroll, and a wet streak laid down every time someone
-         swipes the page is not a damp sheet, it is a mess. The pour and the
-         steam still run there; those are the two that need no pointer. */
+         swipes the page is not a damp sheet, it is a mess. The pour still runs
+         there; it is the one that needs no pointer. */
       const rect = fine ? overPaper(x, y) : null;
       if (rect) {
         if (!stampFrom) stampFrom = { x: ptr.x, y: ptr.y };
@@ -382,7 +355,6 @@ export function start() {
      not been poured. */
   function whisk(x, y, speed) {
     for (const src of sources) {
-      if (!src.def.bowl) continue;
       /* The box the last frame measured, never a fresh one. A pointer reports
          well over a hundred times a second and boxOf reads a computed style;
          taking that on every move is a forced layout per report, for a number
@@ -391,7 +363,7 @@ export function start() {
       if (!b) continue;
       const st = bowlOf(src.el);
       if (st.pour < 0.12) continue;
-      const m = src.def.mouth;
+      const m = BOWL.mouth;
       const c = mapPoint(b, m[0] * b.w, m[1] * b.h);
       const reach = Math.max(m[2] * b.w, 46) * 2.1;
       const dx = x - c.x, dy = y - c.y;
@@ -437,8 +409,8 @@ export function start() {
     }
   }
 
-  function drawBowl(src, b, st) {
-    const m = src.def.mouth;
+  function drawBowl(b, st) {
+    const m = BOWL.mouth;
     const mx = m[0] * b.w, my = m[1] * b.h;
     const rx = m[2] * b.w, ry = m[3] * b.h;
     const t = st.pour;
@@ -503,62 +475,6 @@ export function start() {
     ctx.restore();
   }
 
-  function drawSteam(src, b, st) {
-    const def = src.def;
-    if (!def.plumes) return;
-    let dens = HEAT[heatState] * def.heat;
-    if (st) dens *= (0.25 + 0.75 * st.pour) * (1 - st.froth * 0.35);
-    if (dens <= 0.02) return;
-
-    const m = def.mouth;
-    const c = mapPoint(b, m[0] * b.w, m[1] * b.h);
-    const rx = m[2] * b.w;
-    const H = b.h * 1.05;
-    if (c.y < -H || c.y > vh + 60) return;
-
-    const STEPS = 12;
-    const baseR = Math.max(5, rx * 0.34);
-    const phase = src.seed * 1.7;
-
-    for (let p = 0; p < def.plumes; p++) {
-      const ph = p * 2.399 + phase;
-      /* The plumes leave the cup close together and are separated by their own
-         wander on the way up, which is the shape steam actually has; started
-         wide apart they climb as three parallel bars. */
-      const x0 = c.x + (p - (def.plumes - 1) / 2) * rx * 0.3;
-      for (let i = 1; i <= STEPS; i++) {
-        const t = (i + (p * 0.41) % 1) / STEPS;
-        if (t > 1) continue;
-        const sway = Math.sin(time * 0.85 + ph + t * 3.4) * H * 0.2 * t +
-                     Math.sin(time * 0.36 + ph * 1.7 + t * 1.9) * H * 0.1 * t;
-        let x = x0 + sway + air.x * t * 1.5;
-        let y = c.y - H * t + air.y * t * 0.5;
-
-        /* The pointer is a hand near the cup: the plume goes round it. */
-        if (ptr.has) {
-          const dx = x - ptr.x, dy = y - ptr.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 16900) {
-            const d = Math.sqrt(d2) || 1;
-            const push = 1 - d / 130;
-            const k = push * push * 52;
-            x += dx / d * k;
-            y += dy / d * k;
-          }
-        }
-
-        const r = baseR * (0.32 + t * 1.75);
-        /* Steam comes off in bursts, not as a column; the break-up is what
-           stops the plume reading as a bar of fog. */
-        const gust = 0.58 + 0.42 * Math.sin(time * 1.35 + ph * 2.1 + t * 5.6);
-        const a = dens * 0.082 * Math.pow(1 - t, 1.15) * Math.min(1, t * 4) * gust;
-        if (a <= 0.002) continue;
-        ctx.globalAlpha = a;
-        ctx.drawImage(SP.steam, x - r, y - r, r * 2, r * 2);
-      }
-    }
-  }
-
   /* ---------------------------------------------------------------- loop --- */
 
   function frame(now) {
@@ -577,8 +493,6 @@ export function start() {
     if (fctx) prep(fctx);
 
     const decay = Math.pow(0.9915, dt / 16.67);
-    air.x *= Math.pow(0.9, dt / 16.67);
-    air.y *= Math.pow(0.9, dt / 16.67);
 
     drawDamp(now);
 
@@ -591,23 +505,19 @@ export function start() {
       if (b.y > vh + 120 || b.y + b.h < -260) continue;
       busy = true;
 
-      let st = null;
-      if (src.def.bowl) {
-        st = bowlOf(src.el);
-        /* The pour is the section rising into the window; the ease is so that
-           a bowl already on screen when the page opens is still poured rather
-           than found full. */
-        st.intro = Math.min(1, st.intro + dt / 900);
-        const p = clamp((vh - b.y) / (vh * 0.62), 0, 1);
-        const next = Math.min(p, st.intro);
-        if (next - st.pour > 0.02 && st.ripples.length < 3) st.ripples.push({ t: 0 });
-        st.pour = next;
-        st.froth = Math.min(st.pour, st.froth * decay);
-        st.spin *= Math.pow(0.985, dt / 16.67);
-        drawBowl(src, b, st);
-        if (st.froth > 0.01) busy = true;
-      }
-      drawSteam(src, b, st);
+      const st = bowlOf(src.el);
+      /* The pour is the section rising into the window; the ease is so that
+         a bowl already on screen when the page opens is still poured rather
+         than found full. */
+      st.intro = Math.min(1, st.intro + dt / 900);
+      const p = clamp((vh - b.y) / (vh * 0.62), 0, 1);
+      const next = Math.min(p, st.intro);
+      if (next - st.pour > 0.02 && st.ripples.length < 3) st.ripples.push({ t: 0 });
+      st.pour = next;
+      st.froth = Math.min(st.pour, st.froth * decay);
+      st.spin *= Math.pow(0.985, dt / 16.67);
+      drawBowl(b, st);
+      if (st.froth > 0.01) busy = true;
     }
 
     ctx.globalAlpha = 1;
