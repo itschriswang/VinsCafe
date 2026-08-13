@@ -82,21 +82,27 @@ runs on first load, under `prefers-reduced-motion`, on `saveData`, while the
 tab is hidden or the hero is off screen, or when the machine cannot keep up;
 in the last case it removes itself and leaves the static plate.
 
-`wash.js` is the same idea over the rest of the site, in 2D. It carries four
+`wash.js` is the same idea over the rest of the site, in 2D. It carries three
 things and no others: a damp trail under the pointer on the paper surfaces
 that dries back to cream in about two seconds, the matcha bowl filling as its
-section rises into the window, a foam raised on it by circling the pointer over
-it, and steam off the paintings of hot things, thick in the morning and thin
-while the room is shut, shouldered aside by the pointer. It is gated exactly
-like the pigment layer and it builds its own canvases, so a browser that never
-reaches it is a page with nothing missing.
+section rises into the window, and a foam raised on it by circling the pointer
+over it. It is gated exactly like the pigment layer and it builds its own
+canvases, so a browser that never reaches it is a page with nothing missing.
 
-Everything on it is pigment. Steam is a pale cool wash multiplied into the
-paper, which is how it is put down in watercolour and not how it is done in
-CSS; laying white over the top would be a veil across the board's type. The one
-mark that has to lighten rather than darken is the whisked foam, and it gets a
-second canvas of its own, built only where a bowl is and only ever drawn inside
-one, so nothing else on the page is screened.
+Everything on it is pigment, so it multiplies. The one mark that has to lighten
+rather than darken is the whisked foam, and it gets a second canvas of its own,
+built only where a bowl is and only ever drawn inside one, so nothing else on
+the page is screened.
+
+There was a fourth thing: steam off the paintings of hot things, keyed to the
+hour, shouldered aside by the pointer. It is gone, and the sky wash, the
+per-hour heat table and the pocket of moving air the pointer dragged around
+went with it. A plume was scaled off its own painting, and the paintings are
+large — the matcha bowl's came out around 335px against the coffee cup's 170 —
+so what stood over the board was a soft grey column with nothing to hide
+behind. On paper that is a smudge, not heat coming off a cup. The layer now
+reaches into exactly one painting, the bowl, and everywhere else it only ever
+follows the pointer.
 
 ## Preview switches
 
