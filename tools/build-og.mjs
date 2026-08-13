@@ -106,9 +106,16 @@ const CARD_CSS = `
   .card-word { font: italic 400 132px/0.95 var(--serif); color: var(--ink); }
   .card-word--small { font-size: 54px; color: var(--sun-deep); }
   .card-title { font: italic 400 120px/0.95 var(--serif); color: var(--ink); margin-top: -10px; }
+  /* Painted along its length, like the rule on the site. The card is set at
+     midday, so it picks up that hour's three pigments and a share card carries
+     the same stroke a midday visitor sees. */
   .card-rule {
     width: 288px; height: 12px;
-    background-color: var(--sun);
+    background-color: var(--rule-2, var(--sun));
+    background-image: linear-gradient(in oklch 90deg,
+      var(--rule-1, var(--sun)) 4%,
+      var(--rule-2, var(--sun)) 48%,
+      var(--rule-3, var(--sun)) 92%);
     -webkit-mask: var(--squiggle) left center / 96px 10px repeat-x;
             mask: var(--squiggle) left center / 96px 10px repeat-x;
   }

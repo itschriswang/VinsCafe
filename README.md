@@ -205,9 +205,30 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   width it takes the size of its backing store and ignores the far edges, which
   draws the whole layer at the render scale in the top left corner. Both
   `.pigment` and `.wash` state `width` and `height` for that reason.
-- **Colour.** Four interface colours, written in Oklch so every interpolation
-  the browser performs runs through Oklch rather than sRGB. Lichen, butter,
-  blush, dusty blue and lavender grey exist inside the paintings only.
+- **Colour.** Four interface colours — paper, ink, pine and the sun — and then
+  a set that only ever tints: butter, blush, rose, dusty blue, moss, and five
+  sampled off a pair of gouache landscapes (lichen, lavender, clay, peony,
+  amber). Nothing in the second set carries type, which is why none of it has
+  a contrast floor to clear, and why adding to it is cheap.
+
+  This note used to say the four were "written in Oklch" and that lichen and
+  lavender grey "exist inside the paintings only". Neither was true. Every
+  token is and was hex; there was no `oklch()` anywhere in the stylesheet.
+  Oklch is what the *interpolation* runs in — the rule's gradient and the item
+  hover's `color-mix` both ask for it by name — so a blend of two of these
+  never travels through grey the way the sRGB path would. Lichen and lavender
+  did not exist at all until they were sampled for the rule.
+- **The rule is painted, not filled.** `.hero-rule` and `.page-rule` are one
+  squiggle mask over a gradient of the hour's three pigments, so a single rule
+  changes colour along its length the way a loaded brush does crossing a sheet:
+  amber into peony into rose at the golden hour, lavender into blue into lichen
+  in the morning. The flat `background-color` under it is the fallback — a
+  browser that will not interpolate a gradient in Oklch drops the whole
+  `background-image` and would otherwise leave no rule at all.
+- **`--accent` was dead for a while.** It was defined on all four states and
+  referenced by nothing. The hover on a board line was a hand-written butter
+  `rgba()` that stayed butter at every hour. Both now run off the state, which
+  is how the time of day reaches the board pages and not just the hero.
 - **Marks.** Six, defined once as CSS mask images at the top of `style.css`.
   Swapping in hand-painted versions is six `url()`s and nothing else.
 - **Fonts.** `font-display: optional` with both faces preloaded is the only

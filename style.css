@@ -68,6 +68,18 @@
   --sun-press: #9C3826;
   --moss-text: #5A6530; /* moss dark enough to carry small type */
 
+  /* Five more, lifted off a pair of gouache landscapes: the acid yellow-green
+     the low sun puts on grass, the periwinkle a sky sits on before it turns,
+     the chalk of a bare peak, the pink left in a crevice once the light has
+     gone over the ridge, and the amber of the flowers in the foreground.
+     These are painting colours. They tint a rule and a hover and they never
+     carry type, which is why none of them needs to clear a contrast bar. */
+  --lichen:   #B9C74F;
+  --lavender: #AFB0CE;
+  --clay:     #E0CCC0;
+  --peony:    #E4536B;
+  --amber:    #E8A33D;
+
   --ink-12: rgba(46, 51, 29, 0.12);
   --ink-18: rgba(46, 51, 29, 0.18);
   --ink-30: rgba(46, 51, 29, 0.30);
@@ -95,10 +107,26 @@
 
 /* Each time of day tints the interface a little, so the UI follows the
    painting instead of ignoring it. */
-[data-state='morning'] { --accent: var(--sky);    --accent-ink: var(--ink); }
-[data-state='midday']  { --accent: var(--butter); --accent-ink: var(--ink); }
-[data-state='late']    { --accent: var(--rose);   --accent-ink: var(--ink); }
-[data-state='closed']  { --accent: var(--blush);  --accent-ink: var(--ink); }
+/* Three pigments per hour, not one, because that is how many are on the brush
+   in the landscapes these come from: a sky is never a single colour across a
+   sheet. The rule is painted with them and the hover is mixed from the first,
+   so the time of day reaches the board and not only the hero. */
+[data-state='morning'] {
+  --accent: var(--sky);    --accent-ink: var(--ink);
+  --rule-1: var(--lavender); --rule-2: var(--sky);    --rule-3: var(--lichen);
+}
+[data-state='midday'] {
+  --accent: var(--butter); --accent-ink: var(--ink);
+  --rule-1: var(--lichen);   --rule-2: var(--butter); --rule-3: var(--moss);
+}
+[data-state='late'] {
+  --accent: var(--rose);   --accent-ink: var(--ink);
+  --rule-1: var(--amber);    --rule-2: var(--peony);  --rule-3: var(--rose);
+}
+[data-state='closed'] {
+  --accent: var(--blush);  --accent-ink: var(--ink);
+  --rule-1: var(--clay);     --rule-2: var(--lavender); --rule-3: var(--sky);
+}
 
 /* ---------------------------------------------------------------- base --- */
 
@@ -195,16 +223,25 @@ a:hover { color: var(--sun-press); }
 }
 a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4px); }
 
-/* The squiggle rule: pigment-coloured, repeats to fill its box. */
+/* The squiggle rule: pigment-coloured, repeats to fill its box.
+
+   Painted along its length rather than filled flat, with the hour's three
+   pigments, the way one stroke of a loaded brush changes colour as it crosses
+   a sheet. The mask means only the squiggle takes any of it. The flat colour
+   underneath is not decoration: a browser that will not interpolate a gradient
+   in Oklch drops the whole background-image and keeps the rule. */
 .hero-rule, .page-rule {
   height: 10px;
-  background-color: var(--sun);
+  background-color: var(--rule-2, var(--sun));
+  background-image: linear-gradient(in oklch 90deg,
+    var(--rule-1, var(--sun)) 4%,
+    var(--rule-2, var(--sun)) 48%,
+    var(--rule-3, var(--sun)) 92%);
   -webkit-mask-image: var(--squiggle); mask-image: var(--squiggle);
   -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
   -webkit-mask-size: 96px 10px; mask-size: 96px 10px;
   -webkit-mask-position: left center; mask-position: left center;
 }
-.page-rule { background-color: var(--moss); }
 
 
 /* ----------------------------------------------------------------- bar --- */
@@ -1015,7 +1052,13 @@ html:not(.js) .daystrip { display: none; }
   transition: background 140ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
+  /* Butter was written in by hand here and stayed butter at every hour. Mixed
+     off the accent instead, a line lights up in the colour of the time you are
+     reading it at; the fallback keeps the old value where color-mix is not
+     understood. All four accents are pale enough that the item's own ink is
+     nowhere near its contrast floor on top of them. */
   .item:hover { background: rgba(243, 206, 92, 0.35); }
+  .item:hover { background: color-mix(in oklch, var(--accent) 38%, transparent); }
 }
 .item-lead {
   flex: 1;
