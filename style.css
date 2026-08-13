@@ -2166,6 +2166,11 @@ html:not(.js) .daystrip { display: none; }
 }
 .plan-table tr.is-total th[scope="row"] { color: var(--ink); }
 .is-loss { color: var(--sun-deep); }
+/* The one column on this page with a number worth having. Moss rather than
+   pine: pine is two points off the body ink and the figure read as ordinary
+   text beside a red loss, which is the whole distinction the table is making.
+   --moss-text is the palette's green for small type. */
+.is-gain { color: var(--moss-text); font-weight: 700; }
 .plan-table-foot {
   margin: 16px 0 0;
   font: 700 13px/1.6 var(--sans);

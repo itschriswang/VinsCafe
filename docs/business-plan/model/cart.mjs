@@ -258,10 +258,32 @@ w();
 
 const text = out.join('\n') + '\n';
 
+/* The half of the comparison on plan.html that belongs to the cart. Written as
+   data for the same reason model.mjs writes figures.json: tools/sync-static.mjs
+   renders the table on the website from both files, so the page cannot say one
+   thing while the models say another. */
+const figures = {
+  marketDays: mk.daysPerYear,
+  eventsPerYear: ev.perYear,
+  drinkPrice: drinkPrices().avg,
+  cogsPerDrink: cogsPerDrink(),
+  revenue: Math.round(revenue),
+  fixed,
+  ebitda: Math.round(ebitda),
+  ownerHours,
+  ownerRate: ebitda / ownerHours,
+  capex: { low: capLow, high: capHigh },
+  paybackLow: ebitda > 0 ? capLow / ebitda : null,
+  paybackHigh: ebitda > 0 ? capHigh / ebitda : null,
+};
+
 if (process.argv.includes('--write')) {
   const dest = join(HERE, '..', '19-the-cart-numbers.md');
   writeFileSync(dest, text);
   console.log(`wrote ${dest}`);
+  const json = join(HERE, 'cart-figures.json');
+  writeFileSync(json, JSON.stringify(figures, null, 2) + '\n');
+  console.log(`wrote ${json}`);
 } else {
   console.log(text);
 }

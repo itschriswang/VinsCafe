@@ -1,0 +1,17 @@
+{
+  "marketDays": 40,
+  "eventsPerYear": 30,
+  "drinkPrice": 4.423529411764706,
+  "cogsPerDrink": 1.4420000000000002,
+  "revenue": 47964,
+  "fixed": 8650,
+  "ebitda": 12845,
+  "ownerHours": 560,
+  "ownerRate": 22.937373949579836,
+  "capex": {
+    "low": 21400,
+    "high": 94200
+  },
+  "paybackLow": 1.6660270612619854,
+  "paybackHigh": 7.333633138826123
+}

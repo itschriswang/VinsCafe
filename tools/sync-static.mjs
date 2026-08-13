@@ -370,6 +370,15 @@ function planFigures() {
   }
 }
 
+/* The cart's half of the comparison, from cart.mjs. Same optionality. */
+function cartFigures() {
+  try {
+    return JSON.parse(read('docs/business-plan/model/cart-figures.json'));
+  } catch {
+    return null;
+  }
+}
+
 const money = (n) => (n < 0 ? '−' : '') +
   '$' + Math.abs(Math.round(n)).toLocaleString('en-AU');
 /* An hourly rate rounded to the dollar loses the part that stings. */
@@ -406,6 +415,45 @@ function planNumbersHTML(fig) {
   ].join('\n');
 }
 
+/* The two roads side by side. The garage column is the middle scenario of
+   model.mjs, because that is the one the page's own table leads with; the cart
+   column is the whole of cart.mjs. */
+function cartNumbersHTML(fig, cart) {
+  const garage = fig.scenarios.find((s) => s.name === 'base') || fig.scenarios[0];
+  const rows = [
+    ['What comes in', money(garage.revenue), money(cart.revenue)],
+    ['Left over, before paying ourselves',
+      `<span class="is-loss">${money(garage.ebitda)}</span>`,
+      `<span class="is-gain">${money(cart.ebitda)}</span>`],
+    ['An hour of our time',
+      `<span class="is-loss">${money2(garage.ownerRate)}</span>`,
+      `<span class="is-gain">${money2(cart.ownerRate)}</span>`],
+    ['To get started',
+      `${money(fig.capex.low)} – ${money(fig.capex.high)}`,
+      `${money(cart.capex.low)} – ${money(cart.capex.high)}`],
+    ['Pays itself back',
+      '<span class="is-loss">never</span>',
+      cart.paybackLow
+        ? `${cart.paybackLow.toFixed(1)} – ${cart.paybackHigh.toFixed(1)} years`
+        : 'never'],
+  ];
+  return [
+    '      <div class="plan-table-wrap">',
+    '      <table class="plan-table">',
+    '        <caption>The garage on a steady Sunday, against the cart',
+    `          on ${cart.marketDays} market days and ${cart.eventsPerYear} events</caption>`,
+    '        <thead><tr><th scope="col">A year</th>' +
+      '<th scope="col">The garage</th><th scope="col">The cart</th></tr></thead>',
+    '        <tbody>',
+    ...rows.map(([label, a, b], i) =>
+      `        <tr${i === 1 ? ' class="is-total"' : ''}>` +
+      `<th scope="row">${label}</th><td>${a}</td><td>${b}</td></tr>`),
+    '        </tbody>',
+    '      </table>',
+    '      </div>',
+  ].join('\n');
+}
+
 /* ---- rewrite ---------------------------------------------------------------- */
 
 function region(src, name, make) {
@@ -417,6 +465,7 @@ const PAGES = ['index.html', 'menu.html', 'find-us.html', 'plan.html', '404.html
 const check = process.argv.includes('--check');
 let stale = 0;
 const FIGURES = planFigures();
+const CART = cartFigures();
 
 /* Runs in --check too, so CI fails the deploy rather than shipping a section
    name with a system serif dropped into the middle of it. */
@@ -450,6 +499,9 @@ for (const page of PAGES) {
   after = region(after, 'hours-summary', () => hoursSummary());
   if (FIGURES) {
     after = region(after, 'plan-numbers', () => '\n' + planNumbersHTML(FIGURES) + '\n');
+    if (CART) {
+      after = region(after, 'cart-numbers', () => '\n' + cartNumbersHTML(FIGURES, CART) + '\n');
+    }
   }
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');
   after = region(after, 'preview', () => '\n' + previewHTML() + '\n');
