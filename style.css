@@ -375,7 +375,8 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   padding: 9px 16px 11px;
   background: var(--cream-85);
   border: 1px solid var(--ink-30);
-  border-radius: 999px;
+  /* Square, because the panel it opens is square. A lozenge above a hard-edged
+     card read as two different pieces of furniture. */
   cursor: pointer;
   text-align: left;
   transition: border-color 160ms var(--ease-out), background 160ms var(--ease-out);
@@ -408,12 +409,15 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
 .ind-trigger .mark { --mark-size: 14px; --mark-color: currentColor; }
 [data-state='closed'] .hero .ind-trigger .mark { --mark-color: var(--paper); }
 
+/* The panel is a card lifted off the paper, and it used to say so with a
+   rounded corner and a soft glow. The rest of the site now cuts square and
+   prints flat, so it lifts the way a printed block does: hard edge, solid
+   offset, no blur. */
 .ind-panel {
   padding: 24px 26px 26px;
   background: var(--paper);
-  border: 1px solid var(--ink-18);
-  border-radius: 14px;
-  box-shadow: 0 22px 44px -20px rgba(46, 51, 29, 0.4);
+  border: 1px solid var(--ink);
+  box-shadow: 8px 8px 0 rgba(46, 51, 29, 0.13);
 }
 html.js .ind-panel {
   position: absolute;
@@ -434,7 +438,15 @@ html:not(.js) .bar { align-items: flex-start; }
   color: var(--sun-deep);
   margin: 0 0 12px;
 }
-.ind-addr { font: italic 400 22px/1.3 var(--serif); color: var(--ink); margin: 0 0 16px; }
+/* An address is something a visitor acts on, so it is set in the face that
+   carries information. The italic is the hand, and the hand never says where
+   to go — same reason `.find address` is Epoch. */
+.ind-addr {
+  font: 400 25px/1.12 var(--display);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
 .ind-panel .hours { margin-top: 4px; }
 .ind-close {
   position: absolute;
@@ -553,7 +565,17 @@ html:not(.js) .ind-close { display: none; }
   -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
           mask-image: radial-gradient(50% 50% at 50% 50%, #000 48%, rgba(0,0,0,0) 100%);
 }
-[data-state='morning'] .hero-type::before { left: calc(-1 * var(--bleed) - 52px); }
+/* Morning's box has the same bottom-left corner as midday's, and the 404 is
+   the page that reaches it: its headline is the longest on the site, wraps to
+   three lines at 1440 and puts the last line's first glyph on the counter's
+   dark green, 8px inside the sheet's feathered edge. Two pixels at 2.96:1
+   against a 3.0 bar — the same 2.1:1 ghost the note below describes, caught by
+   the same tool. Reach down as well as left: 3.50 on the 404, and the home
+   morning it also widens goes 3.63 to 3.99. */
+[data-state='morning'] .hero-type::before {
+  left: calc(-1 * var(--bleed) - 72px);
+  bottom: -110px;
+}
 [data-state='late'] .hero-type::before { right: calc(-1 * var(--bleed) - 52px); }
 /* Midday's headline reaches into the bottom-left of its box, over the dark
    of the city window, where the ellipse had already faded out, measured at
@@ -849,9 +871,25 @@ html:not(.js) .roundel { display: none; }
   border-bottom: 1px solid var(--ink-12);
   background: var(--paper-2);
 }
+/* The dial gets the board's lockup rather than a lone italic line: the name in
+   Epoch, the note tucked under its shoulder. Same two faces, same tuck. */
 .daystrip-label {
-  font: italic 400 22px/1 var(--serif);
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font: 400 34px/1 var(--display);
+  letter-spacing: -0.03em;
   color: var(--ink);
+  white-space: nowrap;
+}
+/* Sized off the name rather than in pixels, so the phone's smaller label keeps
+   the same pair rather than ending up with an italic larger than its name. */
+.daystrip-label i {
+  font: italic 400 0.64em/1 var(--serif);
+  letter-spacing: 0;
+  color: var(--ink-75);
+  position: relative;
+  top: 0.28em;
 }
 /* The dial: a dotted horizon arc with the red sun riding it. offset-path
    carries the sun between the four hours; browsers without motion paths get
@@ -1065,8 +1103,9 @@ html:not(.js) .daystrip { display: none; }
 .foot .foot-inner { border-top: 1px solid rgba(247,239,223,0.28); margin-top: 36px; }
 
 /* ---------------------------------------------------------------- page ---
-   Menu and Find us share the board's print grid: one measure, two columns,
-   the paintings hanging in the wide margins. */
+   Menu and Find us share the board's measure and its section bars. The menu
+   runs one column with a painting capping each bar; Find us keeps two, because
+   four short sections in one column is a long thin page. */
 
 .page { padding: 0 var(--gutter); }
 .page-inner { max-width: var(--board-w); margin: 0 auto; }
@@ -1519,16 +1558,45 @@ html:not(.js) .daystrip { display: none; }
   overflow-x: clip;
 }
 .find .sec { margin-bottom: 52px; }
-.find .sec-head { align-items: center; }
-.find .sec-name { flex: none; white-space: nowrap; }
+/* The board takes each bar's colour from the painting hanging on it. Find us
+   has one painting between four sections, so three of them fell back to the
+   same moss and the page read as one long green column. These are the same
+   pigments, assigned by hand because there is no painting to read them off. */
+.find > div > .sec:nth-of-type(1) { --pigment: var(--lichen); }
+.find > div > .sec:nth-of-type(2) { --pigment: var(--clay-deep); }
+.find > div:nth-of-type(2) > .sec:nth-of-type(1) { --pigment: var(--sky); }
+.find > div:nth-of-type(2) > .sec:nth-of-type(2) { --pigment: var(--amber); }
+/* The board's bars are set to a full measure. These sit in half of one, so the
+   pair is scaled to the column it lives in — at the board's 40px the notes had
+   nowhere to tuck and dropped under the names, which is the one thing the
+   lockup is not. Three of the four bars hang nothing and keep none of the
+   board's overhang; the one that does gets the room back, and enough right
+   padding that the painting caps the bar rather than landing on the note.
+   Gated on the two columns existing: below 720px Find us is the same single
+   stack the board is, and takes the board's bars unchanged. */
+@media (min-width: 720px) {
+  .find .sec-head {
+    align-items: baseline;
+    flex-wrap: nowrap;
+    --bar-overhang: 0px;
+    --bar-pad-r: 30px;
+  }
+  .find .sec-head:has(.spot) { --bar-overhang: 88px; --bar-pad-r: 70px; }
+  .find .sec-name { flex: none; white-space: nowrap; font-size: 32px; }
+  .find .sec-note { font-size: 21px; }
+}
 .find address {
-  font: italic 400 clamp(34px, 3.8vw, 48px)/1.15 var(--serif);
-  font-style: italic;
+  font: 400 clamp(32px, 3.1vw, 40px)/1.08 var(--display);
+  letter-spacing: -0.03em;
+  font-style: normal;
   color: var(--ink);
   margin: 0 0 20px;
 }
-.find p { font: 500 20px/1.5 var(--sans); color: var(--ink); max-width: 44ch; text-wrap: pretty; }
-.find p + p { margin-top: 12px; }
+/* Scoped to the section's own children, not every p under .find: the note in
+   the bar is a p too, and this rule is a font shorthand, so as `.find p` it
+   outranked .sec-note and quietly reset the tucked italic to the body sans. */
+.find .sec > p { font: 500 20px/1.5 var(--sans); color: var(--ink); max-width: 44ch; text-wrap: pretty; }
+.find .sec > p + p { margin-top: 12px; }
 .find .hero-onward { margin-top: 24px; }
 .find-links { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .find-links a {
@@ -1664,7 +1732,7 @@ html:not(.js) .daystrip { display: none; }
   [data-state='closed'] .hero-eyebrow { align-self: flex-start; }
 
   .daystrip { gap: 0 20px; padding: 24px var(--gutter) 16px; }
-  .daystrip-label { font-size: 19px; width: 100%; text-align: center; }
+  .daystrip-label { font-size: 26px; width: 100%; justify-content: center; }
   /* the arc reaches 38px above the buttons; the label must clear it */
   .dial { margin-top: 58px; }
   .daystrip-btns button { letter-spacing: 0.1em; font-size: 12.5px; }

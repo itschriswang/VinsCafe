@@ -341,8 +341,18 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   and the page would arrive unstyled. The base pins every relative URL to the
   site root; `sync-static.mjs` keeps it pointing at `config.js`'s `url`.
   Previewing `404.html` locally therefore loads its assets from the live site.
-- **The map is drawn, not embedded.** Find us carries an inline SVG sketch of
-  the corner in the site's own palette; the no-third-party-requests rule
-  covers map tiles too. It is decorative to a screen reader beyond its short
-  label; the prose above it gives the same directions, and the real map stays
-  a link.
+- **There is no map on the page.** The no-third-party-requests rule covers map
+  tiles, so an embed was never an option, and the drawn SVG sketch that stood
+  in for one was of a corner the cafe has since moved off. Nothing replaced it:
+  the address is set large enough to be the thing you came for, and the real
+  map stays one outbound link.
+- **The 404 opens on first light.** It used to be pinned to the room after
+  close, on the reasoning that a dead end is a dark room. That painting is the
+  ground of every footer now, so pinning it showed the same picture twice on
+  the one page a visitor reaches by accident. It is pinned to `morning`
+  instead, with `data-state-lock`: the room the cafe waits all week for is a
+  better thing to hand someone who took a wrong turn. The attribute is read as
+  written and never passed through `heroState()` — a pin that mapping could
+  rewrite would not be a pin. Only the hero is pinned. The stamp and the
+  indicator still answer the clock, because both are clocks, and the copy is
+  fixed with `data-fixed` on each element `paint()` would otherwise rewrite.

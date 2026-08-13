@@ -233,7 +233,10 @@
      four are invisible. This dial lets a visitor turn the room through its
      whole day; the pigment layer bleeds one painting into the next. -->
 <div class="daystrip">
-  <p class="daystrip-label">The room, hour by hour</p>
+  <!-- Two flex items, so the italic can tuck under the name's shoulder the way
+       the board's section notes do. The space before the <i> is for the reader
+       that hears this rather than sees it; flex trims it out of the layout. -->
+  <p class="daystrip-label">The room <i>hour by hour</i></p>
   <div class="dial">
     <svg class="dial-arc" viewBox="0 0 330 48" aria-hidden="true">
       <path d="M6,44 Q165,-34 324,44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 9"/>
