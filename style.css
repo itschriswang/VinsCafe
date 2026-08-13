@@ -1760,6 +1760,10 @@ html:not(.js) .daystrip { display: none; }
   .dial { margin-top: 58px; }
   .daystrip-btns button { letter-spacing: 0.1em; font-size: 12.5px; }
 
+  /* The gap and the top padding are the room the paintings stand up into. Each
+     one rises about 44% of its own height above its bar, and the tallest is
+     186px, so a 40px gap put a cup through the last price of the section
+     above it. */
   .board, .find {
     padding-left: 0;
     padding-right: 0;
@@ -1767,8 +1771,8 @@ html:not(.js) .daystrip { display: none; }
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 40px;
-    padding-top: 26px;
+    gap: 96px;
+    padding-top: 92px;
   }
   .board-col, .find > div { display: contents; }
   .sec { min-height: 0 !important; }
@@ -1781,22 +1785,39 @@ html:not(.js) .daystrip { display: none; }
   .page-head h1 { font-size: 72px; line-height: 0.9; margin-bottom: 14px; }
   .page-meta { text-align: left; padding: 0; font-size: 12.5px; }
   .page-rule { margin-top: 20px; }
-  /* Same conservation as the desktop head: the room the rule sits in comes out
-     of the margin, so the phone board does not shift under its paintings either. */
-  /* The phone's paintings were small and sat a quarter of the way onto their
-     own bar, which is where a drawing goes to disappear: a quarter of it lost
-     in flat pigment, and only 132px of it to begin with. They are wider here
-     now and lap less — a cap on the end of the bar rather than something half
-     swallowed by it. --art is the widest any of them may be, and it is what
-     the bar reserves out of its own length, so the two can never drift apart:
-     shrink the painting and the bar takes the room back by itself. */
+  /* The bar runs the column here rather than shrink-wrapping its own copy.
+     Shrink-wrapping is right on the desktop, where the bar and the painting
+     float together in a wide measure and the varied lengths read as set. On a
+     phone the list beneath runs edge to edge, so a bar that stops at two
+     thirds of the column puts a hard vertical cut through the middle of the
+     section and the set stops looking like one thing. Full width, and the
+     squiggle — which is the bar's own wet edge — runs the width with it.
+
+     Which leaves the painting somewhere to be. It rests on the top right
+     corner: most of its body above the bar on paper, its base dipping into the
+     pigment. That is the same job it always had, capping the end of the bar,
+     resolved for a column too narrow to hang it off the side of one. Lift it
+     further and it hovers; drop it and the drawing goes flat in the colour
+     again. --art is the widest it may be and the bar reserves that much of its
+     own right-hand end, so the two cannot drift apart. */
   .sec-head {
-    --art: clamp(124px, 40vw, 172px);
-    --bar-pad-r: 26px;
-    --bar-overhang: calc(var(--art) * 0.74 + 8px);
+    --art: clamp(140px, 44vw, 186px);
+    --bar-pad-r: calc(var(--art) * 0.62 + 16px);
+    width: auto;
+    max-width: none;
     padding: 11px var(--bar-pad-r) 13px 14px;
     margin-bottom: 18px;
   }
+  /* An item row bleeds 8px each side of the measure so its hover ground and
+     its rule run a little wider than its words. That was invisible while the
+     bar was shorter than the list; now that they share a width, the bar has to
+     share the bleed too or it sits 8px inside every rule under it. Only where
+     there is a list to line up with — Find us has prose, which starts at the
+     measure. */
+  .board .sec-head, .preview .sec-head { margin-left: -8px; margin-right: -8px; }
+  /* A bar with nothing standing on it has no reason to hold the room open; on
+     Find us three of the four are like that. */
+  .sec-head:not(:has(.spot)) { --bar-pad-r: 26px; }
   .sec-name { font-size: 36px; display: block; }
   /* The note has a line to itself here, so it may use two of them. It could
      not before: nowrap under a bar this much shorter puts a long note out past
@@ -1823,12 +1844,15 @@ html:not(.js) .daystrip { display: none; }
 
   /* --into-m and --t1-m below hung the paintings in the phone's margins and
      are unused now; --w is still read from the same rules. */
-  /* The offset stays the desktop's quarter. It was never the problem: the
-     paintings carry transparent margin, so the share of the box that laps the
-     bar and the share of the paint that does are not the same number, and at
-     132px the visible result was a blob sitting in flat colour. Widened, the
-     same quarter reads as the corner of a cup resting on the end of the bar. */
-  .sec-head > .spot { --spot-w: clamp(124px, calc(var(--w, 190px) * 0.74), var(--art)); }
+  /* Off the top edge rather than the side, and flush with the bar's right end.
+     44% is where it reads as resting on the bar: much less and the drawing
+     goes flat in the pigment, much more and it floats above it. */
+  .sec-head > .spot {
+    --spot-w: clamp(140px, calc(var(--w, 190px) * 0.86), var(--art));
+    right: 0;
+    top: 0;
+    transform: translateY(-44%) rotate(var(--tilt, 0deg));
+  }
 
   .spot--cup       { --w: 240px; --into-m: 72px; --t1-m: -44px; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
@@ -1842,17 +1866,18 @@ html:not(.js) .daystrip { display: none; }
   .spot--flatwhite { --w: 280px; --into-m: 86px; --t1-m: -44px; }
 
   /* The card carries its own bar figures, so it does not inherit the board's
-     and has to be widened the same way — and the home page's preview is the
-     one a phone meets first, so it is the surface where a small painting half
-     in flat pigment was most visible. --art is smaller here than on the board
-     because the card is narrower than the page by its own padding. */
+     and takes the same treatment separately — and the home page's preview is
+     the surface a phone meets first, so it is where the bar stopping short was
+     most visible. --art is smaller here because the card is narrower than the
+     page by its own padding, and the card grows a top padding to stand the
+     painting up in rather than letting it break the border. */
   .preview .sec-head {
-    --art: clamp(104px, 32vw, 140px);
-    --bar-pad-r: 22px;
-    --bar-overhang: calc(var(--art) * 0.74 + 8px);
+    --art: clamp(120px, 36vw, 156px);
+    --bar-pad-r: calc(var(--art) * 0.62 + 14px);
   }
-  .preview .sec-head > .spot { --spot-w: clamp(104px, calc(var(--w, 190px) * 0.62), var(--art)); }
-  .preview .sec { padding: 24px 22px 24px; }
+  .preview .sec-head > .spot { --spot-w: clamp(120px, calc(var(--w, 190px) * 0.72), var(--art)); }
+  .preview .sec { padding: 56px 22px 24px; }
+  .preview-cols { gap: 76px; }
 
   .visit h2 { font-size: 52px; }
   .visit::after { width: 170px; height: 170px; top: -50px; right: -50px; }
