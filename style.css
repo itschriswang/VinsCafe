@@ -1,11 +1,29 @@
 /* style.css: developer territory. The owner edits menu.json and config.js, not this. */
 
 /* ---------------------------------------------------------------- type ---
-   Three families. ZT Bros Oskon 90s carries every headline; it is the voice
-   of the site. Darker Grotesque is the body sans, a tall condensed grotesque
-   that reads warm at text sizes. Fragment Mono stays for the small utility
-   type: prices, timestamps, hours, anywhere tabular numbers matter. */
+   Four families, with a clear division of labour.
 
+   Epoch is the display face and the voice of the site: geometric, one weight,
+   built rather than written. It carries the wordmark, the headlines and the
+   section names — anything set large.
+
+   Oskon 90s stays, italic only, and is now the hand: section notes, the
+   standfirst, the asides. It never carries anything a visitor has to act on.
+
+   Darker Grotesque is the body sans. Fragment Mono keeps the small utility
+   type: prices, timestamps, hours, anywhere tabular numbers matter.
+
+   Epoch ships as the supplied OTF, unsubsetted and unconverted, because its
+   licence forbids modifying the file. That costs about 20KB over a WOFF2 and
+   is the honest way to use it. fonts/LICENSE-Epoch.txt is the licence. */
+
+@font-face {
+  font-family: 'Epoch';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/epoch.otf') format('opentype');
+}
 @font-face {
   font-family: 'Oskon';
   font-style: normal;
@@ -58,6 +76,9 @@
   --paper-2:#F1E4CC;   /* a warmer second sheet */
   --ink:    #2E331D;   /* deep forest, the text colour; warmed toward the paintings' olive */
   --pine:   #404A2E;   /* dark green blocks, warmed the same way */
+  /* The ink pushed down to near-black, used for exactly one full-bleed field
+     on the site. Paper on it measures 14.9:1, butter 11.5:1. */
+  --dark:   #1B1E13;
   --moss:   #75823A;   /* olive mid-green */
   --butter: #F3CE5C;   /* butter yellow */
   --blush:  #F4CDBA;   /* blush pink wash */
@@ -95,9 +116,17 @@
   --cream-85: rgba(247, 239, 223, 0.85);
   --cream-35: rgba(247, 239, 223, 0.35);
 
+  /* --display is set large and never small; --serif is now italic-only and
+     only ever carries an aside. See the note at the top of the file. */
+  --display: 'Epoch', 'Helvetica Neue', Arial, sans-serif;
   --serif: 'Oskon', Georgia, 'Times New Roman', serif;
   --sans: 'Darker Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Fragment Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Oskon reads a size smaller than Epoch at the same em — lower x-height,
+     finer strokes. Every place the two sit together winds the italic up by
+     this much so they land level. */
+  --italic-up: 1.17;
 
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
@@ -108,7 +137,11 @@
   /* Menu page: the two type columns hold 660px between them and the margins
      take whatever is left, up to the 230px the spots hang in. */
   --board-w: 1120px;
-  --board-margin: 230px;
+  /* This used to be 230px, and every pixel of it was there to hold a painting
+     hanging in the outer margin. The paintings live in the section bars now,
+     so the margin went back to the columns: they were 302px, which is not wide
+     enough for a name, its italic note and the bar's own end on one line. */
+  --board-margin: 96px;
 }
 
 /* Each time of day tints the interface a little, so the UI follows the
@@ -272,15 +305,33 @@ a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4p
   border-bottom: none;
 }
 
+/* The lockup: half built, half written. "sia" slides back under the m and sits
+   a touch lower, so the italic's entry stroke crosses the geometric.
+
+   It has a floor. Below about 28px the italic's entry stroke merges with the m
+   and it stops reading as two words, so anything smaller sets the two parts
+   apart with a normal space instead. There is no such place on the site today;
+   the rule is here so adding one cannot break the mark silently. */
 .wordmark {
-  font: italic 400 34px/1 var(--serif);
+  font: 400 34px/1 var(--display);
   color: var(--ink);
-  letter-spacing: 0.01em;
+  letter-spacing: -0.045em;
   text-decoration: none;
-  transition: transform 200ms var(--ease-spring);
+  white-space: nowrap;
+  transition: opacity 200ms var(--ease-out);
+}
+.wordmark .wm-b {
+  font: italic 400 calc(1.04em * 1) var(--serif);
+  letter-spacing: 0;
+  margin-left: -0.08em;
+  display: inline-block;
+  transform: translateY(0.11em);
+}
+@media (max-width: 400px) {
+  .wordmark { font-size: 28px; }
 }
 @media (hover: hover) and (pointer: fine) {
-  .wordmark:hover { color: var(--ink); transform: rotate(-2deg) scale(1.04); }
+  .wordmark:hover { color: var(--ink); opacity: 0.72; }
 }
 
 .nav {
@@ -528,7 +579,8 @@ html:not(.js) .ind-close { display: none; }
 .hero-eyebrow .mark { --mark-size: 13px; --mark-color: var(--sun); }
 
 .hero-headline {
-  font: italic 400 var(--h1, 74px)/0.98 var(--serif);
+  font: 400 var(--h1, 74px)/0.94 var(--display);
+  letter-spacing: -0.035em;
   color: var(--ink);
   text-wrap: balance;
 }
@@ -537,6 +589,9 @@ html:not(.js) .ind-close { display: none; }
   color: var(--ink);
   text-wrap: pretty;
 }
+/* The arrow sits on the page, not in a pill. A filled capsule put a box round
+   the one mark on the site that reads as movement; a rule under the words and
+   the arrow on bare paper says the same thing and says it louder. */
 .hero-onward {
   display: inline-flex;
   align-items: center;
@@ -544,28 +599,23 @@ html:not(.js) .ind-close { display: none; }
   width: max-content;
   white-space: nowrap;
   flex-shrink: 0;
-  padding: 12px 24px 15px;
-  border-radius: 999px;
-  background: var(--sun-deep);
+  padding: 0 0 6px;
   border: 0;
+  background: none;
+  border-bottom: 2px solid currentColor;
   font: 700 16px/1 var(--sans);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--paper);
+  color: var(--sun-deep);
   text-decoration: none;
-  box-shadow: 0 1px 2px rgba(46, 51, 29, 0.18);
-  transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-out),
-              background 160ms var(--ease-out);
+  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .hero-onward:hover {
-    color: var(--paper);
-    background: var(--sun-press);
-    transform: translateY(-1px);
-  }
+  .hero-onward:hover { color: var(--sun-press); }
 }
-.hero-onward:active { transform: translateY(1px); }
-.hero-onward .mark { --mark-color: var(--paper); }
+.hero-onward:active { opacity: 0.8; }
+/* The mark takes the link's own colour now that there is no fill behind it. */
+.hero-onward .mark { --mark-color: currentColor; }
 .hero-hours { display: none; }   /* only the closed state shows a table in the hero */
 
 /* The spinning stamp: circular type around a red sun, the paintings' one
@@ -578,10 +628,11 @@ html:not(.js) .ind-close { display: none; }
   width: clamp(110px, 12vw, 160px);
   height: auto;
   pointer-events: none;
-  animation: spin 26s linear infinite;
+  /* It used to turn on a 26s loop. A badge that rotates forever is the single
+     most farmers-market thing on the page; stamped still, it reads as a seal. */
+  transform: rotate(-6deg);
   filter: drop-shadow(0 2px 0 rgba(46,51,29,0.25));
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 [data-state='closed'] .roundel { display: none; }
 
 .stamp {
@@ -942,13 +993,22 @@ html:not(.js) .daystrip { display: none; }
 .foot-inner .stamp { position: static; color: inherit; letter-spacing: 0.16em; font-size: 11px; }
 
 /* the big sign-off wordmark above the footer columns */
+/* The lockup at the one size where it can be as large as it likes. */
 .foot-sign {
   max-width: var(--board-w);
   margin: 0 auto;
   padding: 44px 0 0;
-  font: italic 400 clamp(64px, 10vw, 150px)/0.9 var(--serif);
+  font: 400 clamp(64px, 10vw, 150px)/0.9 var(--display);
+  letter-spacing: -0.05em;
   color: var(--paper);
   text-align: left;
+}
+.foot-sign .wm-b {
+  font: italic 400 1.04em var(--serif);
+  letter-spacing: 0;
+  margin-left: -0.08em;
+  display: inline-block;
+  transform: translateY(0.11em);
 }
 .foot-sign .foot-sun {
   display: inline-block;
@@ -1001,8 +1061,8 @@ html:not(.js) .daystrip { display: none; }
   gap: 40px;
 }
 .page-head h1 {
-  font: italic 400 clamp(64px, 10vw, 130px)/0.9 var(--serif);
-  letter-spacing: 0;
+  font: 400 clamp(64px, 10vw, 130px)/0.88 var(--display);
+  letter-spacing: -0.035em;
   color: var(--ink);
 }
 .page-meta {
@@ -1019,12 +1079,11 @@ html:not(.js) .daystrip { display: none; }
   --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
   padding: 40px var(--board-margin-live) 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 56px;
+  grid-template-columns: 1fr;
   align-items: start;
   overflow-x: clip;                     /* a bled spot must never make the page scroll */
 }
-.board-col { display: flex; flex-direction: column; gap: 52px; }
+.board-col { display: flex; flex-direction: column; gap: 58px; }
 
 .sec { position: relative; }
 /* The paintings reach in under the type now, so everything set on them
@@ -1059,62 +1118,112 @@ html:not(.js) .daystrip { display: none; }
 .sec:has(.spot--teapot)    { --pigment: var(--lavender); }
 .sec:has(.spot--espresso)  { --pigment: var(--clay-deep); }
 
+/* ── the section bar ───────────────────────────────────────────────────────
+   The head is the colour. It shrink-wraps its own words, so the copy sets the
+   bar's length and the six sections stagger down the board on their own —
+   nothing here is positioned by hand, and renaming a section in menu.json just
+   moves the bar with it.
+
+   The pigment is lifted 16% toward paper so the italic note clears its
+   contrast floor on every section: at full strength moss measured 3.12:1
+   against ink and the note is the smallest thing that sits on colour. The far
+   end of the gradient mixes in the hour's accent, which is the only way the
+   time of day still reaches the board now that the rule is gone. */
 .sec-head {
-  /* The rule below is a flex row of its own and therefore makes this box
-     taller. The paintings are positioned against the section and do not move,
-     so ten more pixels here walks the item list down into them: the first
-     Matcha line went from 11.4:1 over paper to 2.5:1 over the bowl. The head's
-     own bottom margin gives back exactly what the rule takes, so the total is
-     the 16px it always was and nothing below shifts by a pixel. */
   --rule-h: 7px;
-  --rule-room: 9px;
+  --bar-pig: color-mix(in srgb, var(--pigment) 84%, var(--paper));
+  --bar-pad-r: 178px;
+  --bar-overhang: 74px;
   position: relative;
+  width: fit-content;
+  /* .board clips horizontally, so the bar has to stop short by exactly the
+     amount its painting hangs past the end or the painting is cut off. */
+  max-width: calc(100% - var(--bar-overhang));
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: var(--rule-room);
-  margin: 0 0 calc(16px - var(--rule-room));
+  gap: 4px;
+  padding: 14px var(--bar-pad-r) 16px 18px;
+  margin: 0 0 22px;
+  background-color: var(--bar-pig);
+  background-image: linear-gradient(in oklch 95deg,
+    var(--bar-pig) 0%,
+    color-mix(in oklch, var(--bar-pig) 62%, var(--accent)) 100%);
 }
 
-/* The section's own rule, in its own pigment. A pseudo-element and not a tag,
-   so the two generators that write this markup stay untouched, and taken out
-   of flow so it is not a flex row: as one it inherited the head's 16px gap as
-   a row gap on top of its own height, and made the head taller still. */
+/* The squiggle is not deleted, it is reassigned: it was the section's rule and
+   it is now the bar's wet lower edge. Machine-cut on three sides, laid by
+   brush on the fourth. */
 .sec-head::after {
   content: '';
   position: absolute;
-  left: 0; right: 0; bottom: 0;
+  left: 0; right: 0; top: 100%;
   height: var(--rule-h);
   background-color: var(--pigment);
-  -webkit-mask: var(--squiggle) left center / 63px 7px repeat-x;
-          mask: var(--squiggle) left center / 63px 7px repeat-x;
-}
-.sec-name {
-  font: italic 400 40px/1 var(--serif);
-  color: var(--ink);
-}
-.sec-note {
-  flex: none;
-  font: 700 13.5px/1 var(--sans);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--moss-text);
-  text-align: right;
+  -webkit-mask: var(--squiggle) left top / 63px 7px repeat-x;
+          mask: var(--squiggle) left top / 63px 7px repeat-x;
 }
 
-.items { display: flex; flex-direction: column; gap: 2px; }
+/* Each painting hangs off the end of its own bar, part on pigment and part on
+   paper, so it caps the terminus instead of sitting in a lane beside it. It is
+   anchored to the bar, so it follows whatever length the copy gives it. The
+   width is bounded because the board's spots run 200–380px and the widest of
+   them would otherwise reach back under the section's own name. */
+.sec-head > .spot {
+  position: absolute;
+  right: calc(-1 * var(--bar-overhang));
+  top: 50%;
+  width: clamp(170px, calc(var(--w, 220px) * 0.78), 250px);
+  max-width: none;
+  transform: translateY(-50%) rotate(var(--tilt, 0deg));
+}
+@media (hover: hover) and (pointer: fine) {
+  .sec:hover .sec-head > .spot {
+    transform: translateY(-50%) rotate(calc(var(--tilt, 0deg) * 2.4)) scale(1.05);
+  }
+}
+
+.sec-name {
+  font: 400 40px/1 var(--display);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* The note drops rather than pulls. A fixed negative margin tucks beautifully
+   under a round final letter and runs straight into a straight one: Matcha,
+   Desserts, Take home and Coffee end in a, s and e and give the italic a
+   pocket; Kitchen ends on a stem and Cold on a d and there is none. Closing up
+   horizontally and dropping instead puts the italic's ascenders into Epoch's
+   x-height whatever the name ends with — and section names come out of
+   menu.json, so it has to hold for a name nobody has written yet. */
+.sec-note {
+  flex: none;
+  font: italic 400 26px/1 var(--serif);
+  color: var(--ink-75);
+  position: relative;
+  top: 0.3em;
+  white-space: nowrap;
+}
+
+/* One column means the board is nearly a thousand pixels wide. A price is no
+   use to anyone sitting that far from its name, so the list keeps a measure
+   even though the bar above it is free to be as long as its own words. */
+.items { display: flex; flex-direction: column; gap: 0; max-width: 620px; }
+/* The dot leader is gone. It was doing a job a ruled column does better, and
+   it was the last thing on the board holding the eye at a slant. */
 .item {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 14px;
   font: 600 20px/1.3 var(--sans);
   color: var(--ink);
-  padding: 4px 8px 6px;
+  padding: 9px 8px 10px;
   margin: 0 -8px;
-  border-radius: 8px;
+  border-bottom: 1px solid var(--ink-12);
   transition: background 140ms var(--ease-out);
 }
+.items > .item:last-child { border-bottom: 0; }
 @media (hover: hover) and (pointer: fine) {
   /* Butter was written in by hand here and stayed butter at every hour. A line
      now lights in its own section's pigment, warmed by the hour you are reading
@@ -1129,13 +1238,15 @@ html:not(.js) .daystrip { display: none; }
       transparent);
   }
 }
-.item-lead {
-  flex: 1;
-  height: 0;
-  border-bottom: 2px dotted var(--ink-30);
-  transform: translateY(-4px);
+/* Kept in the markup because both generators write it and a crawler has seen
+   it for years; it simply no longer draws anything. */
+.item-lead { display: none; }
+.item-price {
+  margin-left: auto;
+  font: 400 15px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--pine);
 }
-.item-price { font: 400 15px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--pine); }
 
 .standfirst {
   margin: 18px 0 0;
@@ -1148,8 +1259,8 @@ html:not(.js) .daystrip { display: none; }
 /* Short sections carry a floor that clears their own spot. Every section
    hangs one painting now, beside its list; a second painting below the
    items needs the 560px floor back, and drags that much paper with it. */
-.sec:has(.spot)          { min-height: 260px; }
-.sec:has(.spot ~ .spot)  { min-height: 560px; }
+/* The paintings sit in the head now, so a section no longer needs a floor
+   tall enough to clear one hanging in the margin beside it. */
 
 .spot {
   position: absolute;
@@ -1165,10 +1276,11 @@ html:not(.js) .daystrip { display: none; }
   .sec:hover .spot { transform: rotate(calc(var(--tilt, 0deg) * 2.4)) scale(1.05); }
 }
 
-.sec:not(.sec--flip) > .spot { left: calc(-1 * var(--into)); right: auto; }
-.sec--flip > .spot           { right: calc(-1 * var(--into)); left: auto; }
-.sec > .spot:nth-of-type(1)  { top: var(--t1, -24px); }
-.sec > .spot:nth-of-type(2)  { top: var(--t2, 300px); }
+/* --into, --t1 and --t2 hung the paintings in the board's outer margin, one
+   per section, all the same distance out. They are unused now: every painting
+   is anchored to the end of its own bar instead. The values stay on the spots
+   below because --w and --tilt are still read from there. */
+.sec-head > .spot:nth-of-type(2) { display: none; }
 
 .spot--cup       { --w: 330px; --into: 230px; --tilt: -1.6deg; --t1: -52px; }
 .spot--espresso  { --w: 200px; --into: 210px; --tilt: 2.2deg; --t2: 200px; }
@@ -1185,12 +1297,11 @@ html:not(.js) .daystrip { display: none; }
    position and only shows itself while the croissant line is under the
    pointer. Both paintings hang in Desserts, so the swap needs no tall floor
    and opens no gap; on a phone the second spot is hidden and the cake stays. */
-.sec > .spot--cake ~ .spot--croissant {
+.sec-head > .spot--cake ~ .spot--croissant {
   --w: 300px;
-  top: -48px;
   opacity: 0;
 }
-.sec:has(.spot--cake ~ .spot--croissant) { min-height: 260px; }
+
 .sec:has(.item[data-item='croissant']:hover) .spot--cake { opacity: 0; }
 .sec:has(.item[data-item='croissant']:hover) .spot--croissant { opacity: 1; }
 
@@ -1223,7 +1334,8 @@ html:not(.js) .daystrip { display: none; }
   gap: 40px;
 }
 .preview-head h2 {
-  font: italic 400 clamp(44px, 5.4vw, 76px)/0.95 var(--serif);
+  font: 400 clamp(44px, 5.4vw, 76px)/0.92 var(--display);
+  letter-spacing: -0.035em;
   color: var(--ink);
   max-width: 14ch;
 }
@@ -1243,31 +1355,29 @@ html:not(.js) .daystrip { display: none; }
 
 /* Each previewed section is a sheet of paper dropped on the yellow, tilted
    like everything else pinned up in the room. */
+/* Flat and square. The tilt and the blurred shadow made two sheets of paper
+   dropped on a table; the room this describes is built, not scattered. */
 .preview .sec {
   background: var(--paper);
-  border: 1px solid var(--ink-12);
-  border-radius: 10px;
+  border: 1px solid var(--ink-18);
   padding: 30px 32px 30px;
-  box-shadow: 0 2px 6px rgba(46, 51, 29, 0.15);
-  transform: rotate(-0.7deg);
-  transition: transform 300ms var(--ease-spring), box-shadow 300ms var(--ease-out);
+  transition: border-color 300ms var(--ease-out);
 }
-.preview .sec--flip { transform: rotate(0.8deg); }
 @media (hover: hover) and (pointer: fine) {
-  .preview .sec:hover {
-    transform: rotate(0deg) translateY(-3px);
-    box-shadow: 0 4px 10px rgba(46, 51, 29, 0.18);
-  }
+  .preview .sec:hover { border-color: var(--pigment); }
 }
 .preview .sec:has(.spot) { min-height: 0; }
 
 /* Inside a card the spot hangs off the top corner rather than in a margin. */
-.preview .sec > .spot {
-  top: -76px;
-  --w: 190px;
-  left: auto; right: -48px;
+/* A preview card is narrower than the board, so its bar carries a smaller
+   painting; everything else about the treatment is the same. */
+.preview .sec-head {
+  --bar-pad-r: 120px;
+  --bar-overhang: 48px;
 }
-.preview .sec--flip > .spot { right: auto; left: -48px; }
+.preview .sec-head > .spot { width: clamp(120px, calc(var(--w, 190px) * 0.5), 150px); }
+.preview .sec-name { font-size: 32px; }
+.preview .sec-note { font-size: 21px; }
 
 .sec-more {
   margin-top: 14px;
@@ -1303,8 +1413,11 @@ html:not(.js) .daystrip { display: none; }
 /* ------------------------------------------------------------ visit band ---
    The page's closing argument: a pine block, one huge line, two buttons. */
 
+/* The one place the site goes properly dark, and it only happens once. Pine
+   was a green block; this is the ink pushed down until it reads as a field
+   rather than a panel, which is what makes the paintings above it glow. */
 .visit {
-  background: var(--pine);
+  background: var(--dark);
   color: var(--paper);
   padding: clamp(64px, 11vh, 130px) var(--gutter);
   position: relative;
@@ -1312,7 +1425,8 @@ html:not(.js) .daystrip { display: none; }
 }
 .visit-inner { max-width: var(--board-w); margin: 0 auto; position: relative; }
 .visit h2 {
-  font: italic 400 clamp(52px, 7.4vw, 110px)/0.95 var(--serif);
+  font: 400 clamp(52px, 7.4vw, 110px)/0.92 var(--display);
+  letter-spacing: -0.035em;
   max-width: 13ch;
   text-wrap: balance;
 }
@@ -1324,15 +1438,15 @@ html:not(.js) .daystrip { display: none; }
   max-width: 46ch;
 }
 .visit-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 34px; }
-.visit .hero-onward { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); }
+.visit .hero-onward { color: var(--butter); }
 .visit .hero-onward--ghost {
   background: transparent;
   border: 1px solid var(--cream-85);
   color: var(--paper);
   box-shadow: none;
 }
-.visit .hero-onward--ghost:hover { background: rgba(247, 239, 223, 0.12); box-shadow: none; }
-.visit .hero-onward--ghost .mark { --mark-color: var(--paper); }
+.visit .hero-onward--ghost:hover { color: var(--butter); }
+.visit .hero-onward--ghost .mark { --mark-color: currentColor; }
 /* the red sun rising over the block's corner */
 .visit::after {
   content: '';
@@ -1529,7 +1643,12 @@ html:not(.js) .daystrip { display: none; }
   .page-rule { margin-top: 20px; }
   /* Same conservation as the desktop head: the room the rule sits in comes out
      of the margin, so the phone board does not shift under its paintings either. */
-  .sec-head { display: block; margin-bottom: calc(14px - var(--rule-room)); }
+  .sec-head {
+    --bar-pad-r: 86px;
+    --bar-overhang: 40px;
+    padding: 11px var(--bar-pad-r) 13px 14px;
+    margin-bottom: 18px;
+  }
   .sec-name { font-size: 36px; display: block; }
   .sec-note { display: block; margin-top: 8px; text-align: inherit; }
   .item { font-size: 19px; }
@@ -1537,15 +1656,13 @@ html:not(.js) .daystrip { display: none; }
   .board-foot { padding-top: 110px; }
 
   .sec { order: var(--i, 0); }
-  .sec--flip .sec-head { text-align: right; }
   .sec--flip .items { margin-left: 0; }
 
   .sec .items, .sec .standfirst, .sec .sec-head { position: relative; }
 
-  .sec > .spot:nth-of-type(2) { display: none; }
-  .sec:not(.sec--flip) > .spot { right: calc(-1 * var(--into-m, 46px)); left: auto; }
-  .sec--flip > .spot           { left: calc(-1 * var(--into-m, 48px)); right: auto; }
-  .sec > .spot:nth-of-type(1)  { top: var(--t1-m, -18px); }
+  /* --into-m and --t1-m below hung the paintings in the phone's margins and
+     are unused now; --w is still read from the same rules. */
+  .sec-head > .spot { width: clamp(104px, calc(var(--w, 190px) * 0.62), 150px); }
 
   .spot--cup       { --w: 240px; --into-m: 72px; --t1-m: -44px; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
@@ -1558,9 +1675,7 @@ html:not(.js) .daystrip { display: none; }
   .spot--matcha    { --w: 190px; --into-m: 58px; --t1-m: -74px; }
   .spot--flatwhite { --w: 280px; --into-m: 86px; --t1-m: -44px; }
 
-  /* preview cards keep their corner spots but tuck them in */
-  .preview .sec > .spot { --w: 150px; right: -18px; left: auto; top: -64px; }
-  .preview .sec--flip > .spot { left: -18px; right: auto; }
+  .preview .sec-head > .spot { width: clamp(96px, calc(var(--w, 150px) * 0.6), 128px); }
   .preview .sec { padding: 24px 22px 24px; }
 
   .visit h2 { font-size: 52px; }

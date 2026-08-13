@@ -22,7 +22,7 @@
 
 <link rel="preload" href="style.css" as="style">
 <link rel="preload" href="fonts/oskon-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/oskon-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/epoch.otf" as="font" type="font/otf" crossorigin>
 <link rel="preload" href="fonts/darker-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -115,7 +115,7 @@
 <body>
 
 <header class="bar">
-  <a class="wordmark" href="index.html" aria-label="gam sia, home">gam sia</a>
+  <a class="wordmark" href="index.html" aria-label="gam sia, home"><span class="wm-a">gam</span><span class="wm-b">sia</span></a>
 
   <nav class="nav" aria-label="Primary">
     <a href="menu.html">Menu</a>
@@ -174,13 +174,13 @@
     <div class="find">
       <div>
         <section class="sec">
-          <img class="spot spot--flatwhite" width="380" height="380"
+          
+          <div class="sec-head"><h2 class="sec-name">The address</h2><p class="sec-note">No booking</p><img class="spot spot--flatwhite" width="380" height="380"
                alt="Watercolour of a flat white seen from above, the crema drawn as one olive ring."
                loading="lazy" decoding="async"
                sizes="(max-width:719px) 280px, (max-width:1179px) 300px, 380px"
                srcset="art/spot-flatwhite-380w.avif 380w, art/spot-flatwhite-760w.avif 760w"
-               src="art/spot-flatwhite-760w.webp">
-          <div class="sec-head"><h2 class="sec-name">The address</h2><p class="sec-note">No booking</p></div>
+               src="art/spot-flatwhite-760w.webp"></div>
           <address>10 Katupna Ct<br>Vermont South VIC 3133</address>
           <a class="hero-onward" href="https://www.google.com/maps?q=10+Katupna+Ct,+Vermont+South+VIC+3133" target="_blank" rel="noopener">
             Open in a map
@@ -243,7 +243,7 @@
 </main>
 
 <footer class="foot">
-  <p class="foot-sign" aria-hidden="true">gam sia<span class="foot-sun"></span></p>
+  <p class="foot-sign" aria-hidden="true"><span class="wm-a">gam</span><span class="wm-b">sia</span><span class="foot-sun"></span></p>
   <div class="foot-inner">
     <nav class="foot-nav" aria-label="Footer">
       <a href="index.html">Home</a>

@@ -68,6 +68,15 @@ const TOTAL = MENU.reduce((n, s) => n + (s.items || []).length, 0);
 /* One item from each of the first three sections: a taste, not the board. */
 const TASTE = MENU.slice(0, 3).map((s) => (s.items || [])[0]).filter(Boolean);
 
+/* The lockup needs the two halves separately. The name comes out of
+   config.js, so a one-word name simply stays one word. */
+function wordmark() {
+  const parts = String(CAFE.name).trim().split(/\s+/);
+  if (parts.length < 2) return esc(CAFE.name);
+  const tail = parts.pop();
+  return `<span class="wm-a">${esc(parts.join(' '))}</span><span class="wm-b">${esc(tail)}</span>`;
+}
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 /* The caps lines break where the sense breaks, never mid-phrase. */
@@ -103,9 +112,15 @@ const CARD_CSS = `
     align-items: flex-start; gap: 26px;
     padding: 0 90px;
   }
-  .card-word { font: italic 400 132px/0.95 var(--serif); color: var(--ink); }
+  /* The wordmark lockup, at the one size where it can be as large as it likes:
+     "gam" built, "sia" written and sliding back under the m. */
+  .card-word { font: 400 132px/0.95 var(--display); letter-spacing: -0.05em; color: var(--ink); }
+  .card-word .wm-b {
+    font: italic 400 1.04em var(--serif); letter-spacing: 0;
+    margin-left: -0.08em; display: inline-block; transform: translateY(0.11em);
+  }
   .card-word--small { font-size: 54px; color: var(--sun-deep); }
-  .card-title { font: italic 400 120px/0.95 var(--serif); color: var(--ink); margin-top: -10px; }
+  .card-title { font: 400 120px/0.92 var(--display); letter-spacing: -0.035em; color: var(--ink); margin-top: -10px; }
   /* Painted along its length, like the rule on the site. The card is set at
      midday, so it picks up that hour's three pigments and a share card carries
      the same stroke a midday visitor sees. */
@@ -119,7 +134,10 @@ const CARD_CSS = `
     -webkit-mask: var(--squiggle) left center / 96px 10px repeat-x;
             mask: var(--squiggle) left center / 96px 10px repeat-x;
   }
-  .card-line { font: italic 400 48px/1.2 var(--serif); color: var(--pine); max-width: 13ch; }
+  /* The site's headlines are Epoch; a share card that set them in the italic
+     would be the one place the two faces swapped jobs. */
+  .card-line { font: 400 52px/1.06 var(--display); letter-spacing: -0.03em;
+    color: var(--ink); max-width: 15ch; }
   .card-caps {
     font: 800 27px/1.5 var(--sans);
     letter-spacing: 0.14em; text-transform: uppercase;
@@ -127,7 +145,9 @@ const CARD_CSS = `
   }
   .card-items { display: flex; flex-direction: column; gap: 10px; width: 560px; }
   .card-items li { display: flex; align-items: baseline; gap: 16px; font: 600 33px/1.25 var(--sans); color: var(--ink); }
-  .card-items .lead { flex: 1; border-bottom: 3px dotted var(--ink-30); transform: translateY(-8px); }
+  /* The dot leader retired with the board's; the price sits in its own column. */
+  .card-items .lead { flex: 1; }
+  .card-items .price { font-variant-numeric: tabular-nums; }
   .card-items .price { font: 400 26px/1 var(--mono); color: var(--pine); }
   .card-addr { font: italic 400 58px/1.15 var(--serif); color: var(--ink); max-width: 15ch; }
   .card-sub { font: 600 32px/1.35 var(--sans); color: var(--ink-75); max-width: 22ch; }
@@ -138,7 +158,7 @@ const CARDS = {
     <div class="card">
       <img class="card-plate" src="art/hero-midday-1376w.webp" alt="">
       <div class="card-type">
-        <p class="card-word">${esc(CAFE.name)}</p>
+        <p class="card-word">${wordmark()}</p>
         <div class="card-rule"></div>
         <p class="card-line">${esc(HEADLINE)}</p>
         <p class="card-caps">${caps([HOURS, `${CAFE.address.street}, ${CAFE.address.locality}`])}</p>
@@ -152,7 +172,7 @@ const CARDS = {
       <img class="card-spot" src="art/spot-coldbrew-440w.webp" alt=""
            style="width: 260px; right: 180px; bottom: -84px; transform: rotate(-2.4deg);">
       <div class="card-type" style="gap: 22px;">
-        <p class="card-word card-word--small">${esc(CAFE.name)}</p>
+        <p class="card-word card-word--small">${wordmark()}</p>
         <p class="card-title">The menu</p>
         <div class="card-rule"></div>
         <ul class="card-items">${TASTE.map((it) =>
@@ -167,7 +187,7 @@ const CARDS = {
       <img class="card-spot" src="art/spot-flatwhite-760w.webp" alt=""
            style="width: 520px; right: 30px; top: 60px; transform: rotate(-1.8deg);">
       <div class="card-type" style="gap: 22px;">
-        <p class="card-word card-word--small">${esc(CAFE.name)}</p>
+        <p class="card-word card-word--small">${wordmark()}</p>
         <p class="card-title">Find us</p>
         <div class="card-rule"></div>
         <p class="card-addr">${esc(`${CAFE.address.street}, ${CAFE.address.locality}`)}</p>

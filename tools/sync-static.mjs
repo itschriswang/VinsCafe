@@ -125,6 +125,31 @@ const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/* Epoch has no en dash, em dash, middot or ellipsis — 127 glyphs and one
+   weight. It carries the wordmark, the headlines, the section names and the
+   item names, all of which come out of menu.json for the owner to edit. Any of
+   these characters in that copy would fall back to a system serif mid-word at
+   display size. Every one of them has a plain equivalent, so this fails loudly
+   rather than shipping a mismatched glyph. */
+const EPOCH_MISSING = /[\u2013\u2014\u00b7\u2026]/;
+
+function checkDisplayGlyphs(data) {
+  const bad = [];
+  for (const sec of data) {
+    if (EPOCH_MISSING.test(sec.section)) bad.push(`section "${sec.section}"`);
+    for (const it of sec.items || []) {
+      if (EPOCH_MISSING.test(it.name)) bad.push(`item "${it.name}"`);
+    }
+  }
+  if (bad.length) {
+    console.error('menu.json uses characters the display face does not have ' +
+      '(en dash, em dash, middot, ellipsis):');
+    for (const b of bad) console.error('  ' + b);
+    console.error('Use a hyphen, a comma or three full stops instead.');
+    process.exit(1);
+  }
+}
+
 function spotHTML(id) {
   const s = SPOTS[id];
   if (!s) return '';
@@ -144,9 +169,14 @@ function spotHTML(id) {
 function sectionHTML(sec, i) {
   let h = `<section class="sec${i % 2 ? ' sec--flip' : ''}" data-sec="${slug(sec.section)}"` +
     ` style="--i:${i}">`;
-  for (const id of sec.spots || []) h += spotHTML(id);
+  /* The paintings live inside the head, which is the section's colour bar, so
+     each one anchors to the end of its own bar and follows whatever length the
+     copy gives it. They used to be siblings hung in the board's outer margin at
+     a fixed offset, which put every painting the same size in the same place
+     down the page. */
   h += `<div class="sec-head"><h2 class="sec-name">${esc(sec.section)}</h2>`;
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
+  for (const id of sec.spots || []) h += spotHTML(id);
   h += '</div><ul class="items">';
   for (const it of sec.items || []) {
     h += `<li class="item" data-item="${slug(it.name)}"><span class="item-name">${esc(it.name)}</span>` +
@@ -196,9 +226,9 @@ function previewRest(data) {
 function previewSectionHTML(sec, i) {
   let h = `<section class="sec${i % 2 ? ' sec--flip' : ''}" data-sec="${slug(sec.section)}"` +
     ` style="--i:${i}">`;
-  if (sec.spot) h += spotHTML(sec.spot);
   h += `<div class="sec-head"><h3 class="sec-name">${esc(sec.section)}</h3>`;
   if (sec.note) h += `<p class="sec-note">${esc(sec.note)}</p>`;
+  if (sec.spot) h += spotHTML(sec.spot);
   h += '</div><ul class="items">';
   for (const it of sec.items || []) {
     h += `<li class="item" data-item="${slug(it.name)}"><span class="item-name">${esc(it.name)}</span>` +
@@ -241,16 +271,18 @@ const columns = (data) => [
   data.map((s, i) => [s, i]).filter(([, i]) => i % 2 === 1)
 ];
 
+/* One column, in the file's own order. It was two, with the sections dealt
+   alternately down them, because the paintings hung in the outer margins and
+   the type had to leave room for both. The paintings are inside the section
+   bars now, and a bar wide enough to carry a name, its italic note and its own
+   painting does not fit in half a board. columns() is kept because the phone
+   board and the flip class still read a section's index. */
 function boardHTML() {
-  const [left, right] = columns(MENU);
   const sig = signature(JSON.stringify(MENU));
   return [
     `    <div class="board" data-menu-sig="${sig}">`,
     '      <div class="board-col">',
-    ...left.map(([s, i]) => '        ' + sectionHTML(s, i)),
-    '      </div>',
-    '      <div class="board-col">',
-    ...right.map(([s, i]) => '        ' + sectionHTML(s, i)),
+    ...MENU.map((s, i) => '        ' + sectionHTML(s, i)),
     '      </div>',
     '    </div>'
   ].join('\n');
@@ -327,6 +359,10 @@ function region(src, name, make) {
 const PAGES = ['index.html', 'menu.html', 'find-us.html', '404.html'];
 const check = process.argv.includes('--check');
 let stale = 0;
+
+/* Runs in --check too, so CI fails the deploy rather than shipping a section
+   name with a system serif dropped into the middle of it. */
+checkDisplayGlyphs(MENU);
 
 for (const page of PAGES) {
   const before = read(page);

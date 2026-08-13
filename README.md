@@ -26,7 +26,7 @@ wash.js         the wet layer over the board, imported the same way
 config.js       hours, timezone, address        ← owner-editable
 menu.json       the board's contents            ← owner-editable
 art/            plates, spots, paper, social cards (AVIF + WebP)
-fonts/          two families, latin subset, woff2
+fonts/          four families; three latin-subset woff2 and Epoch's OTF
 robots.txt  sitemap.xml  favicon.svg  favicon.ico  apple-touch-icon.png
 ```
 
@@ -167,9 +167,14 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   Wednesday-to-Sunday cafe and wrong the moment it became a six-hour Sunday:
   the late-afternoon painting could no longer occur at all, and the one open
   day sat buried between two runs of "Closed".
-- **Sections are not named in code.** Their order on the board, which column
-  they fall in, which side their paintings hang on and how high all derive
-  from a section's index in `menu.json`, carried into the markup as `--i`.
+- **The board is one column.** It was two, with sections dealt alternately down
+  them, because the paintings hung in the outer margins and the type had to
+  leave room for both. A bar wide enough to carry a name, its italic note and
+  its own painting does not fit in half a board, so the margin went back to the
+  column. `--board-margin` dropped from 230px to 96px with it.
+- **Sections are not named in code.** Their order on the board and which side
+  the head aligns to derive from a section's index in `menu.json`, carried
+  into the markup as `--i`.
   These used to be lists of slugs in the stylesheet, so renaming Kitchen to
   Desserts sent it to the top of the phone board and dropped a teapot on top
   of Coffee's prices.
@@ -229,7 +234,16 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   width it takes the size of its backing store and ignores the far edges, which
   draws the whole layer at the render scale in the top left corner. Both
   `.pigment` and `.wash` state `width` and `height` for that reason.
-- **Colour.** Four interface colours — paper, ink, pine and the sun — and then
+- **The section bar.** A section's head is its colour. It shrink-wraps its own
+  words, so the copy sets the bar's length and the sections stagger down the
+  board on their own; renaming a section moves its bar with it. The pigment is
+  lifted 16% toward paper because the italic note is the smallest thing that
+  sits on colour and moss measured 3.12:1 against ink at full strength. The far
+  end of the gradient mixes in the hour's `--accent`, which is now the only way
+  the time of day reaches the board — the section rule it used to travel on is
+  the bar's wet lower edge instead.
+- **Colour.** Five interface colours — paper, ink, pine, the sun and `--dark`,
+  the ink pushed to near-black for the one full-bleed field on the site — and then
   a set that only ever tints: butter, blush, rose, dusty blue, moss, and five
   sampled off a pair of gouache landscapes (lichen, lavender, clay, peony,
   amber). Nothing in the second set carries type, which is why none of it has
@@ -271,12 +285,27 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   is how the time of day reaches the board pages and not just the hero.
 - **Marks.** Six, defined once as CSS mask images at the top of `style.css`.
   Swapping in hand-painted versions is six `url()`s and nothing else.
-- **Fonts.** `font-display: optional` with both faces preloaded is the only
-  combination that cannot shift layout. `font-synthesis: none` is global;
-  Instrument Serif has no bold and must never be asked for one.
-- **Spots.** Positioned against their own section, never the page, so adding an
-  item to `menu.json` cannot move a painting. Short sections carry a
-  `min-height` that clears their spot.
+- **Fonts.** Four families with one job each: Epoch is the display face and
+  carries the wordmark, the headlines and the section names; Oskon is italic
+  only and is the hand, used for notes and asides and never for anything a
+  visitor has to act on; Darker Grotesque is the body; Fragment Mono is the
+  data. `font-synthesis: none` is global — Epoch has one weight and no italic,
+  Oskon no bold, and neither must ever be asked for one.
+
+  Epoch ships as the supplied OTF, unsubsetted and unconverted, because its
+  licence forbids modifying the file. That costs about 20KB over a WOFF2.
+  `fonts/LICENSE-Epoch.txt` is the licence; commercial use is granted.
+
+  It also has 127 glyphs and no en dash, em dash, middot or ellipsis, and it
+  carries copy the owner edits. `sync-static.mjs` fails on any of those four
+  characters in `menu.json` rather than letting a system serif land in the
+  middle of a section name at 40px.
+- **Spots.** Each painting is anchored to the end of its own section bar, so it
+  caps the terminus — part on pigment, part on paper — and follows the bar
+  wherever the copy puts it. Only the size is authored, from `--w` on the spot.
+  They used to hang in the board's outer margin at a fixed offset, one per
+  section, every one the same size in the same place down the page: a table
+  with a picture column. `--into`, `--t1` and `--t2` are unused now.
 - **The spots carry their own alpha.** `build-art.py` cuts it from the scans:
   flat-field the paper, trim the sheet's torn border, take alpha from how far
   each pixel departs from white, then drop the square of wash some of them were
