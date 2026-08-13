@@ -1369,12 +1369,15 @@ html:not(.js) .daystrip { display: none; }
 .preview .sec:has(.spot) { min-height: 0; }
 
 /* Inside a card the spot hangs off the top corner rather than in a margin. */
-.preview .sec > .spot {
-  top: -76px;
-  --w: 190px;
-  left: auto; right: -48px;
+/* A preview card is narrower than the board, so its bar carries a smaller
+   painting; everything else about the treatment is the same. */
+.preview .sec-head {
+  --bar-pad-r: 120px;
+  --bar-overhang: 48px;
 }
-.preview .sec--flip > .spot { right: auto; left: -48px; }
+.preview .sec-head > .spot { width: clamp(120px, calc(var(--w, 190px) * 0.5), 150px); }
+.preview .sec-name { font-size: 32px; }
+.preview .sec-note { font-size: 21px; }
 
 .sec-more {
   margin-top: 14px;
@@ -1653,15 +1656,13 @@ html:not(.js) .daystrip { display: none; }
   .board-foot { padding-top: 110px; }
 
   .sec { order: var(--i, 0); }
-  .sec--flip .sec-head { text-align: right; }
   .sec--flip .items { margin-left: 0; }
 
   .sec .items, .sec .standfirst, .sec .sec-head { position: relative; }
 
-  .sec > .spot:nth-of-type(2) { display: none; }
-  .sec:not(.sec--flip) > .spot { right: calc(-1 * var(--into-m, 46px)); left: auto; }
-  .sec--flip > .spot           { left: calc(-1 * var(--into-m, 48px)); right: auto; }
-  .sec > .spot:nth-of-type(1)  { top: var(--t1-m, -18px); }
+  /* --into-m and --t1-m below hung the paintings in the phone's margins and
+     are unused now; --w is still read from the same rules. */
+  .sec-head > .spot { width: clamp(104px, calc(var(--w, 190px) * 0.62), 150px); }
 
   .spot--cup       { --w: 240px; --into-m: 72px; --t1-m: -44px; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
@@ -1674,9 +1675,7 @@ html:not(.js) .daystrip { display: none; }
   .spot--matcha    { --w: 190px; --into-m: 58px; --t1-m: -74px; }
   .spot--flatwhite { --w: 280px; --into-m: 86px; --t1-m: -44px; }
 
-  /* preview cards keep their corner spots but tuck them in */
-  .preview .sec > .spot { --w: 150px; right: -18px; left: auto; top: -64px; }
-  .preview .sec--flip > .spot { left: -18px; right: auto; }
+  .preview .sec-head > .spot { width: clamp(96px, calc(var(--w, 150px) * 0.6), 128px); }
   .preview .sec { padding: 24px 22px 24px; }
 
   .visit h2 { font-size: 52px; }
