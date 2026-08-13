@@ -1,9 +1,10 @@
 <!doctype html>
-<!-- plan.html: developer territory. The figures in the numbers table are a gen
-     region, rendered by tools/sync-static.mjs from
-     docs/business-plan/model/figures.json, which model.mjs writes. Change an
-     assumption in the model, re-run it, re-run sync-static, and this page
-     follows. Never hand-edit inside a gen region. -->
+<!-- plan.html: developer territory. Both figure tables are gen regions,
+     rendered by tools/sync-static.mjs from the two models in
+     docs/business-plan/model/: model.mjs writes figures.json for the garage,
+     cart.mjs writes cart-figures.json for the comparison. Change an assumption,
+     re-run that model with --write, re-run sync-static, and this page follows.
+     Never hand-edit inside a gen region. -->
 <html lang="en-AU" data-state="midday">
 <head>
 <meta charset="utf-8">
@@ -267,30 +268,90 @@
              back up the page, and here that put a tumbler of cold brew across
              the last line of Twenty. One painting is enough on a page that is
              mostly argument. -->
+        <div class="sec-head"><h2 class="sec-name">The cart</h2><p class="sec-note">The same business, without the building</p></div>
+
+        <p>A cart is registered where the vehicle is kept, which is the garage,
+        and then it trades anywhere. No change of use, no trade waste, no
+        grease trap, no objections, and nothing owing on the house when it is
+        sold one day. Coffee and tea with milk sit in a far lighter class than
+        the grill does.</p>
+
+<!--gen:cart-numbers-->
+      <div class="plan-table-wrap">
+      <table class="plan-table">
+        <caption>The garage on a steady Sunday, against the cart
+          on 40 market days and 30 events</caption>
+        <thead><tr><th scope="col">A year</th><th scope="col">The garage</th><th scope="col">The cart</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">What comes in</th><td>$41,267</td><td>$47,964</td></tr>
+        <tr class="is-total"><th scope="row">Left over, before paying ourselves</th><td><span class="is-loss">−$10,117</span></td><td><span class="is-gain">$12,845</span></td></tr>
+        <tr><th scope="row">An hour of our time</th><td><span class="is-loss">−$16.21</span></td><td><span class="is-gain">$22.94</span></td></tr>
+        <tr><th scope="row">To get started</th><td>$63,700 – $258,500</td><td>$21,400 – $94,200</td></tr>
+        <tr><th scope="row">Pays itself back</th><td><span class="is-loss">never</span></td><td>1.7 – 7.3 years</td></tr>
+        </tbody>
+      </table>
+      </div>
+<!--/gen-->
+
+        <p>The shape matters more than the totals. The market days very nearly
+        cover the whole year of costs on their own, which leaves the weddings
+        and the office mornings as the part that pays. Thirty of those is one a
+        fortnight.</p>
+      </section>
+
+      <section class="sec">
+        <div class="sec-head"><h2 class="sec-name">A different address</h2><p class="sec-note">The largest idea here</p></div>
+        <p>A cafe in a residential street does not always need a permit. Where
+        the land sits within a hundred metres of a shopping zone, shares its
+        street frontage, and has access to a main road, it can be allowed
+        outright.</p>
+        <p>This court has none of those things, which is the whole reason the
+        permit is the hardest part of this. But they describe a real kind of
+        house, and one near a suburban strip might have all three. Renting one
+        is a smaller thing than rebuilding the garage, and the argument with
+        the neighbours never has to happen.</p>
+      </section>
+
+      <section class="sec sec--flip">
+        <div class="sec-head"><h2 class="sec-name">Selling the tin</h2><p class="sec-note">Not the cup</p></div>
+        <p>Every plan on this page assumes the thing sold is a drink made for
+        someone standing in front of us. That is the most regulated and least
+        portable version of this.</p>
+        <p>Sealed tins of matcha and bags of beans are the other one. Selling
+        packaged tea from home needs a notice to the council rather than a
+        registration, and the rule that stops us selling bought-in goods over a
+        counter makes an exception for selling them online. So the one part of
+        the board that could never cross a garage counter is the part that
+        could start this month.</p>
+      </section>
+
+      <section class="sec">
         <div class="sec-head"><h2 class="sec-name">What to do instead</h2><p class="sec-note">Ranked</p></div>
 
         <ul class="plan-rank">
           <li class="is-first">
-            <span class="plan-rank-name">A cart, or a van</span>
-            <span class="plan-rank-note">The same business without the building. It is registered where the vehicle is kept, which is the garage, and then it trades anywhere. No change of use, no trade waste, no objections, and coffee with milk sits in a far lighter class than the kitchen does.</span>
+            <span class="plan-rank-name">Sell the tins online</span>
+            <span class="plan-rank-note">Weeks away, almost no money, and lawful from this house on a notification form. It is the fastest honest revenue on this page.</span>
           </li>
           <li>
-            <span class="plan-rank-name">A market stall</span>
-            <span class="plan-rank-note">The cheapest way to find out whether strangers will queue for the matcha twice. Worth doing first whatever else is decided.</span>
+            <span class="plan-rank-name">A cart, or a van</span>
+            <span class="plan-rank-note">Community markets on the weekend, weddings and offices during it. A private booking does not even need notice lodged.</span>
+          </li>
+          <li>
+            <span class="plan-rank-name">Hire a kitchen by the hour</span>
+            <span class="plan-rank-note">Thirty-odd dollars an hour for a room that already complies. The only option on this page that cooks the whole board, eggs and prawns included, without six figures.</span>
           </li>
           <li>
             <span class="plan-rank-name">Somebody else's Sunday</span>
-            <span class="plan-rank-note">A registered cafe closed on the day we would open. The full board, unchanged, on premises that already comply.</span>
-          </li>
-          <li>
-            <span class="plan-rank-name">Baking for other cafes</span>
-            <span class="plan-rank-note">The buns and the cookies, wholesale. Nobody comes to the house.</span>
+            <span class="plan-rank-note">A registered cafe closed on the day we would open. Or a gym, a brewery, a club, an office lobby: they have the permits and the people, and they want a reason to keep them there.</span>
           </li>
           <li>
             <span class="plan-rank-name">A shopfront</span>
             <span class="plan-rank-note">The conventional answer, and it only works on more than one day a week.</span>
           </li>
         </ul>
+
+        <p class="plan-table-foot">Nearly all of them have one thing in common: we do not own the room.</p>
       </section>
 
       <section class="sec">

@@ -29,6 +29,9 @@ read that one.
 | [15-risk-register.md](15-risk-register.md) | What goes wrong, how likely, what it costs. |
 | [16-critical-path.md](16-critical-path.md) | The order to do things in, and the cheap kill-switches first. |
 | [17-contacts-and-questions.md](17-contacts-and-questions.md) | Who to ring, and the exact questions to ask them. |
+| [18-home-kitchen-and-the-cart.md](18-home-kitchen-and-the-cart.md) | Is a council-approved home kitchen real? Is the matcha cart a business? |
+| [19-the-cart-numbers.md](19-the-cart-numbers.md) | Generated. Do not hand-edit. |
+| [20-other-avenues.md](20-other-avenues.md) | Every other route: a qualifying address, hired kitchens, selling the product, host venues. |
 
 ## The model
 
@@ -39,7 +42,12 @@ or a trading day and the model follows.
 ```sh
 node docs/business-plan/model/model.mjs           # print to stdout
 node docs/business-plan/model/model.mjs --write   # regenerate 13-the-numbers.md
+node docs/business-plan/model/cart.mjs --write    # regenerate 19-the-cart-numbers.md
 ```
+
+`model.mjs` also writes `model/figures.json`, which `tools/sync-static.mjs`
+renders into the numbers table on `plan.html`. Re-run both after changing an
+assumption, or the website and the plan will disagree.
 
 Everything not derived from those two files sits in one `ASSUMPTIONS` block at
 the top. **The assumptions are the argument** — they are what to attack. The
