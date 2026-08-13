@@ -1783,14 +1783,35 @@ html:not(.js) .daystrip { display: none; }
   .page-rule { margin-top: 20px; }
   /* Same conservation as the desktop head: the room the rule sits in comes out
      of the margin, so the phone board does not shift under its paintings either. */
+  /* The phone's paintings were small and sat a quarter of the way onto their
+     own bar, which is where a drawing goes to disappear: a quarter of it lost
+     in flat pigment, and only 132px of it to begin with. They are wider here
+     now and lap less — a cap on the end of the bar rather than something half
+     swallowed by it. --art is the widest any of them may be, and it is what
+     the bar reserves out of its own length, so the two can never drift apart:
+     shrink the painting and the bar takes the room back by itself. */
   .sec-head {
-    --bar-pad-r: 44px;
-    --bar-overhang: 96px;
+    --art: clamp(124px, 40vw, 172px);
+    --bar-pad-r: 26px;
+    --bar-overhang: calc(var(--art) * 0.74 + 8px);
     padding: 11px var(--bar-pad-r) 13px 14px;
     margin-bottom: 18px;
   }
   .sec-name { font-size: 36px; display: block; }
-  .sec-note { display: block; margin-top: 8px; text-align: inherit; }
+  /* The note has a line to itself here, so it may use two of them. It could
+     not before: nowrap under a bar this much shorter puts a long note out past
+     the pigment and onto the painting. */
+  .sec-note {
+    display: block;
+    /* flex: none is what the tuck needs beside a name; on its own line it is
+       what stops the note wrapping at all, so it holds its one-line width and
+       walks out from under the bar. */
+    flex: 0 1 100%;
+    min-width: 0;
+    margin-top: 8px;
+    text-align: inherit;
+    white-space: normal;
+  }
   .item { font-size: 19px; }
   .standfirst { font-size: 21px; max-width: 28ch; }
   .board-foot { padding-top: 110px; }
@@ -1802,7 +1823,12 @@ html:not(.js) .daystrip { display: none; }
 
   /* --into-m and --t1-m below hung the paintings in the phone's margins and
      are unused now; --w is still read from the same rules. */
-  .sec-head > .spot { --spot-w: clamp(104px, calc(var(--w, 190px) * 0.56), 132px); }
+  /* The offset stays the desktop's quarter. It was never the problem: the
+     paintings carry transparent margin, so the share of the box that laps the
+     bar and the share of the paint that does are not the same number, and at
+     132px the visible result was a blob sitting in flat colour. Widened, the
+     same quarter reads as the corner of a cup resting on the end of the bar. */
+  .sec-head > .spot { --spot-w: clamp(124px, calc(var(--w, 190px) * 0.74), var(--art)); }
 
   .spot--cup       { --w: 240px; --into-m: 72px; --t1-m: -44px; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
@@ -1815,14 +1841,36 @@ html:not(.js) .daystrip { display: none; }
   .spot--matcha    { --w: 190px; --into-m: 58px; --t1-m: -74px; }
   .spot--flatwhite { --w: 280px; --into-m: 86px; --t1-m: -44px; }
 
-  .preview .sec-head > .spot { --spot-w: clamp(92px, calc(var(--w, 150px) * 0.54), 118px); }
+  /* The card carries its own bar figures, so it does not inherit the board's
+     and has to be widened the same way — and the home page's preview is the
+     one a phone meets first, so it is the surface where a small painting half
+     in flat pigment was most visible. --art is smaller here than on the board
+     because the card is narrower than the page by its own padding. */
+  .preview .sec-head {
+    --art: clamp(104px, 32vw, 140px);
+    --bar-pad-r: 22px;
+    --bar-overhang: calc(var(--art) * 0.74 + 8px);
+  }
+  .preview .sec-head > .spot { --spot-w: clamp(104px, calc(var(--w, 190px) * 0.62), var(--art)); }
   .preview .sec { padding: 24px 22px 24px; }
 
   .visit h2 { font-size: 52px; }
   .visit::after { width: 170px; height: 170px; top: -50px; right: -50px; }
 
-  .foot-sign { font-size: 64px; padding-top: 34px; }
-  .foot-inner { padding: 24px 0 24px; font-size: 12.5px; }
+  /* The footer's three groups are one row on the desktop. On the phone each of
+     them is wider than the box, so each took a full line of its own and
+     justify-content: space-between had nothing left to do — three loose bands
+     with the gaps stretched between them, which is not a fold of that row but
+     the loss of it. The nav goes last and takes a line to itself; the address
+     and the hours then fit one line together and space-between works again.
+
+     The band gets shorter with them, which is the other half of it: cover was
+     cropping a quarter off the sides of a 1.79 painting to fill a 1.38 box, so
+     the room lost its edges and read as a dark green field. */
+  .foot-sign { font-size: 58px; padding-top: 30px; }
+  .foot .foot-inner { margin-top: 26px; }
+  .foot-inner { padding: 20px 0 24px; font-size: 12px; gap: 14px 18px; }
+  .foot .foot-nav { order: 1; flex-basis: 100%; gap: 20px; }
 }
 
 /* Between the mobile comp and the full 1120 board there is no margin wide
