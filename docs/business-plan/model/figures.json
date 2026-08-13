@@ -1,0 +1,45 @@
+{
+  "daysPerWeek": 1,
+  "hoursPerWeek": 6,
+  "weeksPerYear": 48,
+  "atv": 10.234880952380951,
+  "grossMarginPerTransaction": 6.378519999999999,
+  "grossMarginRate": 0.6232138927337653,
+  "cogsRateOfRevenue": 0.3767861072662348,
+  "fixedAnnual": 19575,
+  "staffHourlyAllIn": 54.28,
+  "capex": {
+    "low": 63700,
+    "high": 258500
+  },
+  "contributionPerTransaction": 6.222949809523809,
+  "scenarios": [
+    {
+      "name": "lean",
+      "transactionsPerDay": 48,
+      "revenue": 23581,
+      "wages": 0,
+      "fixed": 19575,
+      "ebitda": -5237,
+      "ownerRate": -8.393146857142865
+    },
+    {
+      "name": "base",
+      "transactionsPerDay": 84,
+      "revenue": 41267,
+      "wages": 15633,
+      "fixed": 19575,
+      "ebitda": -10117,
+      "ownerRate": -16.212670461538472
+    },
+    {
+      "name": "stretch",
+      "transactionsPerDay": 132,
+      "revenue": 64848,
+      "wages": 36476,
+      "fixed": 19575,
+      "ebitda": -16623,
+      "ownerRate": -26.638701934065956
+    }
+  ]
+}

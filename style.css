@@ -2058,6 +2058,180 @@ html:not(.js) .daystrip { display: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
+/* ----------------------------------------------------------------- plan ---
+   plan.html only. One column, because it is a document and a document is read
+   rather than scanned: the two-column split that suits Find us would break the
+   argument in half. Everything here leans on the tokens the rest of the site
+   already sets, and the sections carry a painting each, so they pick up their
+   pigment from .sec:has() above without naming a colour here. */
+
+.plan {
+  padding: 40px var(--board-margin-live, 0) 0;
+  --board-margin-live: clamp(0px, (100% - 660px) / 2, var(--board-margin));
+}
+
+.plan-lede {
+  font: italic 400 clamp(21px, 2.4vw, 27px)/1.45 var(--serif);
+  color: var(--ink);
+  max-width: 30ch;
+  margin: 0 0 40px;
+}
+
+/* The answer, said once, before any of the working. */
+.plan-verdict {
+  padding: 26px 0 26px 26px;
+  border-left: 3px solid var(--sun-deep);
+  margin: 0 0 8px;
+}
+.plan-verdict-label {
+  font: 700 12.5px/1.6 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sun-deep);
+  margin: 0 0 12px;
+}
+.plan-verdict p { margin: 0 0 12px; max-width: 46ch; }
+.plan-verdict p:last-child { margin-bottom: 0; }
+.plan-verdict-sub {
+  font: 400 clamp(22px, 2.6vw, 30px)/1.15 var(--display);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Numbered because they are a sequence of consequences, not a list of topics:
+   the permit problem is why the kitchen problem costs what it does. */
+.plan-finds { list-style: none; margin: 8px 0 0; padding: 0; counter-reset: find; }
+.plan-finds li {
+  counter-increment: find;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 4px 18px;
+  padding: 22px 0;
+  border-top: 1px solid var(--ink-18);
+}
+.plan-finds li::before {
+  content: counter(find);
+  grid-row: 1 / span 2;
+  font: 400 30px/1 var(--display);
+  color: var(--pigment, var(--moss));
+  padding-top: 2px;
+}
+.plan-finds h3 {
+  margin: 0;
+  font: 700 17px/1.35 var(--sans);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.plan-finds p { margin: 8px 0 0; grid-column: 2; }
+
+/* The figures. Generated into plan.html from the model, never typed. */
+.plan-table-wrap { overflow-x: auto; margin: 26px 0 0; }
+.plan-table { border-collapse: collapse; width: 100%; min-width: 420px; }
+.plan-table caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 12px;
+  font: 700 12.5px/1.6 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+}
+.plan-table th, .plan-table td {
+  padding: 11px 14px 11px 0;
+  border-bottom: 1px solid var(--ink-18);
+  text-align: right;
+  font: 400 15px/1.4 var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.plan-table thead th {
+  font: 700 12.5px/1.6 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  border-bottom-color: var(--ink-30);
+}
+.plan-table th[scope="row"] {
+  text-align: left;
+  font: 600 15.5px/1.4 var(--sans);
+  letter-spacing: 0.01em;
+  padding-right: 24px;
+  white-space: normal;
+  color: var(--ink-75);
+}
+.plan-table tr.is-total th, .plan-table tr.is-total td {
+  border-bottom-color: var(--ink-30);
+  font-weight: 700;
+}
+.plan-table tr.is-total th[scope="row"] { color: var(--ink); }
+.is-loss { color: var(--sun-deep); }
+.plan-table-foot {
+  margin: 16px 0 0;
+  font: 700 13px/1.6 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* Ranked, so the order is the argument. Only the first one is dressed. */
+.plan-rank { list-style: none; margin: 10px 0 0; padding: 0; }
+.plan-rank li {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 18px 0;
+  border-top: 1px solid var(--ink-18);
+}
+.plan-rank li.is-first { border-top-color: var(--pigment, var(--moss)); }
+.plan-rank-name {
+  font: 400 clamp(21px, 2.2vw, 26px)/1.1 var(--display);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+}
+.plan-rank li.is-first .plan-rank-name { color: var(--pine); }
+.plan-rank-note { max-width: 52ch; }
+
+/* The order to do things in. Numbered for the same reason as the findings:
+   step two is only cheap because step one came first. */
+.plan-steps { list-style: none; margin: 22px 0 0; padding: 0; counter-reset: step; }
+.plan-steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 4px 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--ink-18);
+}
+.plan-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  grid-row: 1 / span 2;
+  font: 400 13px/1.5 var(--mono);
+  color: var(--ink-45);
+}
+.plan-step-k {
+  font: 700 16px/1.4 var(--sans);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.plan-step-b { grid-column: 2; max-width: 52ch; }
+
+.plan-note {
+  margin: 48px 0 0;
+  padding: 22px 24px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-18);
+}
+.plan-note p { margin: 0; max-width: 58ch; font-size: 0.95em; color: var(--ink-75); }
+
+@media (max-width: 719px) {
+  .plan { padding-top: 30px; }
+  .plan-lede { margin-bottom: 30px; }
+  .plan-verdict { padding-left: 18px; }
+  .plan-finds li { grid-template-columns: 32px 1fr; gap: 4px 12px; }
+  .plan-finds li::before { font-size: 24px; }
+}
+
 /* ---------------------------------------------------------------- print --- */
 
 @media print {

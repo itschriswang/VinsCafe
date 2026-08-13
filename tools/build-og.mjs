@@ -40,6 +40,14 @@ const MENU_META = strip(
     .replace(/<br\s*\/?>/g, ' · ')
 );
 
+/* The plan page's own meta line and the one sentence its verdict ends on. */
+const PLAN_META = strip(
+  (/<p class="page-meta">([\s\S]*?)<\/p>/.exec(read('plan.html')) || [, ''])[1]
+);
+const PLAN_LINE = strip(
+  (/<p class="plan-verdict-sub">([\s\S]*?)<\/p>/.exec(read('plan.html')) || [, ''])[1]
+);
+
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -192,6 +200,19 @@ const CARDS = {
         <div class="card-rule"></div>
         <p class="card-addr">${esc(`${CAFE.address.street}, ${CAFE.address.locality}`)}</p>
         <p class="card-caps">${caps([HOURS])}</p>
+      </div>
+    </div>`,
+
+  'og-plan.jpg': `
+    <div class="card">
+      <img class="card-spot" src="art/spot-beans-400w.webp" alt=""
+           style="width: 330px; right: 130px; top: 96px; transform: rotate(1.6deg);">
+      <div class="card-type" style="gap: 22px;">
+        <p class="card-word card-word--small">${wordmark()}</p>
+        <p class="card-title">The plan</p>
+        <div class="card-rule"></div>
+        <p class="card-line">${esc(PLAN_LINE)}</p>
+        <p class="card-caps">${caps([PLAN_META, HOURS])}</p>
       </div>
     </div>`
 };
