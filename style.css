@@ -969,38 +969,52 @@ html:not(.js) .daystrip { display: none; }
 /* -------------------------------------------------------------- footer --- */
 
 .foot {
+  position: relative;
+  isolation: isolate;
   background: var(--pine);
   color: var(--paper);
   padding: 0 var(--gutter);
+  overflow: hidden;
 }
 
-/* The room after close. It used to lead the hero, and because the cafe is shut
-   six days a week it was the first thing very nearly everyone saw. A dark empty
-   room is the wrong first image of a place and the right last one, so it closes
-   the page instead. Full bleed out of the footer's own gutter, and masked at
-   the foot so the night in the painting runs into the pine rather than sitting
-   on it as a band with an edge. */
+/* The room after close is the footer's ground, not a strip laid on top of it.
+   It used to lead the hero, and because the cafe is shut six days a week that
+   made a dark empty room the first thing very nearly everyone saw. It is the
+   wrong first impression of a place and the right last one, so the whole foot
+   of every page is now that room, with the sign and the links standing in it.
+
+   The scrim is pine, graded: light at the top where nothing is set, heaviest
+   at the bottom where the small type is. The painting has a lit doorway in it
+   and the scan carries pure white at its border, so the top of the gradient is
+   as far as it can be lifted and still keep 13.5px type off the floor. */
 .foot-plate {
-  display: block;
-  width: calc(100% + 2 * var(--gutter));
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
   max-width: none;
-  margin: 0 calc(-1 * var(--gutter));
-  height: clamp(170px, 24vw, 300px);
+  margin: 0;
   object-fit: cover;
-  object-position: center 44%;
-  /* Two masks, intersected: one fades the foot into the pine, the other takes
-     the sides. The band is much wider than it is tall, so cover fits the width
-     and the scan's own torn paper border sits at both ends of it — the hero
-     never shows that because it crops far harder. */
-  -webkit-mask-image: linear-gradient(#000 58%, rgba(0, 0, 0, 0)),
-    linear-gradient(90deg, rgba(0, 0, 0, 0) 0, #000 5%, #000 95%, rgba(0, 0, 0, 0) 100%);
-          mask-image: linear-gradient(#000 58%, rgba(0, 0, 0, 0)),
-    linear-gradient(90deg, rgba(0, 0, 0, 0) 0, #000 5%, #000 95%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-composite: source-in;
-          mask-composite: intersect;
+  object-position: center 34%;
+  /* cover fits the width here, so the scan's own torn paper border sits at
+     both ends of the band; the hero never showed it because it crops harder. */
+  -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, #000 6%, #000 94%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, #000 6%, #000 94%, rgba(0,0,0,0) 100%);
 }
-/* The sign sits under the painting rather than 44px clear of the section above. */
-.foot-plate + .foot-sign { padding-top: 8px; }
+.foot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(64, 74, 46, 0.34) 0%,
+    rgba(64, 74, 46, 0.74) 34%,
+    rgba(64, 74, 46, 0.91) 68%,
+    rgba(64, 74, 46, 0.97) 100%);
+}
+.foot-sign, .foot-inner { position: relative; z-index: 2; }
 .foot-inner {
   max-width: var(--board-w);
   margin: 0 auto;
@@ -1025,7 +1039,9 @@ html:not(.js) .daystrip { display: none; }
 .foot-sign {
   max-width: var(--board-w);
   margin: 0 auto;
-  padding: 44px 0 0;
+  /* The footer is the room after close, so it is given the height to be a room
+     rather than a band with a wordmark in it. */
+  padding: clamp(96px, 13vw, 190px) 0 0;
   font: 400 clamp(64px, 10vw, 150px)/0.9 var(--display);
   letter-spacing: -0.05em;
   color: var(--paper);

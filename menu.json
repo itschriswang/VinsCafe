@@ -1,73 +1,173 @@
 [
   {
-    "section": "Matcha",
-    "note": "Built to order",
-    "spots": ["spot-matcha"],
+    "section": "Coffee",
+    "note": "Oat, no charge",
+    "spots": [
+      "spot-cup"
+    ],
     "items": [
-      { "name": "Usucha, whisked plain", "price": "4.60" },
-      { "name": "Matcha latte",          "price": "5.00" },
-      { "name": "Ceremonial grade",      "price": "6.20" },
-      { "name": "Iced matcha",           "price": "5.00" },
-      { "name": "Iced matcha latte",     "price": "5.40" },
-      { "name": "Matcha tonic",          "price": "5.20" },
-      { "name": "Hojicha latte",         "price": "4.80" }
+      {
+        "name": "Filter",
+        "price": "3.20"
+      },
+      {
+        "name": "Espresso",
+        "price": "2.60"
+      },
+      {
+        "name": "Cortado",
+        "price": "3.40"
+      },
+      {
+        "name": "Flat white",
+        "price": "3.80"
+      },
+      {
+        "name": "Latte",
+        "price": "4.00"
+      },
+      {
+        "name": "Cold brew",
+        "price": "4.20"
+      }
     ]
   },
   {
     "section": "Kitchen",
     "note": "Under the grill",
-    "spots": ["spot-toast"],
+    "spots": [
+      "spot-toast"
+    ],
     "items": [
-      { "name": "Pho toastie",                   "price": "13.50" },
-      { "name": "Singaporean chilli prawn roll", "price": "15.00" },
-      { "name": "Kaya toast, soft egg",          "price": "7.50" }
+      {
+        "name": "Pho toastie",
+        "price": "13.50"
+      },
+      {
+        "name": "Singaporean chilli prawn roll",
+        "price": "15.00"
+      },
+      {
+        "name": "Kaya toast, soft egg",
+        "price": "7.50"
+      }
+    ]
+  },
+  {
+    "section": "Matcha",
+    "note": "Built to order",
+    "spots": [
+      "spot-matcha"
+    ],
+    "items": [
+      {
+        "name": "Usucha, whisked plain",
+        "price": "4.60"
+      },
+      {
+        "name": "Matcha latte",
+        "price": "5.00"
+      },
+      {
+        "name": "Ceremonial grade",
+        "price": "6.20"
+      },
+      {
+        "name": "Iced matcha",
+        "price": "5.00"
+      },
+      {
+        "name": "Iced matcha latte",
+        "price": "5.40"
+      },
+      {
+        "name": "Matcha tonic",
+        "price": "5.20"
+      },
+      {
+        "name": "Hojicha latte",
+        "price": "4.80"
+      }
     ]
   },
   {
     "section": "Cold",
     "note": "From the fridge",
-    "spots": ["spot-coldbrew"],
+    "spots": [
+      "spot-coldbrew"
+    ],
     "items": [
-      { "name": "Iced filter",    "price": "4.00" },
-      { "name": "Vietnamese iced coffee", "price": "5.80" },
-      { "name": "House lemonade", "price": "3.80" },
-      { "name": "Yuzu soda",      "price": "4.20" }
+      {
+        "name": "Iced filter",
+        "price": "4.00"
+      },
+      {
+        "name": "Vietnamese iced coffee",
+        "price": "5.80"
+      },
+      {
+        "name": "House lemonade",
+        "price": "3.80"
+      },
+      {
+        "name": "Yuzu soda",
+        "price": "4.20"
+      }
     ]
   },
   {
     "section": "Desserts",
     "note": "Fresh from the oven",
-    "spots": ["spot-cake", "spot-croissant"],
+    "spots": [
+      "spot-cake",
+      "spot-croissant"
+    ],
     "items": [
-      { "name": "Matcha basque cheesecake", "price": "6.50" },
-      { "name": "Black sesame cookie",      "price": "3.60" },
-      { "name": "Cake of the day",          "price": "4.80" },
-      { "name": "Cardamom bun",             "price": "4.20" },
-      { "name": "Croissant",                "price": "3.60" },
-      { "name": "Hojicha custard tart",     "price": "5.20" }
+      {
+        "name": "Matcha basque cheesecake",
+        "price": "6.50"
+      },
+      {
+        "name": "Black sesame cookie",
+        "price": "3.60"
+      },
+      {
+        "name": "Cake of the day",
+        "price": "4.80"
+      },
+      {
+        "name": "Cardamom bun",
+        "price": "4.20"
+      },
+      {
+        "name": "Croissant",
+        "price": "3.60"
+      },
+      {
+        "name": "Hojicha custard tart",
+        "price": "5.20"
+      }
     ]
   },
   {
     "section": "Take home",
     "note": "While it lasts",
-    "spots": ["spot-beans"],
+    "spots": [
+      "spot-beans"
+    ],
     "items": [
-      { "name": "Beans, 250g",   "price": "12.00" },
-      { "name": "Matcha, 30g",   "price": "18.00" },
-      { "name": "Filter papers", "price": "4.00" }
-    ]
-  },
-  {
-    "section": "Coffee",
-    "note": "Oat, no charge",
-    "spots": ["spot-cup"],
-    "items": [
-      { "name": "Filter",     "price": "3.20" },
-      { "name": "Espresso",   "price": "2.60" },
-      { "name": "Cortado",    "price": "3.40" },
-      { "name": "Flat white", "price": "3.80" },
-      { "name": "Latte",      "price": "4.00" },
-      { "name": "Cold brew",  "price": "4.20" }
+      {
+        "name": "Beans, 250g",
+        "price": "12.00"
+      },
+      {
+        "name": "Matcha, 30g",
+        "price": "18.00"
+      },
+      {
+        "name": "Filter papers",
+        "price": "4.00"
+      }
     ]
   }
 ]

@@ -52,8 +52,8 @@
     midday: {
       eyebrow: 'Say how you want it',
       mark: 'board',
-      headline: 'A quiet obsession with matcha.',
-      body: 'Stone-ground, whisked to order, poured slow. Tell us how you like it, take the window seat, and let the morning stretch.'
+      headline: 'A quiet obsession with coffee.',
+      body: 'Ground to order, weighed for every cup, poured slow. Tell us how you take it, take the window seat, and let the morning stretch.'
     },
     late: {
       /* Derived from the closing hour in config.js so the two cannot disagree.

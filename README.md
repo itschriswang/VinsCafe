@@ -71,14 +71,21 @@ The plate for the resolved state is written by an inline script at the point in
 the markup where it goes, so the browser fetches the painting for the hour you
 actually arrived at and never one of the other three.
 
-One exception, and `heroPlate()` in `app.js` is the whole of it: the hero holds
-midday when the state is `closed`. The cafe is shut six days a week, so the
-after-close painting — a dark room with the chairs up — was the first thing
-very nearly every visitor saw. It is the wrong first image of the place and the
-right last one, so it closes every page instead, as `.foot-plate`. The hour
-still decides the copy, the colour, the indicator and the stamp; only the
-painting is held. The real after-close room is still the fourth stop in the
-dial under the hero, which reads `PLATES` directly.
+One exception, and `heroState()` in `app.js` is the whole of it: the clock's
+`closed` is mapped to `midday`, which hands the closed hour midday's entire
+hero — painting, layout and copy. The cafe is shut six days a week, so the
+after-close hero was what very nearly every visitor landed on: a dark room with
+the chairs up, its copy set below the painting rather than on it. It is the
+wrong first impression of the place and the right last one, so that painting is
+now the ground of the footer on every page (`.foot-plate`, with a graded pine
+scrim over it), and the room is still the fourth stop in the dial at the foot
+of the home page, which reads `PLATES` directly.
+
+A state asked for explicitly is never mapped, so `?state=closed` still shows the
+real thing — which is also how `check-contrast.mjs` still covers that hero. The
+indicator was already independent of the hero and needed no change; the stamp
+was not, and now reads the clock too, or a Monday evening would be stamped
+`MIDDAY`.
 
 Copy that depends on the
 clock is written by `GamSia.paint()` from an inline call at the end of the
