@@ -45,7 +45,7 @@ Three groups, in the order they matter:
 Your first hundred customers and your entire first year of word of mouth. They
 walk or drive three minutes. They are also, and this is not a coincidence, the
 same people who can object to your planning permit. Marketing to them and
-keeping them onside are the same activity. See [10-neighbours.md](10-neighbours.md).
+keeping them onside are the same activity. See [09-neighbours.md](09-neighbours.md).
 
 **2. The eastern-suburbs matcha crowd.**
 People who will drive 20–40 minutes for ceremonial-grade matcha whisked properly,
@@ -105,7 +105,7 @@ best customer acquisition and your best planning-permit insurance.
 **What not to bother with.** Paid ads (you cannot serve the demand), delivery
 platforms (20–35% commission on a menu with a 62% gross margin, and they destroy
 the occasion), printed flyers, and any signage that needs a permit you do not
-have — see the signs clause in [03-planning-permit.md](03-planning-permit.md).
+have — see the signs clause in [02-planning-permit.md](02-planning-permit.md).
 
 ## Pricing
 
