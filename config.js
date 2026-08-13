@@ -28,22 +28,19 @@ const CAFE = {
   },
 
   address: {
-    street: '5 Kingsway',
-    locality: 'Glen Waverley',
-    postcode: 'VIC 3150',
+    street: '10 Katupna Ct',
+    locality: 'Vermont South',
+    postcode: 'VIC 3133',
     country: 'AU'
   },
 
-  geo: { lat: -37.87920, lon: 145.16490 },
+  geo: { lat: -37.85110, lon: 145.18310 },
 
   telephone: '+61 3 9560 0417',
   email: 'hello@gamsia.cafe',
 
   /* Opened in a new tab from Find us. No map is embedded in the page. */
-  mapUrl: 'https://www.openstreetmap.org/?mlat=-37.87920&mlon=145.16490#map=18/-37.87920/145.16490',
-
-  station: 'Glen Waverley',
-  walk: 'two minutes'
+  mapUrl: 'https://www.openstreetmap.org/?mlat=-37.85110&mlon=145.18310#map=17/-37.85110/145.18310'
 };
 
 /* Loaded as a plain script in <head> so the hero state is resolved before the

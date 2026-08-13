@@ -61,7 +61,7 @@
       eyebrow: null,
       mark: 'hours',
       headline: 'Stay for the golden hour.',
-      body: 'The sun drops low over Kingsway and the room goes soft. The regulars call this the good hour. Now you know too.'
+      body: 'The sun drops low over Katupna Ct and the room goes soft. The regulars call this the good hour. Now you know too.'
     },
     closed: {
       /* Six days in seven this is the site. Nearly every visitor will only ever
