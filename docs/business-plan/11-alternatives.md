@@ -88,12 +88,18 @@ Useful as a wholesale or online sideline. Not a cafe.
 
 **Time to first dollar: 1–3 months. Capital: low to moderate.**
 
-Bake at home under a Class 3 registration where the product allows, or hire a
-shared commercial kitchen where it does not, and sell to cafes that already have
-the permits and the customers. Cardamom buns and sesame cookies are exactly the
-kind of distinctive item a suburban cafe will buy in.
+Sell to cafes that already have the permits and the customers. Cardamom buns and
+sesame cookies are exactly the kind of distinctive item a suburban cafe will buy
+in. No customers on your property, no planning permit, no amenity issue.
 
-No customers on your property, no planning permit, no amenity issue.
+**But not from the house.** An earlier draft of this file said you could bake at
+home under a Class 3 registration and wholesale the result. That is wrong.
+Councils name **wholesale production of food to supply retail outlets** among the
+activities that are *not* appropriate from a domestic kitchen. **[CONFIRMED]**
+Wholesale needs a commercial kitchen — your own, or hired by the hour. See
+[18-home-kitchen-and-the-cart.md](18-home-kitchen-and-the-cart.md).
+
+That pushes this option's capital and complexity up and its ranking down.
 
 ## 5. A pop-up in someone else's registered premises
 
