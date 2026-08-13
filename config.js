@@ -40,7 +40,7 @@ const CAFE = {
   email: 'hello@gamsia.cafe',
 
   /* Opened in a new tab from Find us. No map is embedded in the page. */
-  mapUrl: 'https://www.openstreetmap.org/?mlat=-37.85110&mlon=145.18310#map=17/-37.85110/145.18310'
+  mapUrl: 'https://www.google.com/maps?q=10+Katupna+Ct,+Vermont+South+VIC+3133'
 };
 
 /* Loaded as a plain script in <head> so the hero state is resolved before the
