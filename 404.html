@@ -17,7 +17,7 @@
      sync-static.mjs keeps it pointing at config.js's url. -->
 <base href="https://itschriswang.github.io/VinsCafe/">
 
-<title>Nothing here · gam sia</title>
+<title>404 · Page not found · gam sia</title>
 <meta name="description" content="That page is not on this site. The menu and the address are, and both are one click away.">
 <meta name="robots" content="noindex, follow">
 
@@ -98,11 +98,20 @@
   <div class="hero-type">
     <p class="hero-eyebrow" data-fixed>
       <span class="mark mark--close" aria-hidden="true"></span>
-      <span class="hero-eyebrow-text">Wrong door</span>
+      <span class="hero-eyebrow-text">Page not found</span>
     </p>
-    <h1 class="hero-headline" data-fixed>Nothing here. The kettle is on next door.</h1>
+    <!-- The number goes in the headline because the headline is the largest
+         thing on the page, and 404 is the one word everybody reads. The
+         eyebrow says it in plain English above it and the body says it again
+         in the voice; three signals, largest first.
+
+         The break is hard rather than left to text-wrap: balance, which reads
+         three words and sets "404. Nothing / here." at every width. The number
+         wants the line to itself. "Nothing here." is 286px at the phone's
+         headline size against a 350px column, so the second line holds. -->
+    <h1 class="hero-headline" data-fixed>404.<br>Nothing here.</h1>
     <div class="hero-rule" aria-hidden="true"></div>
-    <p class="hero-body" data-fixed>Everything on this site is one of two pages: the <a href="menu.html">menu</a>, or <a href="find-us.html">where to find us</a>.</p>
+    <p class="hero-body" data-fixed>The kettle is on next door. Everything on this site is one of two pages: the <a href="menu.html">menu</a>, or <a href="find-us.html">where to find us</a>.</p>
     <dl class="hero-hours">
 <!--gen:hours-->
       <dt>Sun</dt><dd>08 – 14</dd>
