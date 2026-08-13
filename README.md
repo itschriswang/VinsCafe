@@ -225,6 +225,22 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   in the morning. The flat `background-color` under it is the fallback — a
   browser that will not interpolate a gradient in Oklch drops the whole
   `background-image` and would otherwise leave no rule at all.
+- **Every section on the board is one colour**, and it is a colour that is
+  actually in the painting hanging beside it: the bowl's green on Matcha, the
+  drop of jam on Kitchen, the cherry on Desserts, the lilac in the glass on
+  Cold. Keyed off `.spot--*` and never off `[data-sec]`, because a section's
+  slug comes out of `menu.json` and is the owner's to rename, while the
+  painting is developer territory and is where the colour came from. Take home
+  is pine rather than the bag's clay, because clay on cream is a rule you
+  cannot see; the greens instead read as a ladder of value.
+- **A rule that is a flex item costs more than its height.** The section rule
+  started as a wrapped flex row, which also collected the head's 16px `gap` as
+  a row gap: the head grew 25px, the item list walked down into paintings that
+  are positioned against the section and do not move, and the first Matcha line
+  went from 11.4:1 over paper to 2.5:1 over the bowl. It is out of flow now,
+  and the room it sits in is taken back out of the head's own margin — at every
+  breakpoint, including the phone's separate `.sec-head` margin. Every name,
+  item and painting on the board is within a pixel of where it was before.
 - **`--accent` was dead for a while.** It was defined on all four states and
   referenced by nothing. The hover on a board line was a hand-written butter
   `rgba()` that stayed butter at every hour. Both now run off the state, which

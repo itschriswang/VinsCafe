@@ -1019,12 +1019,62 @@ html:not(.js) .daystrip { display: none; }
 /* The paintings reach in under the type now, so everything set on them
    stacks above: a wash may touch the words, never cover them. */
 .sec-head, .items, .standfirst, .sec-more, .sec address, .sec p, .find-links { position: relative; }
+/* ---------------------------------------------------------- the pigments ---
+   Every section on the board is one colour, and the colour is the one that is
+   actually in the painting hanging beside it: the bowl's green on Matcha, the
+   drop of jam on Kitchen, the cherry on Desserts, the lilac in the glass on
+   Cold, the paper bag on Take home.
+
+   Keyed off the painting and never off the section, because a section's slug
+   comes out of menu.json and is the owner's to rename; the painting is
+   developer territory and is the thing the colour was taken from anyway. A
+   section with no painting keeps moss, which is what the whole board used to
+   be, so Find us and anything new stay in the family. */
+
+.sec { --pigment: var(--moss); }
+.sec:has(.spot--matcha)    { --pigment: var(--lichen); }
+.sec:has(.spot--toast)     { --pigment: var(--amber); }
+.sec:has(.spot--coldbrew)  { --pigment: var(--lavender); }
+.sec:has(.spot--cake)      { --pigment: var(--peony); }
+/* The bag is pale, and clay on cream is a rule you cannot see. Its painting is
+   "the dark green showing through the sides", so the board gets its greens as
+   a ladder of value instead: lichen on Matcha, moss on Coffee, pine here. */
+.sec:has(.spot--beans)     { --pigment: var(--pine); }
+.sec:has(.spot--cup)       { --pigment: var(--moss); }
+.sec:has(.spot--flatwhite) { --pigment: var(--sky); }
+.sec:has(.spot--teapot)    { --pigment: var(--lavender); }
+.sec:has(.spot--espresso)  { --pigment: var(--clay); }
+
 .sec-head {
+  /* The rule below is a flex row of its own and therefore makes this box
+     taller. The paintings are positioned against the section and do not move,
+     so ten more pixels here walks the item list down into them: the first
+     Matcha line went from 11.4:1 over paper to 2.5:1 over the bowl. The head's
+     own bottom margin gives back exactly what the rule takes, so the total is
+     the 16px it always was and nothing below shifts by a pixel. */
+  --rule-h: 7px;
+  --rule-room: 9px;
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  margin: 0 0 16px;
+  padding-bottom: var(--rule-room);
+  margin: 0 0 calc(16px - var(--rule-room));
+}
+
+/* The section's own rule, in its own pigment. A pseudo-element and not a tag,
+   so the two generators that write this markup stay untouched, and taken out
+   of flow so it is not a flex row: as one it inherited the head's 16px gap as
+   a row gap on top of its own height, and made the head taller still. */
+.sec-head::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--rule-h);
+  background-color: var(--pigment);
+  -webkit-mask: var(--squiggle) left center / 63px 7px repeat-x;
+          mask: var(--squiggle) left center / 63px 7px repeat-x;
 }
 .sec-name {
   font: italic 400 40px/1 var(--serif);
@@ -1052,13 +1102,18 @@ html:not(.js) .daystrip { display: none; }
   transition: background 140ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  /* Butter was written in by hand here and stayed butter at every hour. Mixed
-     off the accent instead, a line lights up in the colour of the time you are
-     reading it at; the fallback keeps the old value where color-mix is not
-     understood. All four accents are pale enough that the item's own ink is
-     nowhere near its contrast floor on top of them. */
+  /* Butter was written in by hand here and stayed butter at every hour. A line
+     now lights in its own section's pigment, warmed by the hour you are reading
+     it at: the colour says which part of the board you are in, the warmth says
+     when. The flat fallback keeps the old value where color-mix is not
+     understood, and every mix here is pale enough that the item's own ink is
+     nowhere near its contrast floor on top of it. */
   .item:hover { background: rgba(243, 206, 92, 0.35); }
-  .item:hover { background: color-mix(in oklch, var(--accent) 38%, transparent); }
+  .item:hover {
+    background: color-mix(in oklch,
+      color-mix(in oklch, var(--pigment, var(--accent)) 64%, var(--accent)) 34%,
+      transparent);
+  }
 }
 .item-lead {
   flex: 1;
@@ -1458,7 +1513,9 @@ html:not(.js) .daystrip { display: none; }
   .page-head h1 { font-size: 72px; line-height: 0.9; margin-bottom: 14px; }
   .page-meta { text-align: left; padding: 0; font-size: 12.5px; }
   .page-rule { margin-top: 20px; }
-  .sec-head { display: block; margin-bottom: 14px; }
+  /* Same conservation as the desktop head: the room the rule sits in comes out
+     of the margin, so the phone board does not shift under its paintings either. */
+  .sec-head { display: block; margin-bottom: calc(14px - var(--rule-room)); }
   .sec-name { font-size: 36px; display: block; }
   .sec-note { display: block; margin-top: 8px; text-align: inherit; }
   .item { font-size: 19px; }
