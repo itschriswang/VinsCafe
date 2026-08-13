@@ -267,6 +267,12 @@
   function moment() { return forcedMoment(params.get('t')) || zoneNow(); }
 
   var root = document.documentElement;
+  /* One page pins its room instead of taking the clock's: the 404, which opens
+     on first light whatever hour you got lost at. The attribute is read as
+     written and never mapped — a pin that heroState() could rewrite would not
+     be a pin. Only the hero is pinned; the stamp and the indicator still
+     answer the clock, because both are clocks. */
+  var locked = root.hasAttribute('data-state-lock');
   var now = moment();
 
   /* The hero never opens on the room after close. The cafe is shut six days a
@@ -283,7 +289,8 @@
      shut while the counter behind it is lit. */
   function heroState(s) { return s === 'closed' ? 'midday' : s; }
 
-  var state = forcedState || heroState(stateAt(now));
+  var state = locked ? root.getAttribute('data-state')
+                     : (forcedState || heroState(stateAt(now)));
 
   root.classList.add('js');
   root.setAttribute('data-state', state);
@@ -400,11 +407,11 @@
     if (!hero) return;
     var c = COPY[state];
 
-    /* data-fixed is the 404's own copy. That page runs on the clock like every
-       other, so its room changes through the day; what does not change is that
-       you took a wrong turn. Every element the clock would otherwise rewrite
-       carries the attribute — the eyebrow as much as the other two, or a page
-       that says "nothing here" invites you to say how you want it. */
+    /* data-fixed is the 404's own copy. Its room is pinned but its words are
+       not the room's: what it has to say is that you took a wrong turn, at any
+       hour. Every element this function would otherwise rewrite carries the
+       attribute — the eyebrow as much as the other two, or a page that says
+       "nothing here" is left inviting you to say how you want it. */
     var eyebrow = $('.hero-eyebrow', hero);
     if (eyebrow && !eyebrow.hasAttribute('data-fixed')) {
       setText($('.hero-eyebrow-text', eyebrow), eyebrowFor(state));
@@ -930,7 +937,7 @@
 
   function tick() {
     var m = moment();
-    var next = forcedState || heroState(stateAt(m));
+    var next = locked ? state : (forcedState || heroState(stateAt(m)));
     if (next !== state) apply(next, m, true);
     else { paintHero(m, state); paintStamp(m, state); paintIndicator(m); paintWeek(m); }
   }

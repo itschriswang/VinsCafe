@@ -346,9 +346,13 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   in for one was of a corner the cafe has since moved off. Nothing replaced it:
   the address is set large enough to be the thing you came for, and the real
   map stays one outbound link.
-- **The 404 runs on the clock.** It used to be pinned to the room after close,
-  on the reasoning that a dead end is a dark room. That painting is the ground
-  of every footer now, so pinning it showed the same picture twice on the one
-  page a visitor reaches by accident. It resolves its state like any other
-  page; only its copy is fixed, with `data-fixed` on each element `paint()`
-  would otherwise rewrite.
+- **The 404 opens on first light.** It used to be pinned to the room after
+  close, on the reasoning that a dead end is a dark room. That painting is the
+  ground of every footer now, so pinning it showed the same picture twice on
+  the one page a visitor reaches by accident. It is pinned to `morning`
+  instead, with `data-state-lock`: the room the cafe waits all week for is a
+  better thing to hand someone who took a wrong turn. The attribute is read as
+  written and never passed through `heroState()` — a pin that mapping could
+  rewrite would not be a pin. Only the hero is pinned. The stamp and the
+  indicator still answer the clock, because both are clocks, and the copy is
+  fixed with `data-fixed` on each element `paint()` would otherwise rewrite.
