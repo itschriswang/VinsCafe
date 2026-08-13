@@ -185,25 +185,6 @@
 
 </section>
 
-<!-- The paintings are keyed to the clock, so on any one visit three of the
-     four are invisible. This dial lets a visitor turn the room through its
-     whole day; the pigment layer bleeds one painting into the next. -->
-<div class="daystrip">
-  <p class="daystrip-label">The room, hour by hour</p>
-  <div class="dial">
-    <svg class="dial-arc" viewBox="0 0 330 48" aria-hidden="true">
-      <path d="M6,44 Q165,-34 324,44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 9"/>
-    </svg>
-    <span class="dial-sun" aria-hidden="true"></span>
-    <div class="daystrip-btns" role="group" aria-label="See the room at another time of day">
-      <button type="button" data-set-state="morning">Morning</button>
-      <button type="button" data-set-state="midday">Midday</button>
-      <button type="button" data-set-state="late">Late</button>
-      <button type="button" data-set-state="closed">After close</button>
-    </div>
-  </div>
-</div>
-
 <!-- The cafe is shut about three quarters of the week, so the hero alone would
      leave most visitors on a page that only says we are closed. This is here in
      every state: the first two sections of menu.json, four items each. -->
@@ -247,6 +228,25 @@
     </div>
   </div>
 </section>
+
+<!-- The paintings are keyed to the clock, so on any one visit three of the
+     four are invisible. This dial lets a visitor turn the room through its
+     whole day; the pigment layer bleeds one painting into the next. -->
+<div class="daystrip">
+  <p class="daystrip-label">The room, hour by hour</p>
+  <div class="dial">
+    <svg class="dial-arc" viewBox="0 0 330 48" aria-hidden="true">
+      <path d="M6,44 Q165,-34 324,44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 9"/>
+    </svg>
+    <span class="dial-sun" aria-hidden="true"></span>
+    <div class="daystrip-btns" role="group" aria-label="See the room at another time of day">
+      <button type="button" data-set-state="morning">Morning</button>
+      <button type="button" data-set-state="midday">Midday</button>
+      <button type="button" data-set-state="late">Late</button>
+      <button type="button" data-set-state="closed">After close</button>
+    </div>
+  </div>
+</div>
 
 <footer class="foot">
     <img class="foot-plate" alt="" aria-hidden="true" loading="lazy" decoding="async"

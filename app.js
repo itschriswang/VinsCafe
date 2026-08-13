@@ -269,14 +269,30 @@
   var root = document.documentElement;
   var locked = root.hasAttribute('data-state-lock');   /* the 404 stays shut */
   var now = moment();
-  var state = locked ? root.getAttribute('data-state') : (forcedState || stateAt(now));
+
+  /* The hero never opens on the room after close. The cafe is shut six days a
+     week, so that hero — a dark room with the chairs up, its copy set below the
+     painting rather than on it — was what very nearly every visitor landed on.
+     It is the wrong first impression of the place and the right last one, so
+     the painting closes every page instead, as .foot-plate.
+
+     The clock's own answer is mapped to midday, which hands the closed hour
+     midday's whole hero: painting, layout and copy. A state asked for
+     explicitly is not mapped, so ?state=closed and the dial's own fourth stop
+     still show the real room. The indicator is untouched either way — it has
+     always answered the clock rather than the hero, so it still says we are
+     shut while the counter behind it is lit. */
+  function heroState(s) { return s === 'closed' ? 'midday' : s; }
+
+  var state = locked ? heroState(root.getAttribute('data-state'))
+                     : (forcedState || heroState(stateAt(now)));
 
   root.classList.add('js');
   root.setAttribute('data-state', state);
 
   /* Preload only the plate we are about to show. Never the other three. */
   (function () {
-    var f = heroPlate(state).file;
+    var f = PLATES[state].file;
     var link = document.createElement('link');
     link.rel = 'preload';
     link.as = 'image';
@@ -287,17 +303,8 @@
     document.head.appendChild(link);
   }());
 
-  /* The hero never opens on the room after close. The cafe is shut six days a
-     week, so that painting was the first thing very nearly every visitor saw,
-     and a dark empty room is the wrong first image of the place — it is the
-     right last one, which is where it went: the foot of every page. The hour
-     still decides the copy, the colour, the indicator and the stamp. Only the
-     painting is held at midday, and the real after-close room is still the
-     fourth stop in the dial below the hero. */
-  function heroPlate(s) { return PLATES[s === 'closed' ? 'midday' : s]; }
-
   function plateHTML(s) {
-    var p = heroPlate(s);
+    var p = PLATES[s];
     return '<picture class="plate">' +
       '<source type="image/avif" sizes="100vw" srcset="art/' + p.file + '-960w.avif 960w, art/' + p.file + '-1376w.avif 1376w">' +
       '<source type="image/webp" sizes="100vw" srcset="art/' + p.file + '-960w.webp 960w, art/' + p.file + '-1376w.webp 1376w">' +
@@ -408,15 +415,19 @@
 
   /* The timestamp appears in the hero on the home page and in the footer strip
      on the others; it is the same component in both places. */
+  /* The stamp is a clock, so it reads the clock. It takes the hero's state only
+     when one has been asked for explicitly — otherwise a Monday evening would
+     be stamped MIDDAY, because that is the hero the closed hour is now given. */
   function paintStamp(now, state) {
-    var text = pad(now.hour) + ':' + pad(now.minute) + ' · ' + LABEL[state];
+    var label = LABEL[forcedState || (locked ? state : stateAt(now))];
+    var text = pad(now.hour) + ':' + pad(now.minute) + ' · ' + label;
     $$('.stamp').forEach(function (el) { el.textContent = text; });
   }
 
   function paintPlate(state) {
     var pic = $('.plate');
     if (!pic) return null;
-    var p = heroPlate(state);
+    var p = PLATES[state];
     var srcs = $$('source', pic);
     if (srcs[0]) srcs[0].srcset = 'art/' + p.file + '-960w.avif 960w, art/' + p.file + '-1376w.avif 1376w';
     if (srcs[1]) srcs[1].srcset = 'art/' + p.file + '-960w.webp 960w, art/' + p.file + '-1376w.webp 1376w';
@@ -913,7 +924,7 @@
 
   function tick() {
     var m = moment();
-    var next = locked ? state : (forcedState || stateAt(m));
+    var next = locked ? state : (forcedState || heroState(stateAt(m)));
     if (next !== state) apply(next, m, true);
     else { paintHero(m, state); paintStamp(m, state); paintIndicator(m); paintWeek(m); }
   }

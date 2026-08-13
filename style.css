@@ -1160,8 +1160,8 @@ html:not(.js) .daystrip { display: none; }
 .sec-head {
   --rule-h: 7px;
   --bar-pig: color-mix(in srgb, var(--pigment) 84%, var(--paper));
-  --bar-pad-r: 178px;
-  --bar-overhang: 74px;
+  --bar-pad-r: 76px;
+  --bar-overhang: 152px;
   position: relative;
   width: fit-content;
   /* .board clips horizontally, so the bar has to stop short by exactly the
@@ -1199,9 +1199,14 @@ html:not(.js) .daystrip { display: none; }
    them would otherwise reach back under the section's own name. */
 .sec-head > .spot {
   position: absolute;
-  right: calc(-1 * var(--bar-overhang));
+  /* The offset is a share of the painting's own width, so every section keeps
+     the same small overlap whatever size its artwork is: about a quarter of it
+     on the pigment, the rest out on the paper. It used to sit mostly on the
+     bar, which buried the drawing in its own section's colour. */
+  --spot-w: clamp(150px, calc(var(--w, 220px) * 0.62), 205px);
+  right: calc(var(--spot-w) * -0.74);
   top: 50%;
-  width: clamp(170px, calc(var(--w, 220px) * 0.78), 250px);
+  width: var(--spot-w);
   max-width: none;
   transform: translateY(-50%) rotate(var(--tilt, 0deg));
 }
@@ -1400,10 +1405,10 @@ html:not(.js) .daystrip { display: none; }
 /* A preview card is narrower than the board, so its bar carries a smaller
    painting; everything else about the treatment is the same. */
 .preview .sec-head {
-  --bar-pad-r: 120px;
-  --bar-overhang: 48px;
+  --bar-pad-r: 52px;
+  --bar-overhang: 112px;
 }
-.preview .sec-head > .spot { width: clamp(120px, calc(var(--w, 190px) * 0.5), 150px); }
+.preview .sec-head > .spot { --spot-w: clamp(112px, calc(var(--w, 190px) * 0.46), 145px); }
 .preview .sec-name { font-size: 32px; }
 .preview .sec-note { font-size: 21px; }
 
@@ -1672,8 +1677,8 @@ html:not(.js) .daystrip { display: none; }
   /* Same conservation as the desktop head: the room the rule sits in comes out
      of the margin, so the phone board does not shift under its paintings either. */
   .sec-head {
-    --bar-pad-r: 86px;
-    --bar-overhang: 40px;
+    --bar-pad-r: 44px;
+    --bar-overhang: 96px;
     padding: 11px var(--bar-pad-r) 13px 14px;
     margin-bottom: 18px;
   }
@@ -1690,7 +1695,7 @@ html:not(.js) .daystrip { display: none; }
 
   /* --into-m and --t1-m below hung the paintings in the phone's margins and
      are unused now; --w is still read from the same rules. */
-  .sec-head > .spot { width: clamp(104px, calc(var(--w, 190px) * 0.62), 150px); }
+  .sec-head > .spot { --spot-w: clamp(104px, calc(var(--w, 190px) * 0.56), 132px); }
 
   .spot--cup       { --w: 240px; --into-m: 72px; --t1-m: -44px; }
   .spot--espresso  { --w: 150px; --into-m: 56px; }
@@ -1703,7 +1708,7 @@ html:not(.js) .daystrip { display: none; }
   .spot--matcha    { --w: 190px; --into-m: 58px; --t1-m: -74px; }
   .spot--flatwhite { --w: 280px; --into-m: 86px; --t1-m: -44px; }
 
-  .preview .sec-head > .spot { width: clamp(96px, calc(var(--w, 150px) * 0.6), 128px); }
+  .preview .sec-head > .spot { --spot-w: clamp(92px, calc(var(--w, 150px) * 0.54), 118px); }
   .preview .sec { padding: 24px 22px 24px; }
 
   .visit h2 { font-size: 52px; }
