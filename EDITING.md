@@ -35,16 +35,22 @@ This is the menu. Each block is one section of the board.
   line by design. **It also decides the front page:** the first two sections
   with a standfirst are the two shown under the hero on the home page, four
   items each. With no standfirsts anywhere, the first two sections in this
-  file are shown instead, which is why Matcha and Kitchen lead the file.
-- **`spots`** are the paintings in the margin. Leave these alone unless you have
-  had new ones painted. The first spot of each front-page section is also the
-  painting that appears beside it on the home page.
+  file are shown instead, which is why Coffee and Kitchen lead the file.
+- **`spots`** are the paintings. Leave these alone unless you have had new ones
+  painted. Each one hangs off the end of its section's colour bar, and the
+  section takes its colour from the painting hanging on it. The first spot of
+  each front-page section is also the painting that appears on the home page.
 
-Section order in this file is the order on the board. The sections alternate
-down the two columns and the paintings follow their section: which side they
-hang on and how high comes from where the section landed, not from the
-painting. So you can rename a section, reorder them or add one, and nothing
-lands on top of the prices.
+Section order in this file is the order on the board, top to bottom, and the
+first section is the one people read first. Each section's bar is only as long
+as its own name and note, so renaming one just makes its bar longer or shorter
+and its painting moves with it. You can rename a section, reorder them or add
+one, and nothing lands on top of the prices.
+
+One thing to avoid: the display face has no en dash, em dash, middot or
+ellipsis, and it sets the section names and the item names. Use a hyphen, a
+comma or three full stops instead. If one slips in, the deploy stops and tells
+you which line it was.
 
 Everything the front page says about the size of the menu counts itself. "And 2
 more" under a column, "Also on the board: Tea, Sweet, Cold, Take home", and "The
