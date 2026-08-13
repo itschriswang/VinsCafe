@@ -68,6 +68,24 @@
   --sun-press: #9C3826;
   --moss-text: #5A6530; /* moss dark enough to carry small type */
 
+  /* Five more, lifted off a pair of gouache landscapes: the acid yellow-green
+     the low sun puts on grass, the periwinkle a sky sits on before it turns,
+     the chalk of a bare peak, the pink left in a crevice once the light has
+     gone over the ridge, and the amber of the flowers in the foreground.
+     These are painting colours. They tint a rule and a hover and they never
+     carry type, which is why none of them needs to clear a contrast bar. */
+  --lichen:   #B9C74F;
+  --lavender: #AFB0CE;
+  --clay:     #E0CCC0;
+  --peony:    #E4536B;
+  --amber:    #E8A33D;
+  /* Clay is the lit face of the chalk peak and is invisible as a mark on
+     cream: 1.36:1. This is the shaded face of the same rock, and the only
+     thing it is for is being seen — the same job --sun-deep and --moss-text
+     already do for their own colours. 2.7:1 on paper, brighter than the
+     lavender rule that reads perfectly well at 1.9:1. */
+  --clay-deep: #A79280;
+
   --ink-12: rgba(46, 51, 29, 0.12);
   --ink-18: rgba(46, 51, 29, 0.18);
   --ink-30: rgba(46, 51, 29, 0.30);
@@ -95,10 +113,26 @@
 
 /* Each time of day tints the interface a little, so the UI follows the
    painting instead of ignoring it. */
-[data-state='morning'] { --accent: var(--sky);    --accent-ink: var(--ink); }
-[data-state='midday']  { --accent: var(--butter); --accent-ink: var(--ink); }
-[data-state='late']    { --accent: var(--rose);   --accent-ink: var(--ink); }
-[data-state='closed']  { --accent: var(--blush);  --accent-ink: var(--ink); }
+/* Three pigments per hour, not one, because that is how many are on the brush
+   in the landscapes these come from: a sky is never a single colour across a
+   sheet. The rule is painted with them and the hover is mixed from the first,
+   so the time of day reaches the board and not only the hero. */
+[data-state='morning'] {
+  --accent: var(--sky);    --accent-ink: var(--ink);
+  --rule-1: var(--lavender); --rule-2: var(--sky);    --rule-3: var(--lichen);
+}
+[data-state='midday'] {
+  --accent: var(--butter); --accent-ink: var(--ink);
+  --rule-1: var(--lichen);   --rule-2: var(--butter); --rule-3: var(--moss);
+}
+[data-state='late'] {
+  --accent: var(--rose);   --accent-ink: var(--ink);
+  --rule-1: var(--amber);    --rule-2: var(--peony);  --rule-3: var(--rose);
+}
+[data-state='closed'] {
+  --accent: var(--blush);  --accent-ink: var(--ink);
+  --rule-1: var(--clay);     --rule-2: var(--lavender); --rule-3: var(--sky);
+}
 
 /* ---------------------------------------------------------------- base --- */
 
@@ -195,16 +229,25 @@ a:hover { color: var(--sun-press); }
 }
 a:hover > .mark--onward, button:hover > .mark--onward { transform: translateX(4px); }
 
-/* The squiggle rule: pigment-coloured, repeats to fill its box. */
+/* The squiggle rule: pigment-coloured, repeats to fill its box.
+
+   Painted along its length rather than filled flat, with the hour's three
+   pigments, the way one stroke of a loaded brush changes colour as it crosses
+   a sheet. The mask means only the squiggle takes any of it. The flat colour
+   underneath is not decoration: a browser that will not interpolate a gradient
+   in Oklch drops the whole background-image and keeps the rule. */
 .hero-rule, .page-rule {
   height: 10px;
-  background-color: var(--sun);
+  background-color: var(--rule-2, var(--sun));
+  background-image: linear-gradient(in oklch 90deg,
+    var(--rule-1, var(--sun)) 4%,
+    var(--rule-2, var(--sun)) 48%,
+    var(--rule-3, var(--sun)) 92%);
   -webkit-mask-image: var(--squiggle); mask-image: var(--squiggle);
   -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
   -webkit-mask-size: 96px 10px; mask-size: 96px 10px;
   -webkit-mask-position: left center; mask-position: left center;
 }
-.page-rule { background-color: var(--moss); }
 
 
 /* ----------------------------------------------------------------- bar --- */
@@ -371,6 +414,19 @@ html:not(.js) .ind-close { display: none; }
 
 .hero {
   position: relative;
+  /* Above the wash layer, which is z-index 2. The wash paints on the board and
+     the preview and never inside the hero, so it has no business compositing
+     there either: this keeps one more blended layer off the one part of the
+     site that already carries a live WebGL canvas and a multiply wash under
+     its type.
+
+     This rule was first written with a contrast justification, and that
+     justification was wrong: the 4.76:1 to 4.49:1 drop it cited was noise in
+     tools/check-contrast.mjs, which was sampling one frame of a moving picture
+     and measuring a headline's whole bounding box rather than its letters. It
+     read the same on main with no wash on the page at all. Both faults are
+     fixed in that file; the hero clears AA everywhere with room to spare. */
+  z-index: 3;
   /* Short of the full viewport by the day dial's height, so the dial,
      the way into the other three paintings, is on screen from the start. */
   height: calc(100svh - 114px);
@@ -974,12 +1030,65 @@ html:not(.js) .daystrip { display: none; }
 /* The paintings reach in under the type now, so everything set on them
    stacks above: a wash may touch the words, never cover them. */
 .sec-head, .items, .standfirst, .sec-more, .sec address, .sec p, .find-links { position: relative; }
+/* ---------------------------------------------------------- the pigments ---
+   Every section on the board is one colour, and the colour is the one that is
+   actually in the painting hanging beside it: the bowl's green on Matcha, the
+   drop of jam on Kitchen, the cherry on Desserts, the lilac in the glass on
+   Cold, the paper bag on Take home.
+
+   Keyed off the painting and never off the section, because a section's slug
+   comes out of menu.json and is the owner's to rename; the painting is
+   developer territory and is the thing the colour was taken from anyway. A
+   section with no painting keeps moss, which is what the whole board used to
+   be, so Find us and anything new stay in the family. */
+
+.sec { --pigment: var(--moss); }
+.sec:has(.spot--matcha)    { --pigment: var(--lichen); }
+.sec:has(.spot--toast)     { --pigment: var(--amber); }
+.sec:has(.spot--coldbrew)  { --pigment: var(--lavender); }
+.sec:has(.spot--cake)      { --pigment: var(--peony); }
+/* Take home is a kraft paper bag, so it is the one section whose colour is the
+   packet rather than what is in it. It was pine for a while, which was true to
+   "the dark green showing through the sides" but made three of six sections
+   green and left the board reading greener than either painting does. Two
+   greens is the honest number: the acid one on Matcha and the olive one on
+   Coffee, which are the two sections that really are green. */
+.sec:has(.spot--beans)     { --pigment: var(--clay-deep); }
+.sec:has(.spot--cup)       { --pigment: var(--moss); }
+.sec:has(.spot--flatwhite) { --pigment: var(--sky); }
+.sec:has(.spot--teapot)    { --pigment: var(--lavender); }
+.sec:has(.spot--espresso)  { --pigment: var(--clay-deep); }
+
 .sec-head {
+  /* The rule below is a flex row of its own and therefore makes this box
+     taller. The paintings are positioned against the section and do not move,
+     so ten more pixels here walks the item list down into them: the first
+     Matcha line went from 11.4:1 over paper to 2.5:1 over the bowl. The head's
+     own bottom margin gives back exactly what the rule takes, so the total is
+     the 16px it always was and nothing below shifts by a pixel. */
+  --rule-h: 7px;
+  --rule-room: 9px;
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  margin: 0 0 16px;
+  padding-bottom: var(--rule-room);
+  margin: 0 0 calc(16px - var(--rule-room));
+}
+
+/* The section's own rule, in its own pigment. A pseudo-element and not a tag,
+   so the two generators that write this markup stay untouched, and taken out
+   of flow so it is not a flex row: as one it inherited the head's 16px gap as
+   a row gap on top of its own height, and made the head taller still. */
+.sec-head::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--rule-h);
+  background-color: var(--pigment);
+  -webkit-mask: var(--squiggle) left center / 63px 7px repeat-x;
+          mask: var(--squiggle) left center / 63px 7px repeat-x;
 }
 .sec-name {
   font: italic 400 40px/1 var(--serif);
@@ -1007,7 +1116,18 @@ html:not(.js) .daystrip { display: none; }
   transition: background 140ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
+  /* Butter was written in by hand here and stayed butter at every hour. A line
+     now lights in its own section's pigment, warmed by the hour you are reading
+     it at: the colour says which part of the board you are in, the warmth says
+     when. The flat fallback keeps the old value where color-mix is not
+     understood, and every mix here is pale enough that the item's own ink is
+     nowhere near its contrast floor on top of it. */
   .item:hover { background: rgba(243, 206, 92, 0.35); }
+  .item:hover {
+    background: color-mix(in oklch,
+      color-mix(in oklch, var(--pigment, var(--accent)) 64%, var(--accent)) 34%,
+      transparent);
+  }
 }
 .item-lead {
   flex: 1;
@@ -1407,7 +1527,9 @@ html:not(.js) .daystrip { display: none; }
   .page-head h1 { font-size: 72px; line-height: 0.9; margin-bottom: 14px; }
   .page-meta { text-align: left; padding: 0; font-size: 12.5px; }
   .page-rule { margin-top: 20px; }
-  .sec-head { display: block; margin-bottom: 14px; }
+  /* Same conservation as the desktop head: the room the rule sits in comes out
+     of the margin, so the phone board does not shift under its paintings either. */
+  .sec-head { display: block; margin-bottom: calc(14px - var(--rule-room)); }
   .sec-name { font-size: 36px; display: block; }
   .sec-note { display: block; margin-top: 8px; text-align: inherit; }
   .item { font-size: 19px; }
@@ -1472,6 +1594,84 @@ html:not(.js) .daystrip { display: none; }
   .preview .sec > .spot { --w: 170px; }
 }
 
+/* ------------------------------------------------------------- the week ---
+   Seven marks, one a day, Monday first. Six of them are a hairline and one is
+   the morning the door is open, so the shape of the place is legible before
+   you have read a word of the table beside it. All seven marks occupy the same
+   eight pixels and are centred in them, so the open day gains weight without
+   knocking the row out of line.
+
+   aria-hidden, and every day carries a title: the hours table next to this is
+   the accessible answer, and a screen reader reading both would say the same
+   thing twice in two different shapes. */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+  max-width: 268px;
+  margin: 0 0 18px;
+}
+.week-day { display: flex; flex-direction: column; gap: 7px; }
+.week-letter {
+  font: 700 11px/1 var(--sans);
+  letter-spacing: 0.08em;
+  text-align: center;
+  /* The shut days want to recede, but ink at 45% is 2.5:1 at eleven pixels and
+     that is a contrast failure whatever it is doing. moss-text is in the
+     palette for exactly this: quiet, and still 5.4:1. The step down from the
+     open day is carried by the mark below, which is free to be as faint as it
+     likes because it is not type. */
+  color: var(--moss-text);
+}
+.week-mark { display: flex; align-items: center; height: 8px; }
+.week-bar {
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink-18);
+}
+.week-day.is-open .week-letter { color: var(--ink); }
+.week-day.is-open .week-bar { height: 8px; border-radius: 3px; background: var(--sun); }
+/* Today is where you are standing in that week, not another opening. */
+.week-day.is-today .week-letter { color: var(--sun-deep); }
+
+/* ------------------------------------------------------------- the wash ---
+   One canvas over the whole page for the four wet things: the damp trail the
+   pointer leaves on the paper, the matcha bowl filling, the foam whisked up
+   on it, and the steam off the hot paintings. wash.js draws it and app.js
+   only loads that on a machine and a setting that want it.
+
+   Multiply, because everything on it is pigment: a damp patch darkens the
+   sheet, tea deepens the bowl, and steam is a pale cool wash the way it is
+   painted rather than white laid over the top. That is what lets the layer
+   sit above the type without touching its contrast: multiplying ink this
+   dark by a colour this pale cannot lift it off the page.
+
+   Below the bar and the hours panel, above everything else. Never hit-tested. */
+
+.wash {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  /* A canvas is a replaced element: pinned on all four sides with an auto
+     width it takes its backing store's size and ignores the far edges, which
+     draws the whole layer at the render scale in the top left corner. Both
+     lengths are stated for the same reason .pigment states them. */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+.wash.is-lit { opacity: 1; }
+
+/* The one thing on this layer that has to lighten rather than darken: the
+   foam whisked up on the matcha. Built only when a bowl is on the page, and
+   only ever drawn inside one, so nothing else on the page is screened. */
+.wash--foam { mix-blend-mode: screen; }
+
 /* -------------------------------------------------------------- motion ---
    Cross-fade between pages through the paper; sections rise gently as they
    enter the viewport where scroll-driven animations are supported. All of it
@@ -1524,7 +1724,7 @@ html:not(.js) .daystrip { display: none; }
 @keyframes dv-in  { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .pigment { display: none; }
+  .pigment, .wash { display: none; }
   .roundel { animation: none; }
   .ind-dot { animation: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -1533,7 +1733,7 @@ html:not(.js) .daystrip { display: none; }
 /* ---------------------------------------------------------------- print --- */
 
 @media print {
-  .bar, .ind, .pigment, .strip, .spot, .stamp, .daystrip, .roundel, .visit { display: none !important; }
+  .bar, .ind, .pigment, .wash, .strip, .spot, .stamp, .daystrip, .roundel, .visit { display: none !important; }
   body { color: #000; background: #fff; }
   .board { display: block; }
   /* Browsers strip backgrounds when printing; the pale text on the coloured

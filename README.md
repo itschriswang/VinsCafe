@@ -22,6 +22,7 @@ find-us.html    address, hours, getting here
 style.css       one stylesheet
 app.js          clock, state resolution, indicator, menu hydration
 pigment.js      the WebGL2 layer, imported asynchronously by app.js
+wash.js         the wet layer over the board, imported the same way
 config.js       hours, timezone, address        ← owner-editable
 menu.json       the board's contents            ← owner-editable
 art/            plates, spots, paper, social cards (AVIF + WebP)
@@ -80,6 +81,22 @@ wet-in-wet bleed when the clock crosses an hour with the tab open. It never
 runs on first load, under `prefers-reduced-motion`, on `saveData`, while the
 tab is hidden or the hero is off screen, or when the machine cannot keep up;
 in the last case it removes itself and leaves the static plate.
+
+`wash.js` is the same idea over the rest of the site, in 2D. It carries four
+things and no others: a damp trail under the pointer on the paper surfaces
+that dries back to cream in about two seconds, the matcha bowl filling as its
+section rises into the window, a foam raised on it by circling the pointer over
+it, and steam off the paintings of hot things, thick in the morning and thin
+while the room is shut, shouldered aside by the pointer. It is gated exactly
+like the pigment layer and it builds its own canvases, so a browser that never
+reaches it is a page with nothing missing.
+
+Everything on it is pigment. Steam is a pale cool wash multiplied into the
+paper, which is how it is put down in watercolour and not how it is done in
+CSS; laying white over the top would be a veil across the board's type. The one
+mark that has to lighten rather than darken is the whisked foam, and it gets a
+second canvas of its own, built only where a bowl is and only ever drawn inside
+one, so nothing else on the page is screened.
 
 ## Preview switches
 
@@ -164,9 +181,88 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   below 720px, which left the menu reachable only by scrolling the whole hero,
   and unreachable from the closed hero, the one most visitors land on.
 
-- **Colour.** Four interface colours, written in Oklch so every interpolation
-  the browser performs runs through Oklch rather than sRGB. Lichen, butter,
-  blush, dusty blue and lavender grey exist inside the paintings only.
+- **The wash measures, it does not repeat the CSS.** Every box `wash.js` draws
+  into comes off the painting's live offset box and its computed transform, not
+  off the rules that place it. The spots change width at three breakpoints,
+  swap sides on a phone and tilt further on hover; a copy of any of that in the
+  module would be a second place to update and a silent way to put tea beside a
+  bowl instead of in it. `getBoundingClientRect` is not enough on its own,
+  because it reports the upright rectangle around a tilted painting.
+- **Nothing in the module is named after a menu section.** The bowl is found by
+  its painting, `.spot--matcha`, never by `[data-sec="matcha"]`: section slugs
+  come out of `menu.json`, which the owner edits, and renaming Matcha would
+  have quietly taken the pour with it. Sources are re-queried every half second
+  so a board rebuilt from `menu.json` picks straight back up.
+- **The hero sits above the wash** (`.hero { z-index: 3 }`) because the wash
+  paints on the board and the preview and never inside the hero, so it should
+  not composite there either. On the board, where there is no WebGL underneath,
+  a fully soaked damp trail costs the type 8.93:1 to 8.90:1 and nothing else.
+- **`check-contrast.mjs` was wrong in two ways, and both produced ghosts.**
+
+  It sampled *one frame of a moving picture*. `pigment.js` warps the damp edge
+  continuously, so the darkest pixel inside a target is not a fixed quantity,
+  and a single screenshot reported PASS or FAIL for identical code depending on
+  when it landed. Three runs either side of a change looked like a clean signal
+  and were not — that is how the wash layer briefly got blamed for a hero
+  contrast drop it had nothing to do with. It now samples several frames per
+  target and keeps the worst, which is what this file already claimed to do.
+
+  It also measured *the bounding box rather than the letters*. A two-line
+  italic headline at 130px is mostly empty paper, and one dark corner of the
+  painting inside that rectangle failed the check with no glyph near it: the
+  midday headline at 1440 read 2.42:1 against a 3.0 bar that way, on `main`,
+  for years. The tool now takes a glyph mask first — still the pigment layer,
+  screenshot the type, screenshot it transparent, and the pixels that changed
+  are the type — then measures the ground only there.
+
+  With both fixed, every hero target clears AA on every state ground with
+  headroom; the tightest is the morning headline at 1440, 3.43:1 against 3.0.
+  Neither ghost was ever a real defect on the page. Both were the safety net
+  lying, which is worse.
+- **A canvas is a replaced element.** Pinned on all four sides with an auto
+  width it takes the size of its backing store and ignores the far edges, which
+  draws the whole layer at the render scale in the top left corner. Both
+  `.pigment` and `.wash` state `width` and `height` for that reason.
+- **Colour.** Four interface colours — paper, ink, pine and the sun — and then
+  a set that only ever tints: butter, blush, rose, dusty blue, moss, and five
+  sampled off a pair of gouache landscapes (lichen, lavender, clay, peony,
+  amber). Nothing in the second set carries type, which is why none of it has
+  a contrast floor to clear, and why adding to it is cheap.
+
+  This note used to say the four were "written in Oklch" and that lichen and
+  lavender grey "exist inside the paintings only". Neither was true. Every
+  token is and was hex; there was no `oklch()` anywhere in the stylesheet.
+  Oklch is what the *interpolation* runs in — the rule's gradient and the item
+  hover's `color-mix` both ask for it by name — so a blend of two of these
+  never travels through grey the way the sRGB path would. Lichen and lavender
+  did not exist at all until they were sampled for the rule.
+- **The rule is painted, not filled.** `.hero-rule` and `.page-rule` are one
+  squiggle mask over a gradient of the hour's three pigments, so a single rule
+  changes colour along its length the way a loaded brush does crossing a sheet:
+  amber into peony into rose at the golden hour, lavender into blue into lichen
+  in the morning. The flat `background-color` under it is the fallback — a
+  browser that will not interpolate a gradient in Oklch drops the whole
+  `background-image` and would otherwise leave no rule at all.
+- **Every section on the board is one colour**, and it is a colour that is
+  actually in the painting hanging beside it: the bowl's green on Matcha, the
+  drop of jam on Kitchen, the cherry on Desserts, the lilac in the glass on
+  Cold. Keyed off `.spot--*` and never off `[data-sec]`, because a section's
+  slug comes out of `menu.json` and is the owner's to rename, while the
+  painting is developer territory and is where the colour came from. Take home
+  is pine rather than the bag's clay, because clay on cream is a rule you
+  cannot see; the greens instead read as a ladder of value.
+- **A rule that is a flex item costs more than its height.** The section rule
+  started as a wrapped flex row, which also collected the head's 16px `gap` as
+  a row gap: the head grew 25px, the item list walked down into paintings that
+  are positioned against the section and do not move, and the first Matcha line
+  went from 11.4:1 over paper to 2.5:1 over the bowl. It is out of flow now,
+  and the room it sits in is taken back out of the head's own margin — at every
+  breakpoint, including the phone's separate `.sec-head` margin. Every name,
+  item and painting on the board is within a pixel of where it was before.
+- **`--accent` was dead for a while.** It was defined on all four states and
+  referenced by nothing. The hover on a board line was a hand-written butter
+  `rgba()` that stayed butter at every hour. Both now run off the state, which
+  is how the time of day reaches the board pages and not just the hero.
 - **Marks.** Six, defined once as CSS mask images at the top of `style.css`.
   Swapping in hand-painted versions is six `url()`s and nothing else.
 - **Fonts.** `font-display: optional` with both faces preloaded is the only
