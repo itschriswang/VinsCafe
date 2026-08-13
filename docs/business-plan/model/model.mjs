@@ -335,10 +335,41 @@ w();
 
 const text = out.join('\n') + '\n';
 
+/* The figures the website's plan page shows. Written as data rather than
+   restated in the markup, for the same reason the board is: plan.html carries
+   a <!--gen:plan-numbers--> region and tools/sync-static.mjs renders it from
+   this file, so the page cannot drift from the model the way a hand-typed
+   table would. */
+const figures = {
+  daysPerWeek,
+  hoursPerWeek,
+  weeksPerYear: A.weeksPerYear,
+  atv: b.atv,
+  grossMarginPerTransaction: b.atv - b.cogs,
+  grossMarginRate: (b.atv - b.cogs) / b.atv,
+  cogsRateOfRevenue: b.cogs / b.atv,
+  fixedAnnual: Object.values(A.fixedAnnual).reduce((a, c) => a + c, 0),
+  staffHourlyAllIn: A.staffHourlyAllIn,
+  capex: { low: cap.low, high: cap.high },
+  contributionPerTransaction: be[0].contributionPerTransaction,
+  scenarios: scenarios.map((s) => ({
+    name: s.name,
+    transactionsPerDay: Math.round(s.transactionsPerDay),
+    revenue: Math.round(s.revenue),
+    wages: Math.round(s.wages),
+    fixed: Math.round(s.fixed),
+    ebitda: Math.round(s.ebitda),
+    ownerRate: s.ownerEffectiveRate
+  }))
+};
+
 if (process.argv.includes('--write')) {
   const dest = join(HERE, '..', '13-the-numbers.md');
   writeFileSync(dest, text);
   console.log(`wrote ${dest}`);
+  const json = join(HERE, 'figures.json');
+  writeFileSync(json, JSON.stringify(figures, null, 2) + '\n');
+  console.log(`wrote ${json}`);
 } else {
   console.log(text);
 }

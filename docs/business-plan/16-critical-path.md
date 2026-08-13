@@ -119,7 +119,7 @@ the most expensive mistake.
 | 3 | 1–2 months | $5k–$20k | Sunk if refused |
 | 4 | 3–9 months | included | Sunk if refused |
 | 5 | 2–4 months | $50k–$200k | Committed |
-| **Total** | **9–18 months** | **$57k–$229k** | |
+| **Total** | **9–18 months** | **$64k–$259k** | |
 
 Nine to eighteen months, and the great majority of the money is in the last
 stage. That is a good shape: the expensive commitment comes last, and there are

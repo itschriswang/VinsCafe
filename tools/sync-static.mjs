@@ -295,7 +295,10 @@ function boardHTML() {
    sitemap.xml and robots.txt, and renaming the repository silently pointed all
    of them at a 404: canonicals, social cards and the search-engine data. */
 const SITE = CAFE.url.replace(/\/*$/, '/');
-const OG = { 'index.html': 'og-home', 'menu.html': 'og-menu', 'find-us.html': 'og-find-us' };
+const OG = {
+  'index.html': 'og-home', 'menu.html': 'og-menu',
+  'find-us.html': 'og-find-us', 'plan.html': 'og-plan'
+};
 const pageUrl = (page) => SITE + (page === 'index.html' ? '' : page);
 
 function siteUrls(src, page) {
@@ -314,7 +317,7 @@ function siteUrls(src, page) {
 
 /* The two steps of each inner page's trail, mirrored as BreadcrumbList so a
    result page can show Home › The menu instead of a bare URL. */
-const CRUMB = { 'menu.html': 'The menu', 'find-us.html': 'Find us' };
+const CRUMB = { 'menu.html': 'The menu', 'find-us.html': 'Find us', 'plan.html': 'The plan' };
 
 function breadcrumbLd(page) {
   return '<script type="application/ld+json">\n' + JSON.stringify({
@@ -349,6 +352,60 @@ function jsonLd(existing, page) {
     JSON.stringify(data, null, 2) + '\n</' + 'script>';
 }
 
+/* ---- the plan page's figures ------------------------------------------------- */
+
+/* plan.html states what the cafe would earn and lose. Those numbers belong to
+   the model in docs/business-plan/, not to the markup, so the page carries a
+   gen region and the model writes the data:
+       node docs/business-plan/model/model.mjs --write
+   The model reads menu.json and config.js in turn, so a price change on the
+   board reaches this table without anyone retyping it. The file is optional —
+   the plan page is the only thing that needs it, and a checkout without it
+   should still sync rather than crash. */
+function planFigures() {
+  try {
+    return JSON.parse(read('docs/business-plan/model/figures.json'));
+  } catch {
+    return null;
+  }
+}
+
+const money = (n) => (n < 0 ? '−' : '') +
+  '$' + Math.abs(Math.round(n)).toLocaleString('en-AU');
+/* An hourly rate rounded to the dollar loses the part that stings. */
+const money2 = (n) => (n < 0 ? '−' : '') + '$' + Math.abs(n).toFixed(2);
+
+function planNumbersHTML(fig) {
+  const cols = fig.scenarios;
+  const head = { lean: 'Quiet', base: 'Steady', stretch: 'Busy' };
+  const row = (label, pick, cls) =>
+    `        <tr${cls ? ` class="${cls}"` : ''}><th scope="row">${label}</th>` +
+    cols.map((c) => `<td>${pick(c)}</td>`).join('') + '</tr>';
+
+  return [
+    '      <div class="plan-table-wrap">',
+    '      <table class="plan-table">',
+    '        <caption>A Sunday, ' + fig.hoursPerWeek + ' hours, ' +
+      fig.weeksPerYear + ' weeks of the year</caption>',
+    '        <thead><tr><th scope="col">Per year</th>' +
+      cols.map((c) => `<th scope="col">${head[c.name] || c.name}</th>`).join('') +
+      '</tr></thead>',
+    '        <tbody>',
+    row('Customers a Sunday', (c) => c.transactionsPerDay),
+    row('What comes in', (c) => money(c.revenue)),
+    row('Wages', (c) => (c.wages ? money(-c.wages) : '—')),
+    row('Being legal', (c) => money(-c.fixed)),
+    row('Left over', (c) => `<span class="is-loss">${money(c.ebitda)}</span>`, 'is-total'),
+    row('An hour of our time', (c) => `<span class="is-loss">${money2(c.ownerRate)}</span>`),
+    '        </tbody>',
+    '      </table>',
+    '      </div>',
+    '      <p class="plan-table-foot">Add the fitout and it is ' +
+      money(fig.capex.low) + ' to ' + money(fig.capex.high) +
+      ' before the first coffee. Every column pays it back never.</p>'
+  ].join('\n');
+}
+
 /* ---- rewrite ---------------------------------------------------------------- */
 
 function region(src, name, make) {
@@ -356,9 +413,10 @@ function region(src, name, make) {
   return src.replace(re, (_m, open, body, close) => open + make(body) + close);
 }
 
-const PAGES = ['index.html', 'menu.html', 'find-us.html', '404.html'];
+const PAGES = ['index.html', 'menu.html', 'find-us.html', 'plan.html', '404.html'];
 const check = process.argv.includes('--check');
 let stale = 0;
+const FIGURES = planFigures();
 
 /* Runs in --check too, so CI fails the deploy rather than shipping a section
    name with a system serif dropped into the middle of it. */
@@ -390,6 +448,9 @@ for (const page of PAGES) {
   });
 
   after = region(after, 'hours-summary', () => hoursSummary());
+  if (FIGURES) {
+    after = region(after, 'plan-numbers', () => '\n' + planNumbersHTML(FIGURES) + '\n');
+  }
   after = region(after, 'board', () => '\n' + boardHTML() + '\n');
   after = region(after, 'preview', () => '\n' + previewHTML() + '\n');
 
@@ -407,11 +468,11 @@ for (const page of PAGES) {
 const LASTMOD = (/<lastmod>([^<]+)<\/lastmod>/.exec(read('sitemap.xml')) || [, '2026-08-10'])[1];
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-  ['index.html', 'menu.html', 'find-us.html'].map((p, i) =>
+  ['index.html', 'menu.html', 'find-us.html', 'plan.html'].map((p, i) =>
     '  <url>\n' +
     `    <loc>${pageUrl(p)}</loc>\n` +
     `    <lastmod>${LASTMOD}</lastmod>\n` +
-    `    <priority>${['1.0', '0.8', '0.8'][i]}</priority>\n` +
+    `    <priority>${['1.0', '0.8', '0.8', '0.5'][i]}</priority>\n` +
     '  </url>').join('\n') +
   '\n</urlset>\n';
 

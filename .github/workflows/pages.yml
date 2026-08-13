@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -r \
-            index.html menu.html find-us.html 404.html \
+            index.html menu.html find-us.html plan.html 404.html \
             style.css app.js pigment.js wash.js config.js menu.json \
             robots.txt sitemap.xml \
             favicon.svg favicon.ico apple-touch-icon.png \

@@ -13,7 +13,7 @@ can end the project or cost more than the project is worth.
 | 6 | **Food poisoning from soft eggs or prawns** | Low–moderate | Severe | Closure, prosecution, reputation | Cook to order, never hold, temperature records, or drop those items |
 | 7 | **CGT on the business portion of the house** | Certain if you convert | Major, deferred | ~$16,000 on a worked example, invisible until sale | Model it with an accountant before committing. [06](06-structure-tax-gst.md) |
 | 8 | **Sustained neighbour complaints → enforcement** | Moderate–high in a court | Major | Conditions tightened, hours cut, or shutdown | Consult before lodging. Treat the fan acoustically. [09](09-neighbours.md) |
-| 9 | **Capital blowout on the conversion** | High | Major | The range is $57k–$229k for a reason | Surveyor engaged before builder. Design for ≤20 patrons. [04](04-building-and-access.md) |
+| 9 | **Capital blowout on the conversion** | High | Major | The range is $64k–$259k for a reason | Surveyor engaged before builder. Design for ≤20 patrons. [04](04-building-and-access.md) |
 | 10 | **Mortgage terms breached by change of use** | Unknown | Major | Loan review, repricing, worst case a call | Ask the lender in writing. [10](10-title-covenants-mortgage.md) |
 | 11 | **Owner burnout** | **High** | Severe | The business closes; most small cafes fail this way first | 22 hours/week for 6 hours' trade. Be honest about year three. [14](14-operations.md) |
 | 12 | **Wrong award applied / underpayment** | Moderate if employing | Major | Back-pay, penalties, criminal exposure for deliberate underpayment | Confirm with Fair Work before the first shift. [07](07-employment.md) |

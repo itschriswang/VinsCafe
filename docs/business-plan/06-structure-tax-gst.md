@@ -43,7 +43,7 @@ Every scenario in [13-the-numbers.md](13-the-numbers.md) lands **under
 $75,000** — the stretch case is $64,848. So registration is **optional**.
 
 **Register anyway, at least for the build year.** The capital spend is
-$56,700–$228,500 and most of it carries GST. Registering lets you claim the input
+$63,700–$258,500 and most of it carries GST. Registering lets you claim the input
 tax credits on the fitout, the equipment and the professional fees, which on a
 $100,000 build is roughly $9,000 back. That is not a rounding error at this
 scale.

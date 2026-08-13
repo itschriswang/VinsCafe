@@ -1,0 +1,348 @@
+<!doctype html>
+<!-- plan.html: developer territory. The figures in the numbers table are a gen
+     region, rendered by tools/sync-static.mjs from
+     docs/business-plan/model/figures.json, which model.mjs writes. Change an
+     assumption in the model, re-run it, re-run sync-static, and this page
+     follows. Never hand-edit inside a gen region. -->
+<html lang="en-AU" data-state="midday">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>The plan · gam sia</title>
+<meta name="description" content="Whether a Sunday cafe can lawfully and profitably open out of the garage at Vermont South, what it would cost, and what to do instead.">
+
+<link rel="canonical" href="https://itschriswang.github.io/VinsCafe/plan.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="gam sia">
+<meta property="og:title" content="The plan · gam sia">
+<meta property="og:description" content="What it would take to open the cafe out of the garage, what it would cost, and the honest answer.">
+<meta property="og:url" content="https://itschriswang.github.io/VinsCafe/plan.html">
+<meta property="og:image" content="https://itschriswang.github.io/VinsCafe/art/og-plan.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The plan, hand-set beside a watercolour of a paper bag of coffee.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" href="style.css" as="style">
+<link rel="preload" href="fonts/oskon-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/epoch.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="fonts/darker-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<meta name="theme-color" content="#F7EFDF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!--gen:jsonld-->
+<script type="application/ld+json" data-generated>
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "@id": "https://itschriswang.github.io/VinsCafe/#cafe",
+  "name": "gam sia",
+  "url": "https://itschriswang.github.io/VinsCafe/plan.html",
+  "image": "https://itschriswang.github.io/VinsCafe/art/og-plan.jpg",
+  "description": "What it would take to open gam sia out of the garage at 10 Katupna Ct, Vermont South.",
+  "servesCuisine": [
+    "Coffee",
+    "Asian Fusion",
+    "Vietnamese",
+    "Singaporean",
+    "Breakfast",
+    "Sandwiches"
+  ],
+  "priceRange": "$$",
+  "currenciesAccepted": "AUD",
+  "hasMenu": "https://itschriswang.github.io/VinsCafe/menu.html",
+  "telephone": "+61 3 9560 0417",
+  "email": "hello@gamsia.cafe",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "10 Katupna Ct",
+    "addressLocality": "Vermont South",
+    "postalCode": "VIC 3133",
+    "addressCountry": "AU"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -37.8511,
+    "longitude": 145.1831
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Sunday"
+      ],
+      "opens": "08:00",
+      "closes": "14:00"
+    }
+  ]
+}
+</script>
+<!--/gen-->
+
+<!--gen:breadcrumb-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://itschriswang.github.io/VinsCafe/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "The plan",
+      "item": "https://itschriswang.github.io/VinsCafe/plan.html"
+    }
+  ]
+}
+</script>
+<!--/gen-->
+</head>
+
+<body>
+
+<header class="bar">
+  <a class="wordmark" href="index.html" aria-label="gam sia, home"><span class="wm-a">gam</span><span class="wm-b">sia</span></a>
+
+  <nav class="nav" aria-label="Primary">
+    <a href="menu.html">Menu</a>
+    <a href="find-us.html">Find us</a>
+  </nav>
+
+  <div class="ind">
+    <button class="ind-trigger" type="button" aria-expanded="false" aria-controls="ind-panel" hidden>
+      <span class="ind-dot" aria-hidden="true"></span>
+      <span class="ind-label"></span>
+      <span class="mark mark--hours" aria-hidden="true"></span>
+    </button>
+    <div class="ind-panel" id="ind-panel">
+      <button class="ind-close" type="button" aria-label="Close hours">
+        <span class="mark mark--close" aria-hidden="true"></span>
+      </button>
+      <p class="ind-title">Where and when</p>
+      <p class="ind-addr">10 Katupna Ct<br>Vermont South VIC 3133</p>
+      <div class="week" aria-hidden="true">
+<!--gen:week-->
+          <span class="week-day" title="Monday, closed"><span class="week-letter">M</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day" title="Tuesday, closed"><span class="week-letter">T</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day" title="Wednesday, closed"><span class="week-letter">W</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day" title="Thursday, closed"><span class="week-letter">T</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day" title="Friday, closed"><span class="week-letter">F</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day" title="Saturday, closed"><span class="week-letter">S</span><span class="week-mark"><span class="week-bar"></span></span></span>
+          <span class="week-day is-open" title="Sunday, open 08 to 14"><span class="week-letter">S</span><span class="week-mark"><span class="week-bar"></span></span></span>
+<!--/gen-->
+      </div>
+      <dl class="hours">
+<!--gen:hours-->
+        <dt>Sun</dt><dd>08 – 14</dd>
+        <dt>Mon–Sat</dt><dd>Closed</dd>
+<!--/gen-->
+      </dl>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-inner">
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="index.html">Home</a></li>
+        <li aria-current="page">The plan</li>
+      </ol>
+    </nav>
+
+    <div class="page-head">
+      <h1>The plan</h1>
+      <p class="page-meta">Whether the garage can be a cafe</p>
+    </div>
+    <div class="page-rule" aria-hidden="true"></div>
+
+    <div class="plan">
+
+      <p class="plan-lede">This is a cafe that does not exist yet. The board is
+      real, the hours are real, and the room is a garage on a residential court
+      in Vermont South. What follows is the honest answer to whether that room
+      can lawfully and profitably become the cafe, worked out properly rather
+      than hoped at.</p>
+
+      <div class="plan-verdict">
+        <p class="plan-verdict-label">The verdict</p>
+        <p>Nothing about it is prohibited. It is all discretionary, expensive,
+        and at one day a week it loses money in every version we can model.</p>
+        <p class="plan-verdict-sub">The concept is sound. The container is
+        wrong.</p>
+      </div>
+
+      <section class="sec">
+        <div class="sec-head"><h2 class="sec-name">Three findings</h2><p class="sec-note">In the order they bite</p><img class="spot spot--beans" width="200" height="228"
+             alt="Watercolour of a paper bag of coffee, the dark green showing through the sides."
+             loading="lazy" decoding="async"
+             sizes="(max-width:719px) 170px, (max-width:1179px) 160px, 200px"
+             srcset="art/spot-beans-200w.avif 200w, art/spot-beans-400w.avif 400w"
+             src="art/spot-beans-400w.webp"></div>
+
+        <ol class="plan-finds">
+          <li>
+            <h3>A permit is required, which is worse than being banned outright</h3>
+            <p>A cafe is a food and drink premises. In the residential zone that
+            is a use you may apply for, not one you may simply do. The
+            application is discretionary, advertised to the neighbours, and
+            decided on amenity, traffic, parking and neighbourhood character:
+            the four grounds on which a cul-de-sac is weakest.</p>
+          </li>
+          <li>
+            <h3>This board cannot be cooked in a house kitchen</h3>
+            <p>Soft eggs, prawns, dairy and unpackaged food made to order put it
+            in the highest ordinary risk class, and that class is not accepted
+            in a domestic kitchen. The garage would have to become a genuine
+            commercial one: sealed finishes, a dedicated hand basin, separate
+            prep and wash sinks, mechanical exhaust over the grill.</p>
+          </li>
+          <li>
+            <h3>Six hours a week cannot carry the cost of being legal</h3>
+            <p>Insurance, registration, trade waste, grease arrestor servicing,
+            commercial waste, compliance statements, accounting. That bill
+            arrives whether the door opens one day a week or six, and six hours
+            of trade is not enough to absorb it.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="sec sec--flip">
+        <div class="sec-head"><h2 class="sec-name">The numbers</h2><p class="sec-note">Modelled from this board</p></div>
+
+        <p>Every figure below is computed from the prices on the menu and the
+        hours on the site, so it cannot drift from what the cafe actually sells.</p>
+
+<!--gen:plan-numbers-->
+      <div class="plan-table-wrap">
+      <table class="plan-table">
+        <caption>A Sunday, 6 hours, 48 weeks of the year</caption>
+        <thead><tr><th scope="col">Per year</th><th scope="col">Quiet</th><th scope="col">Steady</th><th scope="col">Busy</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">Customers a Sunday</th><td>48</td><td>84</td><td>132</td></tr>
+        <tr><th scope="row">What comes in</th><td>$23,581</td><td>$41,267</td><td>$64,848</td></tr>
+        <tr><th scope="row">Wages</th><td>—</td><td>−$15,633</td><td>−$36,476</td></tr>
+        <tr><th scope="row">Being legal</th><td>−$19,575</td><td>−$19,575</td><td>−$19,575</td></tr>
+        <tr class="is-total"><th scope="row">Left over</th><td><span class="is-loss">−$5,237</span></td><td><span class="is-loss">−$10,117</span></td><td><span class="is-loss">−$16,623</span></td></tr>
+        <tr><th scope="row">An hour of our time</th><td><span class="is-loss">−$8.39</span></td><td><span class="is-loss">−$16.21</span></td><td><span class="is-loss">−$26.64</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="plan-table-foot">Add the fitout and it is $63,700 to $258,500 before the first coffee. Every column pays it back never.</p>
+<!--/gen-->
+
+        <p>Growth makes it worse, not better. The moment a second pair of hands
+        is needed, a Sunday costs more per hour than an extra pair of hands can
+        earn back at this average sale.</p>
+      </section>
+
+      <section class="sec">
+        <div class="sec-head"><h2 class="sec-name">Twenty</h2><p class="sec-note">The one number worth designing around</p></div>
+        <p>A room that seats no more than twenty people does not have to provide
+        customer toilets. Design for twenty and the accessible toilet, the
+        single most expensive thing in the fitout, disappears from the drawing
+        entirely.</p>
+        <p>It helps twice: it is also exactly the kind of self-imposed limit a
+        council would rather be offered than have to impose.</p>
+      </section>
+
+      <section class="sec sec--flip">
+        <!-- No painting on this head. The spots hang above their bar and reach
+             back up the page, and here that put a tumbler of cold brew across
+             the last line of Twenty. One painting is enough on a page that is
+             mostly argument. -->
+        <div class="sec-head"><h2 class="sec-name">What to do instead</h2><p class="sec-note">Ranked</p></div>
+
+        <ul class="plan-rank">
+          <li class="is-first">
+            <span class="plan-rank-name">A cart, or a van</span>
+            <span class="plan-rank-note">The same business without the building. It is registered where the vehicle is kept, which is the garage, and then it trades anywhere. No change of use, no trade waste, no objections, and coffee with milk sits in a far lighter class than the kitchen does.</span>
+          </li>
+          <li>
+            <span class="plan-rank-name">A market stall</span>
+            <span class="plan-rank-note">The cheapest way to find out whether strangers will queue for the matcha twice. Worth doing first whatever else is decided.</span>
+          </li>
+          <li>
+            <span class="plan-rank-name">Somebody else's Sunday</span>
+            <span class="plan-rank-note">A registered cafe closed on the day we would open. The full board, unchanged, on premises that already comply.</span>
+          </li>
+          <li>
+            <span class="plan-rank-name">Baking for other cafes</span>
+            <span class="plan-rank-note">The buns and the cookies, wholesale. Nobody comes to the house.</span>
+          </li>
+          <li>
+            <span class="plan-rank-name">A shopfront</span>
+            <span class="plan-rank-note">The conventional answer, and it only works on more than one day a week.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sec">
+        <div class="sec-head"><h2 class="sec-name">The order</h2><p class="sec-note">Cheapest answers first</p></div>
+        <p>The sequence matters more than the content. The temptation is to
+        start with drawings and equipment and discover the fatal problem in
+        month six. These come first because they are nearly free and any one of
+        them can end it.</p>
+
+        <ol class="plan-steps">
+          <li><span class="plan-step-k">A title search</span><span class="plan-step-b">An old covenant forbidding trade on the land would stop the permit before the council ever saw it. About fifty dollars to find out.</span></li>
+          <li><span class="plan-step-k">A call to the insurer</span><span class="plan-step-b">Running an undisclosed business from home can void the policy on the whole house, not just the part with the coffee machine in it.</span></li>
+          <li><span class="plan-step-k">Four free phone calls</span><span class="plan-step-b">Planning, environmental health, the water authority, the lender. Each of them can say something that changes the answer.</span></li>
+          <li><span class="plan-step-k">Then test the demand</span><span class="plan-step-b">A few market days, before a single wall is lined. If the queue is not there where the foot traffic is handed to you, it will not be here.</span></li>
+        </ol>
+      </section>
+
+      <div class="plan-note">
+        <p><strong>How much to trust this.</strong> It was researched without
+        being able to reach the source documents directly, so the clause
+        numbers, thresholds and fees behind it come second-hand and want
+        checking before anyone spends money. The zone this house sits in was
+        never confirmed. It is enough to decide with. It is not enough to sign
+        with, and it is not legal, planning or tax advice.</p>
+      </div>
+
+    </div>
+
+    <div class="board-foot">
+      <div class="foot-inner">
+        <span>10 Katupna Ct · Vermont South</span>
+        <span class="foot-hours"><!--gen:hours-summary-->Sun 08–14<!--/gen--></span>
+        <span class="stamp"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>if (window.GamSia) GamSia.paint();</script>
+</main>
+
+<footer class="foot">
+  <p class="foot-sign" aria-hidden="true"><span class="wm-a">gam</span><span class="wm-b">sia</span><span class="foot-sun"></span></p>
+  <div class="foot-inner">
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="find-us.html">Find us</a>
+      <a href="mailto:hello@gamsia.cafe">hello@gamsia.cafe</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

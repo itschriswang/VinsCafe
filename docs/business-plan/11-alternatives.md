@@ -50,7 +50,7 @@ build from a cart that moves, and the pho toastie needs rethinking. But the
 brand, the matcha, the coffee and the Sunday all survive intact.
 
 **What it costs.** A secondhand cart or trailer with a good machine sits around
-$15,000–$35,000; a fitted van more. **[VERIFY]** Against $56,700–$228,500 for the
+$15,000–$35,000; a fitted van more. **[VERIFY]** Against $63,700–$258,500 for the
 garage, with a real payback rather than none.
 
 ## 2. Market stalls — the fastest possible start
@@ -150,7 +150,7 @@ scarcity mechanic that the whole concept rests on.
 | **5. Pop-up in a registered venue** | 2–8 weeks | Very low | Low | **Fully** |
 | **6. Shopfront** | 3–9 months | High | Moderate | Fully, but needs more days |
 | **7. Online only** | Weeks | Very low | Very low | No |
-| — Garage cafe | 9–18 months | $57k–$229k | **Very high** | Fully |
+| — Garage cafe | 9–18 months | $64k–$259k | **Very high** | Fully |
 
 ## What I would actually do
 

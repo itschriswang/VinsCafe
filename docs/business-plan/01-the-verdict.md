@@ -66,7 +66,7 @@ casual Sunday rate of $48.46 an hour plus super — about $54 all-in — and one
 helper cannot generate $54 an hour of additional gross profit on a $10.23
 average transaction.
 
-Against this you would be spending **$56,700 to $228,500 of capital** to convert
+Against this you would be spending **$63,700 to $258,500 of capital** to convert
 the garage. There is no payback. Not a long payback — no payback.
 
 The gross margin is not the problem. At 62.3% it is healthy, and the cost of
