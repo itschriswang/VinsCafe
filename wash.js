@@ -54,7 +54,13 @@ const PAPER = '.page, .preview';
    [cx, cy, rx, ry]. The flat white is not here on purpose; it is seen from
    directly above, and steam rising towards the reader reads as nothing. */
 const SOURCES = [
-  { sel: '.spot--matcha', mouth: [0.604, 0.432, 0.214, 0.081], bowl: true,  heat: 0.90, plumes: 3 },
+  /* No plume off the bowl. A plume is scaled off its own painting's height and
+     the matcha bowl is the tallest thing on the board, so this one came out
+     around 335px against the cup's 170 — a column of grey wide enough to read
+     as a smudge rather than as steam, rising out of the first section on the
+     page, across the rule and into the headline. The bowl keeps the pour and
+     the whisk; it simply does not steam. */
+  { sel: '.spot--matcha', mouth: [0.604, 0.432, 0.214, 0.081], bowl: true,  heat: 0.90, plumes: 0 },
   { sel: '.spot--cup',    mouth: [0.500, 0.300, 0.145, 0.098], bowl: false, heat: 1.00, plumes: 3 },
   { sel: '.spot--toast',  mouth: [0.495, 0.350, 0.230, 0.045], bowl: false, heat: 0.72, plumes: 2 }
 ];
@@ -499,6 +505,7 @@ export function start() {
 
   function drawSteam(src, b, st) {
     const def = src.def;
+    if (!def.plumes) return;
     let dens = HEAT[heatState] * def.heat;
     if (st) dens *= (0.25 + 0.75 * st.pour) * (1 - st.froth * 0.35);
     if (dens <= 0.02) return;
