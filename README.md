@@ -22,6 +22,7 @@ find-us.html    address, hours, getting here
 style.css       one stylesheet
 app.js          clock, state resolution, indicator, menu hydration
 pigment.js      the WebGL2 layer, imported asynchronously by app.js
+wash.js         the wet layer over the board, imported the same way
 config.js       hours, timezone, address        ← owner-editable
 menu.json       the board's contents            ← owner-editable
 art/            plates, spots, paper, social cards (AVIF + WebP)
@@ -80,6 +81,22 @@ wet-in-wet bleed when the clock crosses an hour with the tab open. It never
 runs on first load, under `prefers-reduced-motion`, on `saveData`, while the
 tab is hidden or the hero is off screen, or when the machine cannot keep up;
 in the last case it removes itself and leaves the static plate.
+
+`wash.js` is the same idea over the rest of the site, in 2D. It carries four
+things and no others: a damp trail under the pointer on the paper surfaces
+that dries back to cream in about two seconds, the matcha bowl filling as its
+section rises into the window, a foam raised on it by circling the pointer over
+it, and steam off the paintings of hot things, thick in the morning and thin
+while the room is shut, shouldered aside by the pointer. It is gated exactly
+like the pigment layer and it builds its own canvases, so a browser that never
+reaches it is a page with nothing missing.
+
+Everything on it is pigment. Steam is a pale cool wash multiplied into the
+paper, which is how it is put down in watercolour and not how it is done in
+CSS; laying white over the top would be a veil across the board's type. The one
+mark that has to lighten rather than darken is the whisked foam, and it gets a
+second canvas of its own, built only where a bowl is and only ever drawn inside
+one, so nothing else on the page is screened.
 
 ## Preview switches
 
@@ -164,6 +181,30 @@ same `npm i --no-save playwright` as `check-contrast.mjs`.
   below 720px, which left the menu reachable only by scrolling the whole hero,
   and unreachable from the closed hero, the one most visitors land on.
 
+- **The wash measures, it does not repeat the CSS.** Every box `wash.js` draws
+  into comes off the painting's live offset box and its computed transform, not
+  off the rules that place it. The spots change width at three breakpoints,
+  swap sides on a phone and tilt further on hover; a copy of any of that in the
+  module would be a second place to update and a silent way to put tea beside a
+  bowl instead of in it. `getBoundingClientRect` is not enough on its own,
+  because it reports the upright rectangle around a tilted painting.
+- **Nothing in the module is named after a menu section.** The bowl is found by
+  its painting, `.spot--matcha`, never by `[data-sec="matcha"]`: section slugs
+  come out of `menu.json`, which the owner edits, and renaming Matcha would
+  have quietly taken the pour with it. Sources are re-queried every half second
+  so a board rebuilt from `menu.json` picks straight back up.
+- **The hero sits above the wash on purpose.** A `mix-blend-mode` layer over
+  the top is not free even where it draws nothing: it forces the hero, the one
+  place on the site with a live WebGL canvas and a multiply wash under its type,
+  through a compositing round trip. Measured, that moved the darkest ground
+  pixel under the late body copy from 4.76:1 to 4.49:1 and put it under AA, with
+  the wash canvas provably empty there. `.hero { z-index: 3 }` keeps it out of
+  that group. On the board, where there is no WebGL underneath, a fully soaked
+  damp trail costs 8.93:1 to 8.90:1 and nothing else.
+- **A canvas is a replaced element.** Pinned on all four sides with an auto
+  width it takes the size of its backing store and ignores the far edges, which
+  draws the whole layer at the render scale in the top left corner. Both
+  `.pigment` and `.wash` state `width` and `height` for that reason.
 - **Colour.** Four interface colours, written in Oklch so every interpolation
   the browser performs runs through Oklch rather than sRGB. Lichen, butter,
   blush, dusty blue and lavender grey exist inside the paintings only.

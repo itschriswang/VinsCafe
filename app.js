@@ -820,6 +820,21 @@
     }).catch(function () { canvas.remove(); });
   }
 
+  /* ---------------------------------------------------------------- wash ---
+     The wet layer over the page: the pointer's damp trail on the paper, the
+     matcha bowl filling as it comes into view, the foam whisked up on it, and
+     the steam off the paintings of hot things. Gated exactly like the pigment
+     canvas, and it builds its own canvas, so a browser that never gets here
+     is a page with nothing missing from it. */
+
+  function loadWash() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (navigator.connection && navigator.connection.saveData) return;
+    if (!document.querySelector('.page, .preview, .spot')) return;
+
+    import('./wash.js').then(function (mod) { mod.start(); }).catch(function () { /* dry page */ });
+  }
+
   /* ------------------------------------------------------------- ticking --- */
 
   function apply(next, nowMoment, animate) {
@@ -885,6 +900,7 @@
     syncSchema();
     hydrateMenu();
     loadPigment();
+    loadWash();
     signOff();
 
     /* Fifteen seconds is fine: the timestamp shows minutes and the state can

@@ -371,6 +371,14 @@ html:not(.js) .ind-close { display: none; }
 
 .hero {
   position: relative;
+  /* Above the wash layer, which is z-index 2. The wash paints on the board and
+     the preview and never inside the hero, but a mix-blend-mode element over
+     the top is not free even where it is empty: it forces the hero, alone on
+     this site in having a live WebGL canvas and a multiply wash under its
+     type, through a compositing round trip that moved the darkest ground pixel
+     under the late body copy from 4.76:1 to 4.49:1 and put it under AA.
+     Measured with tools/check-contrast.mjs; keep the hero out of that group. */
+  z-index: 3;
   /* Short of the full viewport by the day dial's height, so the dial,
      the way into the other three paintings, is on screen from the start. */
   height: calc(100svh - 114px);
@@ -1472,6 +1480,42 @@ html:not(.js) .daystrip { display: none; }
   .preview .sec > .spot { --w: 170px; }
 }
 
+/* ------------------------------------------------------------- the wash ---
+   One canvas over the whole page for the four wet things: the damp trail the
+   pointer leaves on the paper, the matcha bowl filling, the foam whisked up
+   on it, and the steam off the hot paintings. wash.js draws it and app.js
+   only loads that on a machine and a setting that want it.
+
+   Multiply, because everything on it is pigment: a damp patch darkens the
+   sheet, tea deepens the bowl, and steam is a pale cool wash the way it is
+   painted rather than white laid over the top. That is what lets the layer
+   sit above the type without touching its contrast: multiplying ink this
+   dark by a colour this pale cannot lift it off the page.
+
+   Below the bar and the hours panel, above everything else. Never hit-tested. */
+
+.wash {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  /* A canvas is a replaced element: pinned on all four sides with an auto
+     width it takes its backing store's size and ignores the far edges, which
+     draws the whole layer at the render scale in the top left corner. Both
+     lengths are stated for the same reason .pigment states them. */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+.wash.is-lit { opacity: 1; }
+
+/* The one thing on this layer that has to lighten rather than darken: the
+   foam whisked up on the matcha. Built only when a bowl is on the page, and
+   only ever drawn inside one, so nothing else on the page is screened. */
+.wash--foam { mix-blend-mode: screen; }
+
 /* -------------------------------------------------------------- motion ---
    Cross-fade between pages through the paper; sections rise gently as they
    enter the viewport where scroll-driven animations are supported. All of it
@@ -1524,7 +1568,7 @@ html:not(.js) .daystrip { display: none; }
 @keyframes dv-in  { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .pigment { display: none; }
+  .pigment, .wash { display: none; }
   .roundel { animation: none; }
   .ind-dot { animation: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -1533,7 +1577,7 @@ html:not(.js) .daystrip { display: none; }
 /* ---------------------------------------------------------------- print --- */
 
 @media print {
-  .bar, .ind, .pigment, .strip, .spot, .stamp, .daystrip, .roundel, .visit { display: none !important; }
+  .bar, .ind, .pigment, .wash, .strip, .spot, .stamp, .daystrip, .roundel, .visit { display: none !important; }
   body { color: #000; background: #fff; }
   .board { display: block; }
   /* Browsers strip backgrounds when printing; the pale text on the coloured

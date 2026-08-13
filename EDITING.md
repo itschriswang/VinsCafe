@@ -99,8 +99,8 @@ The address, telephone number and email underneath work the same way.
 ## What not to touch
 
 Everything else: `index.html`, `menu.html`, `find-us.html`, `style.css`,
-`app.js`, `pigment.js`, and the `art/` and `fonts/` folders. Each of those
-files says so at the top.
+`app.js`, `pigment.js`, `wash.js`, and the `art/` and `fonts/` folders. Each of
+those files says so at the top.
 
 If a change needs one of them, it needs a developer, and it is written up in
 `README.md`.
