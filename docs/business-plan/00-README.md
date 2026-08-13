@@ -31,6 +31,7 @@ read that one.
 | [17-contacts-and-questions.md](17-contacts-and-questions.md) | Who to ring, and the exact questions to ask them. |
 | [18-home-kitchen-and-the-cart.md](18-home-kitchen-and-the-cart.md) | Is a council-approved home kitchen real? Is the matcha cart a business? |
 | [19-the-cart-numbers.md](19-the-cart-numbers.md) | Generated. Do not hand-edit. |
+| [20-other-avenues.md](20-other-avenues.md) | Every other route: a qualifying address, hired kitchens, selling the product, host venues. |
 
 ## The model
 
