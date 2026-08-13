@@ -81,7 +81,11 @@ const ASSUMPTIONS = {
      super). Owner hours are unpaid in the P&L and then valued separately,
      because pretending the owner works for nothing is how cafes lie to
      themselves. */
-  staffHourlyAllIn: 51.00,
+  /* Restaurant Industry Award MA000119, casual Level 2 (Food & Beverage
+     Attendant Grade 2), Sunday = 150% including the 25% casual loading =
+     $48.46/hr, plus 12% superannuation. This is the number that decides
+     whether a Sunday-only cafe can afford anyone at all. */
+  staffHourlyAllIn: 54.28,
   staffHoursPerTradingDay: { lean: 0, base: 6, stretch: 14 },
   ownerHoursPerTradingDay: 13,     // 6 trading + 7 prep, baking, cleaning, admin
   ownerHourlyOpportunityCost: 40,  // what the owner's Sunday is worth elsewhere
@@ -93,10 +97,10 @@ const ASSUMPTIONS = {
     'Home insurance uplift (business use disclosed)': 700,
     'Food Act registration renewal (Class 2)': 800,
     'Commercial waste collection': 2400,
-    'Grease arrestor pump-out & servicing': 1800,
+    'Grease arrestor pump-out & servicing': 1200,   // $150–400/quarter, Melbourne
     'Backflow device annual test': 250,
     'Essential Safety Measures annual statement': 600,
-    'Trade waste charges': 900,
+    'Trade waste agreement (Yarra Valley Water)': 625,  // contract fee, billed quarterly
     'Utilities uplift (power, water, gas)': 3000,
     'Accounting & BAS': 2200,
     'POS & software subscriptions': 900,
@@ -117,7 +121,10 @@ const ASSUMPTIONS = {
     'Building permit, surveyor, drawings': [4000, 14000],
     'Garage structural works, lining, insulation, floor': [8000, 30000],
     'Fire separation from the dwelling': [3000, 12000],
-    'Accessible patron toilet': [12000, 30000],
+    /* NCC Part F4: patron sanitary facilities are not required where the
+       building accommodates not more than 20 persons. Cap the fitout at 20
+       and this line goes to zero — the single largest saving available. */
+    'Accessible patron toilet (avoidable at ≤20 persons)': [0, 30000],
     'Accessible entry, ramp, path of travel': [3000, 15000],
     'Mechanical exhaust hood & make-up air': [6000, 18000],
     'Plumbing: sinks, hand basin, warm water, tempering': [5000, 14000],
